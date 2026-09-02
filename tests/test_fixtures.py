@@ -54,16 +54,16 @@ def test_invalid_fixture_known_first_error_step(bundles):
     oracle = oracle_for("invalid-known-first-error")
     k = oracle["first_error"]["step_id"]
     assert b.reward == 0.0
-    assert b.trajectory is not None and len(b.trajectory) == 11
+    assert b.trajectory is not None and len(b.trajectory) == 5
     fatal = b.trajectory[k - 1]
     assert fatal.step_id == k
     assert fatal.command is not None and "rm -rf" in fatal.command
-    claim = b.trajectory[10]
+    claim = b.trajectory[k]
     assert claim.command is None  # success claimed with no confirming command
     assert all(c.status == "failed" for c in b.verifier.checks)
-    # steps 1..9 are the real, undoctored prefix
-    valid_prefix = bundles["valid"].trajectory[:9]
-    assert tuple(s.command for s in b.trajectory[:9]) == tuple(s.command for s in valid_prefix)
+    # steps 1..3 are the real, undoctored pristine-repo prefix (read-only)
+    valid_prefix = bundles["valid"].trajectory[:3]
+    assert tuple(s.command for s in b.trajectory[:3]) == tuple(s.command for s in valid_prefix)
 
 
 def test_inconclusive_fixture_has_infrastructure_exception(bundles):

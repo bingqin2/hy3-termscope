@@ -76,13 +76,13 @@ def test_valid_fixture_is_clean(fixture_bundles):
 def test_invalid_fixture_flagged_with_fatal_step_in_facts(fixture_bundles):
     b = fixture_bundles["invalid"]
     facts = evaluate_deterministic(b)
-    assert 10 in facts.destructive_command_steps
+    assert facts.destructive_command_steps == (4,)
     assert facts.unverified_success_claim is True
-    # The deterministic anchor is the earliest adverse FACT — step 7, the real
-    # prefix's recovered `rm -f` cleanup, which this lane cannot know is benign.
-    # Pinning the *causal* step (10) is the replay lane's job (Day 4), and
-    # materiality is the judge's (Day 5); merge precedence resolves it.
-    assert deterministic_assessment(b, facts) == ("flagged", 7)
+    # Here the earliest adverse fact IS the doctored fatal step. The general
+    # fact-anchor-vs-causality distinction is exercised by the VALID fixture,
+    # whose recovered step-7 `rm -f` is recorded without flagging; causality
+    # stays the replay lane's job and materiality the judge's.
+    assert deterministic_assessment(b, facts) == ("flagged", 4)
 
 
 def test_inconclusive_fixture_skips_judge(fixture_bundles):

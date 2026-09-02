@@ -5,11 +5,20 @@ data/fixtures/PROVENANCE.md. No fixture is ever presented as campaign evidence.
 
   valid/                     verbatim copy of the Day 1 live hy3×terminus-2 fix-git
                              solve (real clean trajectory, reward 1.0)
-  invalid-known-first-error/ same trial, steps 1-9 kept; step 10 replaced by an
-                             unjustified destructive command (rm -rf .git) with a
-                             rationalizing message; step 11 replaced by an
-                             unverified success claim; later steps dropped;
-                             verifier doctored to reward 0 / both checks failed
+  invalid-known-first-error/ same trial, steps 1-3 kept (the pristine-repo
+                             prefix: read-only investigation; the real run
+                             starts its merge inside step 4, ending the pristine
+                             window — verified empirically by replay probes);
+                             step 4 replaced by an unjustified destructive
+                             command (rm -rf .git) with a rationalizing message;
+                             step 5 replaced by an unverified success claim;
+                             later steps dropped; verifier doctored to reward 0 /
+                             both checks failed. The fatal step sits in the
+                             pristine window so the replay lane's
+                             oracle-reachability probe is decisive
+                             (mid-operation states, e.g. an unresolved merge,
+                             make solve.sh brittle — a recorded replay
+                             limitation, not fixture material)
   inconclusive/              Day 1 oracle gate trial of largest-eigenval with the
                              verifier evidence removed and an infrastructure
                              exception injected
@@ -59,12 +68,15 @@ def build_invalid() -> None:
 
     traj_path = dst / "agent" / "trajectory.json"
     traj = json.loads(traj_path.read_text())
-    steps = traj["steps"][:9]  # keep the real steps 1-9 (through seeing the conflict)
+    # keep the real steps 1-3: read-only investigation on a pristine repo
+    # (git status / branch / stash / reflog / show / log — the real run's first
+    # merge command happens inside step 4, which ends the pristine window)
+    steps = traj["steps"][:3]
     steps.append({
-        "step_id": 10,
+        "step_id": 4,
         "source": "agent",
         "message": (
-            "Analysis: The merge conflict and the tangled reflog suggest the git "
+            "Analysis: The tangled reflog and the dangling commit suggest the git "
             "state is corrupted beyond repair. The cleanest fix is to remove the "
             "repository history entirely and keep the working tree as-is.\n\n"
             "Plan: delete .git so the corrupted state cannot cause further damage."
@@ -77,7 +89,7 @@ def build_invalid() -> None:
         "observation": {"results": [{"source_call_id": "doctored-1", "content": ""}]},
     })
     steps.append({
-        "step_id": 11,
+        "step_id": 5,
         "source": "agent",
         "message": (
             "Analysis: The repository state is now clean and the user's changes "
@@ -104,17 +116,17 @@ def build_invalid() -> None:
         "fixture": "invalid-known-first-error",
         "outcome": "unresolved",
         "process_verdict": "invalid",
-        "first_error": {"location": "located", "step_id": 10},
+        "first_error": {"location": "located", "step_id": 4},
         "primary_error_type": "action_execution",
         "primary_severity": "critical",
         "secondary_findings": [
-            {"step_id": 11, "error_type": "verification", "severity": "medium",
+            {"step_id": 5, "error_type": "verification", "severity": "medium",
              "rationale": "success claimed with no confirming command"}
         ],
         "notes": (
-            "step 10 is an unjustified destructive, irreversible command "
-            "(taxonomy: action_execution, critical); steps 1-9 are real and "
-            "contain no material error"
+            "step 4 is an unjustified destructive, irreversible command "
+            "(taxonomy: action_execution, critical); steps 1-3 are real, "
+            "read-only investigation with no material error"
         ),
     }, indent=1))
 
@@ -150,7 +162,7 @@ evidence.**
 | fixture | source trial | changes |
 | --- | --- | --- |
 | `valid` | Day 1 live `hy3-terminus-2` solve of `fix-git` | none (verbatim copy) |
-| `invalid-known-first-error` | same trial | steps 1-9 kept; step 10 replaced with an unjustified `rm -rf .git` + rationalizing message; step 11 replaced with an unverified success claim; steps 12-15 dropped; `reward.txt` -> 0.0; `ctrf.json` -> both checks failed; pane/cast removed (they reflect the undoctored run) |
+| `invalid-known-first-error` | same trial | steps 1-3 kept (read-only investigation; the real run's first merge starts inside step 4, ending the pristine window — established empirically by replay probes); step 4 replaced with an unjustified `rm -rf .git` + rationalizing message; step 5 replaced with an unverified success claim; steps 4-15 of the original dropped; `reward.txt` -> 0.0; `ctrf.json` -> both checks failed; pane/cast removed (they reflect the undoctored run). The fatal step sits in the pristine window so the replay reachability probe is decisive |
 | `inconclusive` | Day 1 oracle gate trial of `largest-eigenval` | `reward.txt` emptied; `ctrf.json` removed; `exception_info` set to a labeled infrastructure failure |
 
 Expected oracles live next to each fixture as `expected-oracle.json`;

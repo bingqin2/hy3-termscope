@@ -145,11 +145,19 @@ class DeterministicFacts(_Frozen):
 
 
 class PrefixCheck(_Frozen):
-    """Replay lane: outcome of the task checks after commands 1..k."""
+    """Replay lane: outcome of one probe after commands 1..k.
+
+    ``direct``: do the task's checks already pass at prefix k?
+    ``reachability``: after prefix k, does completing the task from that state
+    (oracle solution, then checks) still succeed? — the spec's "reachable
+    outcome".
+    """
 
     prefix_k: int
     reward: float | None
     passed: bool | None
+    probe: Literal["direct", "reachability"] = "reachability"
+    seconds: float | None = None
 
 
 class ReplayResult(_Frozen):

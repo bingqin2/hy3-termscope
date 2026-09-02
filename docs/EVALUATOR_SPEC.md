@@ -73,15 +73,24 @@ inconclusive). Every such flagged run is human-audited (§6).
 
 ### Prefix-replay causal localization (ROADMAP decision 7 — flagship)
 
-For every failed or flagged run: rebuild the task environment fresh from its definition, replay
-the trajectory's commands 1..k for each prefix k, and run the task's checks at each prefix. The
-first error step is the k at which a check's reachable outcome permanently flips. Properties:
+For every failed or flagged run: rebuild the task environment fresh from its pinned image,
+execute the trajectory's commands 1..k in one non-interactive shell session, and probe the
+outcome at that prefix. Two probes exist — **direct** (do the task's checks already pass at
+k?) and **reachability** (after prefix k, run the oracle solution, then the checks: is the
+task still completable from that state?). The causal first error of a failed run is the first
+k at which reachability flips False **permanently** — found by bisection, with the flip
+boundary verified and the flip probe repeated once to catch non-determinism. Properties:
 causal rather than judged, zero API quota, fully local. Localization values
-`located | none | unlocatable` — when no prefix flips the outcome (non-determinism, interactive
-steps, environment drift; all recorded), replay reports `unlocatable` rather than forcing a
-step. Output: a per-step check matrix plus the causal first-error candidate. Per-task replay
-feasibility (check runtime, determinism) is recorded at the Day 1 gate; infeasible tasks fall to
-judge + human coverage, stated per run — never silently skipped.
+`located | none | unlocatable` — `none` when no prefix flips (the failure is one of omission,
+not a destroyed state); `unlocatable` when probes fail or disagree (non-determinism,
+interactive steps, environment drift; all recorded) rather than forcing a step. Known,
+recorded limitation: the oracle solution assumes a pristine initial state, so a prefix ending
+inside an unfinished operation (e.g. an unresolved merge) can flip reachability without being
+a material error — the flip step's command is always included in the notes, and merge
+precedence (§5) plus the judge/human lanes weigh materiality. Output: a per-probe check
+matrix (with per-probe runtime) plus the causal first-error candidate. Per-task replay
+feasibility (check runtime, determinism) derives from the Day 1 gate records; infeasible
+tasks fall to judge + human coverage, stated per run — never silently skipped.
 
 ## 4. Semantic lane — the LLM-based evaluation solution
 

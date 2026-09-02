@@ -1,6 +1,28 @@
 # Next steps
 
-Current step: **Day 4 — replay localizer** (Days 1–3 complete; exit conditions met).
+Current step: **Day 5 — semantic lane & judge gate** (Days 1–4 complete; exit conditions met).
+
+## Day 4 status (complete 2026-09-01)
+
+- **Replay localizer shipped** (`src/termscope/evaluator/replay.py`): fresh
+  container per probe from the task's pinned image; the command prefix 1..k runs
+  in one non-interactive shell session; **direct** and **reachability** probes
+  (reachability = oracle solution from the prefix state, then checks —
+  operationalizing the spec's "reachable outcome"); bisection to the first
+  permanent flip, boundary verified, flip probe repeated to catch
+  non-determinism; `located / none / unlocatable`; per-probe matrix + runtimes.
+- **Exit condition measured and recorded**
+  (`data/environment-checks/day4-replay-measurement.json`): invalid fixture →
+  **located, step 4 = the known doctored step** (5 probes, 47 s wall); the real
+  Day 1 live trial → **`none`** (correct: nothing destroyed; 2 probes, 19 s).
+  Probes run ~8–13 s each on fix-git.
+- Empirical finding folded back into the design: the real run starts its merge
+  inside step 4, so oracle-reachability flips at any mid-merge prefix — the
+  fixture's fatal step moved into the pristine read-only window (steps 1–3
+  real, `rm -rf .git` at step 4), and the probe-brittleness limitation is now
+  stated in EVALUATOR_SPEC §3 with the flip command always recorded in notes.
+- 42/42 tests green (flip-search logic covered by pure unit tests with a fake
+  prober: locates, none, bad-baseline, non-determinism, probe-failure cases).
 
 ## Day 3 status (complete 2026-09-01)
 

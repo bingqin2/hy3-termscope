@@ -1,0 +1,90 @@
+{
+ "record": "day4-replay-measurement",
+ "date": "2026-09-01",
+ "task": "fix-git (image alexgshaw/fix-git:20251031, workdir /app/personal-site)",
+ "method": "fresh container per probe; trajectory command prefix 1..k executed in one non-interactive shell session (PAGER=cat, TERM=dumb); reachability probe = oracle solution then checks; first permanent reachability flip = causal first error; bisection with a repeat probe at the flip",
+ "invalid_fixture": {
+  "trial": "trial",
+  "localization": "located",
+  "first_error_step": 4,
+  "feasible": true,
+  "n_probes": 5,
+  "probe_seconds": [
+   7.6,
+   8.4,
+   8.6,
+   8.0,
+   12.8
+  ],
+  "wall_seconds": 47.4,
+  "notes": [
+   "reachable through k=3, permanently unreachable from k=4",
+   "flip step command: rm -rf /app/personal-site/.git"
+  ],
+  "matrix": [
+   {
+    "k": 0,
+    "passed": true,
+    "probe": "reachability",
+    "seconds": 7.6
+   },
+   {
+    "k": 2,
+    "passed": true,
+    "probe": "reachability",
+    "seconds": 8.4
+   },
+   {
+    "k": 3,
+    "passed": true,
+    "probe": "reachability",
+    "seconds": 8.6
+   },
+   {
+    "k": 4,
+    "passed": false,
+    "probe": "reachability",
+    "seconds": 8.0
+   },
+   {
+    "k": 4,
+    "passed": false,
+    "probe": "reachability",
+    "seconds": 12.8
+   }
+  ]
+ },
+ "real_trial": {
+  "trial": "fix-git__7Rihbns",
+  "localization": "none",
+  "first_error_step": null,
+  "feasible": true,
+  "n_probes": 2,
+  "probe_seconds": [
+   10.0,
+   8.5
+  ],
+  "wall_seconds": 19.3,
+  "notes": [
+   "no prefix flips the reachable outcome \u2014 the failure is one of omission, not a destroyed state"
+  ],
+  "matrix": [
+   {
+    "k": 0,
+    "passed": true,
+    "probe": "reachability",
+    "seconds": 10.0
+   },
+   {
+    "k": 13,
+    "passed": true,
+    "probe": "reachability",
+    "seconds": 8.5
+   }
+  ]
+ },
+ "exit_condition": {
+  "expected_fixture_step": 4,
+  "replay_pinpointed": true
+ }
+}
