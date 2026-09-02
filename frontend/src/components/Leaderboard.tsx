@@ -1,8 +1,12 @@
 import data from "../data/leaderboard.json";
 import type { LeaderboardData } from "../types";
-import { CONFIG_DOT, ConfigLabel, Section, th, td } from "./ui";
+import { CONFIG_DOT, ConfigLabel, Section, Tip, th, td } from "./ui";
 
-const lb = data as LeaderboardData;
+const lb = data as unknown as LeaderboardData;
+
+function pct(x: number | null): string {
+  return x == null ? "—" : `${Math.round(x * 100)}%`;
+}
 
 export function Leaderboard() {
   return (
@@ -10,17 +14,26 @@ export function Leaderboard() {
       id="leaderboard"
       num="01"
       title="Leaderboard"
-      blurb={`Updated ${lb.updated}. Mean effective score across 12 tasks — single attempt per (configuration, task) pair under a hard API budget, so no error bars are shown or implied. All configurations are Hy3; the comparison is across agent settings, not models.`}
+      blurb={`Updated ${lb.updated}. 20 pre-registered Terminal-Bench 2.0 tasks × 2 scaffolds, one attempt per (task, configuration) pair by design — no error bars are shown or implied. Both configurations run the same Hy3 model; the comparison is across scaffolds. Resolve rate is the official verifier outcome; process validity is the share of conclusive runs whose process is valid — as predicted by the evaluator, and as adjudicated with reference labels and human rulings layered on top.`}
     >
       <div className="overflow-x-auto rounded border border-line">
-        <table className="w-full min-w-[560px] border-collapse">
+        <table className="w-full min-w-[640px] border-collapse">
           <thead className="border-b border-line bg-surface">
             <tr>
               <th className={th}>#</th>
               <th className={th}>Configuration</th>
-              <th className={th}>Mean score</th>
-              <th className={`${th} text-right`}>Resolve rate</th>
-              <th className={`${th} text-right`}>Tasks won</th>
+              <th className={th}>Resolve rate</th>
+              <th className={`${th} text-right`}>Resolved</th>
+              <th className={`${th} text-right`}>
+                <Tip tip="share of conclusive runs the evaluator's merged verdict calls valid">
+                  <span>Process validity · predicted</span>
+                </Tip>
+              </th>
+              <th className={`${th} text-right`}>
+                <Tip tip="reference labels + human adjudication override the evaluator where present">
+                  <span>Process validity · adjudicated</span>
+                </Tip>
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -32,24 +45,35 @@ export function Leaderboard() {
                 </td>
                 <td className={td}>
                   <div className="flex items-center gap-3">
-                    <span className="font-mono tabular-nums">{r.mean_score.toFixed(2)}</span>
+                    <span className="font-mono tabular-nums">{pct(r.resolve_rate)}</span>
                     <span className="h-1.5 w-28 overflow-hidden rounded-full bg-surface-2">
                       <span
                         className={`block h-full rounded-r-full ${CONFIG_DOT[r.config_id]}`}
-                        style={{ width: `${r.mean_score * 100}%` }}
+                        style={{ width: `${(r.resolve_rate ?? 0) * 100}%` }}
                       />
                     </span>
                   </div>
                 </td>
                 <td className={`${td} text-right font-mono tabular-nums`}>
-                  {Math.round(r.resolve_rate * 100)}%
+                  {r.tasks_won}/{r.n_runs - r.n_inconclusive}
                 </td>
-                <td className={`${td} text-right font-mono tabular-nums`}>{r.tasks_won}</td>
+                <td className={`${td} text-right font-mono tabular-nums`}>
+                  {pct(r.process_validity_rate_predicted)}
+                </td>
+                <td className={`${td} text-right font-mono tabular-nums`}>
+                  {pct(r.process_validity_rate_adjudicated)}
+                </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
+      <p className="mt-3 max-w-3xl font-mono text-xs leading-relaxed text-ink-faint">
+        The predicted and adjudicated columns disagree on purpose: the validation section below
+        measures the evaluator's semantic lane as too lenient (its verdicts call nearly every
+        process valid), while blinded reference labels rate 12 of the 14 failed runs partial or
+        invalid. Both numbers are shown with their provenance rather than blending them.
+      </p>
     </Section>
   );
 }

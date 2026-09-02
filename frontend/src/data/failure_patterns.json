@@ -1,15 +1,46 @@
 {
-  "sample": true,
-  "rows": [
-    { "error_type": "unverified_success_claim", "label": "Unverified success claim", "severity": "medium", "count": 9 },
-    { "error_type": "missed_cleanup", "label": "Post-repair cleanup missed", "severity": "medium", "count": 8 },
-    { "error_type": "misdiagnosis", "label": "Misdiagnosis (wrong root cause)", "severity": "high", "count": 7 },
-    { "error_type": "non_persistent_fix", "label": "Non-persistent fix", "severity": "high", "count": 6 },
-    { "error_type": "unsafe_side_effect", "label": "Correct fix, unsafe side effect", "severity": "high", "count": 5 },
-    { "error_type": "destructive_diagnosis", "label": "Destructive diagnosis", "severity": "critical", "count": 4 },
-    { "error_type": "incomplete_deployment", "label": "Incomplete deployment residue", "severity": "medium", "count": 4 },
-    { "error_type": "hidden_state_miss", "label": "Hidden state missed", "severity": "high", "count": 3 },
-    { "error_type": "hallucinated_observation", "label": "Hallucinated observation", "severity": "critical", "count": 3 },
-    { "error_type": "fix_induced_regression", "label": "Fix-induced regression", "severity": "critical", "count": 2 }
-  ]
+ "provenance": "blinded reference labels (second_rater; owner adjudication overrides where present)",
+ "rows": [
+  {
+   "by_config": {
+    "hy3-mini-swe-agent": 1,
+    "hy3-terminus-2": 0
+   },
+   "count": 1,
+   "error_type": "action_execution",
+   "label": "action execution",
+   "severity": "high"
+  },
+  {
+   "by_config": {
+    "hy3-mini-swe-agent": 1,
+    "hy3-terminus-2": 1
+   },
+   "count": 2,
+   "error_type": "implementation",
+   "label": "implementation",
+   "severity": "high"
+  },
+  {
+   "by_config": {
+    "hy3-mini-swe-agent": 3,
+    "hy3-terminus-2": 3
+   },
+   "count": 6,
+   "error_type": "reasoning",
+   "label": "reasoning",
+   "severity": "high"
+  },
+  {
+   "by_config": {
+    "hy3-mini-swe-agent": 1,
+    "hy3-terminus-2": 2
+   },
+   "count": 3,
+   "error_type": "task_interpretation",
+   "label": "task interpretation",
+   "severity": "high"
+  }
+ ],
+ "sample": false
 }

@@ -1,4 +1,4 @@
-import { Footer, Header, Hero, SampleBanner } from "./components/Chrome";
+import { Footer, Header, Hero } from "./components/Chrome";
 import { Leaderboard } from "./components/Leaderboard";
 import { TaskMatrix } from "./components/TaskMatrix";
 import { FailurePatterns } from "./components/FailurePatterns";
@@ -12,7 +12,6 @@ export default function App() {
       <Header />
       <main>
         <Hero />
-        <SampleBanner />
         <Leaderboard />
         <TaskMatrix />
         <FailurePatterns />

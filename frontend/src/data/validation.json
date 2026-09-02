@@ -1,8 +1,88 @@
 {
-  "sample": true,
-  "localization_exact": { "num": 11, "den": 14 },
-  "localization_pm1": { "num": 13, "den": 14 },
-  "false_positive_rate": { "num": 1, "den": 6 },
-  "discriminative": "3/3 tiers ranked correctly",
-  "consistency": "not run (API budget)"
+ "consistency": {
+  "first_error_step_agreement": "38/40",
+  "flagged_run_stability": {
+   "run_id": "hy3-terminus-2__financial-document-processor",
+   "step": "5/5",
+   "verdict": "5/5"
+  },
+  "n_runs": 40,
+  "verdict_agreement": "38/40"
+ },
+ "false_positive_rate": {
+  "den": null,
+  "num": null
+ },
+ "fixture_gate_v1": "passed (valid → valid/0 findings; invalid → located at the known step, right category)",
+ "localization_exact": {
+  "den": 14,
+  "num": 3
+ },
+ "localization_located_only": {
+  "den": 12,
+  "num": 1
+ },
+ "localization_pm1": {
+  "den": 14,
+  "num": 3
+ },
+ "metric_definitions": {
+  "localization_exact": "reference vs merged first error over all labeled failed runs; agreement = same step, or both sides 'none'",
+  "localization_located_only": "exact step match restricted to runs whose reference label locates a step"
+ },
+ "reference_labels": {
+  "human": 0,
+  "second_rater": 14
+ },
+ "regression": {
+  "fixture_gate_v2": {
+   "invalid": true,
+   "passed": true,
+   "valid": true
+  },
+  "metrics": {
+   "category_agreement_at_exact_step": {
+    "v1": "0/12",
+    "v2": "0/12"
+   },
+   "denominators": {
+    "failed_labeled": 14,
+    "reference_located": 12,
+    "reference_nonvalid": 12,
+    "resolved": 26
+   },
+   "detection_nonvalid": {
+    "v1": "0/12",
+    "v2": "1/12"
+   },
+   "localization_exact": {
+    "v1": "3/14",
+    "v2": "3/14"
+   },
+   "localization_located_only": {
+    "v1": "1/12",
+    "v2": "1/12"
+   },
+   "localization_pm1": {
+    "v1": "3/14",
+    "v2": "3/14"
+   },
+   "resolved_flagged_invalid": {
+    "note": "v2 flags are the owner's false-positive audit set; none are auto-accepted",
+    "v1": [],
+    "v2": []
+   },
+   "verdict_agreement_3way": {
+    "v1": "2/14",
+    "v2": "3/14"
+   }
+  },
+  "residual_failure_mode": {
+   "diagnosis": "the judge executes the audits but resolves them charitably inside the agent's own frame; it does not independently re-derive domain conclusions, and it shares the generating model's priors (measured self-evaluation bias, anticipated in EVALUATOR_SPEC §4.8). The one detection gain in v2 comes from the merge change (causal replay flip capping 'valid'), not from the semantic lane",
+   "disposition": "decision 16 permits exactly one revision; v2 is it, measured and recorded. Stored campaign evaluations remain official v1; localization credibility rests on the replay lane and the blinded reference labels, and the semantic lane's limits are reported as a finding, not patched further",
+   "evidence": "all completed v2 calls filled the mandatory audits (zero validation retries), yet 13/14 failed runs still came back 'valid' with 8 findings total across 39 calls; e.g. on one spectroscopy run the audit names the decisive peak-assignment commitment, records that amplitude/offset 'swing wildly', and itself classifies the final check as 'a structural check, not a fit-correctness check' — then renders valid with zero findings",
+   "id": "audit-then-absolve"
+  }
+ },
+ "sample": false
 }

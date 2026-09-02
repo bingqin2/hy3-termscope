@@ -1,9 +1,36 @@
 # Next steps
 
-Current step: **Day 9 — site & deploy** (real `results/*.json` into the frontend, TB2
-relabeling, Pages deploy; Day 8 complete).
+Current step: **Day 10 — report, audits, demo, freeze** (Day 9 complete; the owner pushes and
+enables Pages to put the site live).
 
-Owner items still open from Day 7 (they do not block Day 9):
+## Day 9 status (complete; owner to push + enable Pages)
+
+- **Site data pipeline** (`scripts/build_site_data.py`): derives `frontend/src/data/*.json`
+  from committed `results/*.json` + `judge-stability/` + `regression/` (decision 8 — the page
+  reads only a frozen snapshot). Failure patterns are re-derived from the blinded reference
+  labels with that provenance printed. Every emitted file passes a **publication scan**
+  (API-key shapes, env assignments, bearer tokens, local home paths hard-fail the build,
+  two-phase so nothing partial is ever written) — trajectory observations can echo container
+  environment variables, so this runs before anything becomes public.
+- **Frontend relabeled for TB2 and rebuilt on real data** (TermScope branding): leaderboard
+  with resolve rate + process validity predicted *and* adjudicated (the 100% vs 68/70%
+  disagreement is displayed and explained, not blended); 20-task outcome × process matrix
+  with honest-null cells; failure patterns from reference labels; the error taxonomy;
+  a run explorer that walks every trajectory with two markers (red = blinded reference label's
+  first error with the reviewer's note, orange = evaluator's merged/causal-replay step) and
+  provenance on every chip; a validation section with the negative result stated plainly and
+  the v1-vs-v2 regression table.
+- **Verified in the browser**: all six sections render from real data, zero console errors,
+  the default view opens a failed run at its labeled first-error step, mobile horizontal
+  overflow fixed (grid min-width blowout) and re-measured at 375 px; production build green
+  (gzipped ≈ 420 KB incl. all 40 runs' truncated steps).
+- **Pages workflow** (`.github/workflows/deploy.yml`): official actions flow, builds only
+  `frontend/` with `VITE_BASE=/<repo>/`, never touches `results/` or credentials.
+- **Owner to finish deploy**: push `main`, then GitHub → Settings → Pages → Source = "GitHub
+  Actions" (one-time). The repo-name decision (`hy3` vs the working title TermScope) becomes
+  sticky at this push — renaming later changes the Pages URL.
+
+Owner items still open from Day 7 (they do not block Day 10):
 
 1. **Owner adjudication** — two runs await the owner:
    `hy3-terminus-2__financial-document-processor` (lane conflict: replay located a causal step,

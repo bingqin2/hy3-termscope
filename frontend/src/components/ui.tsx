@@ -1,23 +1,35 @@
 import type { ReactNode } from "react";
-import type { ConfigId, Severity } from "../types";
+import type { ConfigId, Process, Provenance, Severity } from "../types";
 
 /** Fixed categorical assignment — one color per configuration, never cycled. */
 export const CONFIG_DOT: Record<ConfigId, string> = {
-  "hy3-react": "bg-cat-a",
-  "hy3-react-verify": "bg-cat-b",
-  "hy3-oneshot": "bg-cat-c",
+  "hy3-terminus-2": "bg-cat-a",
+  "hy3-mini-swe-agent": "bg-cat-b",
 };
 
 export const CONFIG_SHORT: Record<ConfigId, string> = {
-  "hy3-react": "ReAct",
-  "hy3-react-verify": "ReAct+verify",
-  "hy3-oneshot": "one-shot",
+  "hy3-terminus-2": "terminus-2",
+  "hy3-mini-swe-agent": "mini-swe-agent",
 };
 
 export const SEVERITY_DOT: Record<Severity, string> = {
   critical: "bg-bad",
   high: "bg-warn",
   medium: "bg-sev-medium",
+};
+
+export const PROCESS_STYLE: Record<Process, string> = {
+  valid: "border-good/50 text-good",
+  partial: "border-warn/50 text-warn",
+  invalid: "border-bad/50 text-bad",
+};
+
+export const PROVENANCE_LABEL: Record<Provenance, string> = {
+  official: "verifier",
+  evaluator: "evaluator",
+  human: "human adjudication",
+  second_rater: "blinded reference label",
+  mixed: "mixed",
 };
 
 export function Dot({ className }: { className: string }) {
@@ -29,6 +41,35 @@ export function ConfigLabel({ id, long }: { id: ConfigId; long?: string }) {
     <span className="inline-flex items-center gap-2">
       <Dot className={CONFIG_DOT[id]} />
       <span>{long ?? CONFIG_SHORT[id]}</span>
+    </span>
+  );
+}
+
+export function ProcessChip({
+  process,
+  provenance,
+}: {
+  process: Process | null;
+  provenance?: Provenance;
+}) {
+  if (process === null) {
+    return (
+      <span
+        className="rounded-full border border-line px-2 py-0.5 font-mono text-[11px] text-ink-faint"
+        title="no semantic verdict (honest null)"
+      >
+        process n/a
+      </span>
+    );
+  }
+  const tip = provenance ? `process label provenance: ${PROVENANCE_LABEL[provenance]}` : undefined;
+  return (
+    <span
+      className={`rounded-full border px-2 py-0.5 font-mono text-[11px] ${PROCESS_STYLE[process]}`}
+      title={tip}
+    >
+      process {process}
+      {provenance === "human" ? " ·H" : ""}
     </span>
   );
 }

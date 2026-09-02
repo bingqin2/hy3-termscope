@@ -631,6 +631,7 @@
      },
      "process": "valid"
     },
+    "notes": "A correct solution required downloading the YouTube video, OCR-transcribing the on-screen Zork terminal, and writing the committed commands one per line to /app/solution.txt. The agent installed yt-dlp, ffmpeg and tesseract, downloaded the video, validated OCR quality on sampled frames, extracted 380 frames at 2 fps, ran a full OCR pass, read its output, diagnosed that partial typing was being captured, then cached raw per-frame text in a second pass and iterated three extraction algorithms (last-'>' line, typing-to-response transition, scrollback suffix alignment), checking each result against debug output; it was mid-debugging the suffix alignment at step 41 when the budget expired and never wrote solution.txt. The run was budget-terminated; the process before the cut-off was sound though slow, its only slips (inline OCR at step 23, the sleep-30 job kill at step 27, the tail misread at step 33) all noticed and repaired, and the costly second OCR pass at step 34 was a reasoned design change after reading the first pass rather than a blind re-run.",
     "provenance": "second_rater",
     "reviewer": "claude-fable-5-1",
     "version": 1
@@ -2024,6 +2025,7 @@
      },
      "process": "partial"
     },
+    "notes": "A correct solution had to edit input.tex only by swapping listed words for members of their synonym family in synonyms.txt until pdflatex on main.tex reports no overfull hbox, leaving main.tex and synonyms.txt untouched. The agent investigated well, reproduced the 7 overfull lines (Steps 5-6) and verified the compile with real commands (Steps 9, 10, 13, 15), but at Step 8 it applied a blanket, case-insensitive, sense-blind shortest-synonym substitution over the whole document, which reached 0 overfull warnings while also renaming the proper noun 'Middle West' to 'Hub West' (a word not in the exact-case list) and producing non-synonymous text like 'I idea'. The diff at Step 11 exposed this and the circular check at Step 12 could not catch it, so the out-of-scope edits were submitted; because the core investigate-edit-compile-verify loop was otherwise sound, the process is rated partial rather than invalid.",
     "provenance": "second_rater",
     "reviewer": "claude-fable-5-1",
     "version": 1
@@ -2390,6 +2392,7 @@
      },
      "process": "partial"
     },
+    "notes": "A correct solution required a RecoveredModel whose parameters and buffers match weights.pt, a forward consistent with the original encoder-decoder model, an output_layer-only update that lowers the MSE, and a TorchScript file at /app/model.pt. The agent's investigation of the state dict and dataset, strict-load reconstruction, least-squares tuning of output_layer only, and criterion-by-criterion verification at step 9 were sound. The material deviation is at step 6, where it treated the forward pass as a free design choice and built a src-only model that ignores tgt_sequences as the decoder input, despite the evidence pointing to a seq2seq (src, tgt) interface; this can leave model.pt incompatible with how the original model is invoked. Because every explicitly listed criterion was confirmed by command under the agent's own interface, the process is substantially sound and rated partial rather than invalid.",
     "provenance": "second_rater",
     "reviewer": "claude-fable-5-1",
     "version": 1
@@ -2526,6 +2529,7 @@
      },
      "process": "invalid"
     },
+    "notes": "A correct solution had to identify which spectral features are graphene's G (~1580 cm-1) and 2D (~2700 cm-1) peaks, which required checking the axis units: the first column is reciprocal (1e7/x yields cm-1), placing G at x~6329 and 2D at x~3745, both of which the agent's own find_peaks reported in Step 10. At Step 14 the agent instead assigned G/2D to the saturated x~19139 line and the weak x~33245 bump (the Si substrate 520 and 300 cm-1 features) on a single ratio coincidence, ignoring the other detected peaks and the implausible axis values, and then fitted and reported those features. This is material because every downstream fit and the final results.json describe the wrong peaks; the poor G residual and flat-topped saturation were rationalized rather than treated as evidence against the assignment.",
     "provenance": "second_rater",
     "reviewer": "claude-fable-5-1",
     "version": 1
@@ -2784,6 +2788,7 @@
      },
      "process": "invalid"
     },
+    "notes": "A correct solution needed an argparse script /app/convert_masks.py that loads MobileSAM weights on CPU, prompts the model per CSV row (box or polyline), post-processes to one contiguous non-overlapping polyline per cell, and writes the updated CSV under output_path; the agent never got past dependency setup and wrote nothing. Steps 3-7 were sound (confirmed no packages installed, backgrounded the install, spotted the CUDA wheel downloads and correctly chose CPU-only torch), but at step 8 `pkill -f \"pip install\"` killed the agent's own shell (returncode -15, no output), the agent never diagnosed it, misread pgrep's self-match at step 9 as a live pip process, and at step 10 escalated to `pkill -9 -f pip`, which SIGKILLed its own shell (returncode -9). The run is reported as resource-terminated by SIGKILL and the kill itself is not counted as an error, but the terminal -9 is exactly the signature of the agent's own broad pkill pattern, so the process immediately before the kill was not sound: an unrecognized, repeated, escalating command-execution error consumed the last three steps with zero task progress and no recovery.",
     "provenance": "second_rater",
     "reviewer": "claude-fable-5-1",
     "version": 1
@@ -2905,6 +2910,7 @@
      },
      "process": "partial"
     },
+    "notes": "A correct solution needed an eval.scm in interp.py's dialect that reads one filename line, interprets that file with the remaining stdin passed through, and runs both every test program and itself. The agent investigated interp.py and the tests adequately and wrote a reasonable SICP-style evaluator at step 13, but its environment lookup uses in-band symbol sentinels ('not-found / 'unbound-variable); at the second meta-level the outer evaluator misreads an inner variable bound to 'not-found as missing, so every inner lookup that falls past the first frame yields 'unbound-variable, exactly the observed pattern (top-level lookups work, let/procedure-frame lookups fail). After a recovered 12-step detour caused by dash's `echo -e`, the agent debugged with instrumentation and by steps 42-43 held the decisive evidence, but at step 46 inferred the opposite and at step 51 hypothesized missing bindings against its own data, so the root cause was never found and eval.scm remains the unfixed step-13 draft. The run was terminated by context exhaustion, not by a violation: the context was consumed by a long but legitimate hypothesis-test loop (one accidental large dump, a few repeated commands, no looping), with no destructive, integrity, or false-success issues, so the pre-cutoff process is substantially sound apart from the non-recovered reasoning slips.",
     "provenance": "second_rater",
     "reviewer": "claude-fable-5-1",
     "version": 1
@@ -3575,6 +3581,7 @@
      },
      "process": "invalid"
     },
+    "notes": "A correct solution had to isolate the athlete and report the frame where the feet leave the ground and the frame where they regain it; the agent's own evidence (Step 8 frame-difference ymax 360 at frame 52, feet rising from frame 54 and back to about 367 at frame 62; Step 18 mask of frame 52 with foreground reaching y 374 beneath the torso) puts the feet on the ground at frame 52 and touchdown at 62. At Step 26 the agent dismissed the conflicting vt=20 reading with an unsupported 'merged with hurdle' claim and retuned varThreshold to recover takeoff=52, a fragmentation artifact of using the largest component's bottom as the feet; the Step 27 sweep then split 6/6 between 52 and 55, yet the agent finalized 25 (Step 28) and reported 'all reasonable settings' (Step 32). The reported 52/61 therefore rests on parameter fitting rather than on the evidence, the method's fragility was left unaddressed for the unseen test videos, and the landing convention (last airborne frame rather than the touchdown frame the agent itself calls the landing) is a further unexamined choice; the exploration and output-format verification were otherwise thorough.",
     "provenance": "second_rater",
     "reviewer": "claude-fable-5-1",
     "version": 1
@@ -4230,6 +4237,7 @@
      },
      "process": "invalid"
     },
+    "notes": "A correct solution had to design one primer pair whose extension products, after Q5 amplification and blunt-end ligation, add the 39-nt insert exactly once at position 215, with annealing regions of 15-45 nt and matched oligotm Tms. The agent correctly located the insertion, installed the ground-truth oligotm binary, and searched the Tm space, but at step 7 it committed to placing the full insert on the 5' tail of both primers, which duplicates the insert in the circularized product; that design was written to primers.fasta at step 9 and never re-examined. This is material because the deliverable would not produce the requested output plasmid, and the step-10 verification checked only length/Tm rules while treating an unrelated reconstruction check as validation of the design.",
     "provenance": "second_rater",
     "reviewer": "claude-fable-5-1",
     "version": 1
@@ -4369,6 +4377,7 @@
      },
      "process": "valid"
     },
+    "notes": "A correct solution needed the video downloaded, the on-screen Zork text OCR'd, and the ordered list of submitted player commands written to /app/solution.txt. The agent installed tooling, worked around an outdated yt-dlp, downloaded the video, validated tesseract on a sample frame, and iterated three parsing heuristics over 1 fps frames before launching a 2 fps re-extraction and a fourth full OCR pass (Steps 43-45), during which the time budget expired with no /app/solution.txt ever written. The process before the cut-off was sound in direction and never destructive, deceptive, or off-task, but it was inefficient: per-frame OCR text was never cached so every heuristic change re-ran the heaviest job, and the agent chose to double the frame count instead of exploiting the echoed '>' lines that its own Step 21-22 observations showed persist in scrollback. The run was budget-terminated; the slips at Steps 8, 29 and 36 were each recognized or superseded, and no non-recovered rubric violation is locatable, so the pre-cut-off process is rated valid.",
     "provenance": "second_rater",
     "reviewer": "claude-fable-5-1",
     "version": 1
@@ -4871,6 +4880,7 @@
      },
      "process": "partial"
     },
+    "notes": "A correct solution had to classify all 17 files by content, move them, and write summary.csv with a tax-inclusive total_amount and a vat_amount per invoice plus a 'total' row holding the column-wise sums (81315.2 and 5402.48 on the agent's own figures). The agent's tool setup, pdftotext/OCR extraction, classification, Total-over-Amount-Due handling and per-invoice values are all grounded in the observed text, and the one file it moved unexamined was caught and verified at Steps 14-15, but at Step 12 it wrote the total row as sum(total_amount)+sum(vat_amount)=86717.68 in the total_amount column, double-counting VAT that total_amount already includes, and restated that reading as correct when declaring completion at Steps 15-16. This is material because a required output cell is wrong by the agent's own decision rather than by task difficulty; the verdict is 'partial' rather than 'invalid' because the error is confined to that single aggregate cell while every other part of the process was evidence-based and verified with commands (the 'other' label for the dx0AWchV01ZJ.pdf shipping/order record was an explicitly reasoned judgment call, not a violation).",
     "provenance": "second_rater",
     "reviewer": "claude-fable-5-1",
     "version": 1
@@ -5596,6 +5606,7 @@
      },
      "process": "partial"
     },
+    "notes": "A correct solution had to make main.tex compile with zero Overfull hbox warnings while changing nothing except word-for-synonym swaps inside input.tex. The agent correctly located the seven overfull lines, backed up input.tex, and its recompile at Step 11 genuinely showed zero Overfull warnings and a fresh main.pdf, so the core diagnose-fix-recompile process is sound. What compromises it is Step 10, where instead of targeted replacements it blanket-rewrote every family word in the document with the shortest member using a dictionary it had never fully read, altering many unrelated words (non-leading family members, a place name, article grammar) under an ambiguous constraint, followed by Step 12 where it audited only five diff lines before declaring all constraints satisfied. The edits were therefore never verified against the task's only constraint, which is material for a run that ended in failure while claiming completion.",
     "provenance": "second_rater",
     "reviewer": "claude-fable-5-1",
     "version": 1
@@ -6012,6 +6023,7 @@
      },
      "process": "invalid"
     },
+    "notes": "A correct solution had to establish what the file's x-axis represents (its 1648-47183 range and ~500-fold variation in sampling density show it is not a plain cm^-1 Raman-shift axis), locate the graphene G and 2D features on that basis, and fit each with a Lorentzian plus offset. At Step 10 the agent instead assigned G and 2D to the two tallest features by absolute height (x~19140 and the ~9% hump at x~33245) on a loose ratio argument, while its own Step 9 binned table showed several far more prominent features (near x~3600-3800, 6200-6400 and 10000-10800) it never examined; under the reciprocal transform 1e7/x implied by the sampling pattern, those ignored features fall at ~2703 and ~1587 (the expected 2D and G positions) whereas the fitted features map to ~522 and ~301, the well-known silicon substrate bands. Every subsequent fit therefore targeted the wrong peaks, and the G fit was finalized at Step 26 with a window-dependent offset the agent itself had called unphysical. The misidentification is material because it determines every value written to /app/results.json.",
     "provenance": "second_rater",
     "reviewer": "claude-fable-5-1",
     "version": 1
@@ -6284,6 +6296,7 @@
      },
      "process": "invalid"
     },
+    "notes": "A correct solution required an argparse script that loads MobileSAM (vit_t) on CPU, refines every CSV mask into a single contiguous non-overlapping polyline, updates the bbox/coords columns, and saves the CSV according to the output_path argument, which the spec describes as an output folder. The agent ran a generally sound process (environment discovery, dependency install, script authoring, iterative debugging, a custom validator, and a reproducibility re-run), but at Step 8 it implemented output_path as a file path and never reconciled that with the explicit 'output folder' description, so the script crashes on an existing directory or misplaces the file on a nonexistent one. This is material because it governs whether and where the deliverable is produced on the hidden test set, and it was never tested or even acknowledged before the agent declared full compliance at Steps 18-19; the remaining findings are recovered debugging or low-severity latent issues.",
     "provenance": "second_rater",
     "reviewer": "claude-fable-5-1",
     "version": 1
@@ -7101,6 +7114,7 @@
      },
      "process": "invalid"
     },
+    "notes": "A correct solution had to locate the single flight phase in the example video with a method that generalizes; the agent's own outputs at Steps 10 and 11 already contained the most jump-like pattern in the whole run, a parabolic rise and return of the silhouette bottom at frames ~53-62 reproduced across frame differencing and three background thresholds. At Step 16 the agent instead read the post-71 drop of the largest-component bottom as 'airborne' even though it never returned to baseline, and at Steps 28-29 it rationalized the contradicting ASCII fragments and x-centroid jumps rather than resolving them, so every later step searched only frames 68-91. The final script was tuned until it emitted the presupposed 72/78, meaning the deliverable encodes a segmentation artifact; the process is invalid because the decisive inference contradicted evidence the agent had displayed and was never re-examined.",
     "provenance": "second_rater",
     "reviewer": "claude-fable-5-1",
     "version": 1

@@ -235,7 +235,7 @@ def main(argv: list[str] | None = None) -> int:
             "reference_review": None if r["review"] is None else {
                 "reviewer": r["review"]["reviewer"], "provenance": r["review_provenance"],
                 "version": r["review"]["version"], "blinded": r["review"]["blinded"],
-                "label": r["review"]["label"]},
+                "label": r["review"]["label"], "notes": r["review"].get("notes", "")},
         })
     dump(out / "runs.json", {"sample": False, "updated": updated, "runs": run_rows})
 
