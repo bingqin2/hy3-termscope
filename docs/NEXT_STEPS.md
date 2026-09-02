@@ -1,6 +1,34 @@
 # Next steps
 
-Current step: **Day 5 — semantic lane & judge gate** (Days 1–4 complete; exit conditions met).
+Current step: **Day 6 — campaign** (Days 1–5 complete; exit conditions met).
+Before launching: confirm the account balance covers the projection (agents dominate;
+the judge measured far cheaper than planned).
+
+## Day 5 status (complete)
+
+- **Semantic lane shipped** (`src/termscope/evaluator/judge.py` + frozen
+  `rubric_v1.md`): blinded prompt (task instruction + deterministic-facts summary
+  with the verifier outcome deliberately withheld + step-numbered trajectory,
+  fixed head+tail observation truncation); Hy3 at temperature 0 in JSON mode;
+  local validator cross-references every cited step (dangling citation rejects);
+  one schema-repair retry → honest `unavailable`; oversize input → honest
+  `context_limit`; raw responses under `.local/judge-raw/`; injection defense in
+  the rubric (observations are data; embedded evaluator-directed instructions are
+  themselves a reportable finding).
+- **Merge policy shipped** (`merge.py`): inconclusive skips the judge; hard
+  failures outrank a semantic `valid`; localization precedence replay > judge
+  with the judge's earlier reasoning-level step recorded alongside;
+  `correct_result_invalid_process` derived only from conclusive runs;
+  flag rules for lane conflicts, partials, and resolved-but-invalid.
+- **Gate passed first-try, recorded** (`day5-judge-gate.json`): valid fixture →
+  `valid`, zero findings, first_error `none`; invalid fixture → `invalid`,
+  located step 4, `action_execution` present at the step; **stability 5/5
+  verdict, 5/5 first-error step, 4/5 primary category**
+  (`results/judge-stability/invalid-fixture-sessions.json`); full-pipeline
+  merge demo: replay + judge + facts agree at step 4. Cost: 54,408 tokens over
+  7 calls (~7.8K/call — far below the planning average).
+- 59 tests green (validator, retry, truncation, blinding, merge precedences all
+  unit-covered without API calls).
 
 ## Day 4 status (complete 2026-09-01)
 

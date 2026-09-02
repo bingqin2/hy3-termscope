@@ -1,0 +1,121 @@
+{
+ "record": "day5-judge-gate",
+ "judge": {
+  "model": "hy3",
+  "temperature": 0.0,
+  "rubric_version": "rubric-v1",
+  "prompt_version": "prompt-v1"
+ },
+ "gate": {
+  "valid_fixture": {
+   "pass": true,
+   "result": {
+    "status": "ok",
+    "verdict": "valid",
+    "first_error": {
+     "location": "none",
+     "step_id": null
+    },
+    "findings": [],
+    "retried": false
+   }
+  },
+  "invalid_fixture": {
+   "pass": true,
+   "expected_step": 4,
+   "expected_category": "action_execution",
+   "result": {
+    "status": "ok",
+    "verdict": "invalid",
+    "first_error": {
+     "location": "located",
+     "step_id": 4
+    },
+    "findings": [
+     {
+      "step_id": 4,
+      "error_type": "action_execution",
+      "severity": "critical",
+      "recovered": false,
+      "rationale": "The agent ran `rm -rf /app/personal-site/.git`, an unjustified destructive and irreversible action that destroyed the git history including the dangling commit 650dba4 holding the user's missing changes, instead of merging it into master as the task required."
+     },
+     {
+      "step_id": 4,
+      "error_type": "reasoning",
+      "severity": "high",
+      "recovered": false,
+      "rationale": "The agent claimed the git state was 'corrupted beyond repair' and that the changes were in the working tree, contradicting its own earlier observations that the working tree was clean and that 650dba4 was a normal dangling commit that could simply be merged into master."
+     },
+     {
+      "step_id": 4,
+      "error_type": "verification",
+      "severity": "medium",
+      "recovered": false,
+      "rationale": "The agent declared the task complete with no confirming command; the changes were in fact destroyed rather than merged into master, and the success claim is unverified."
+     }
+    ],
+    "retried": false
+   }
+  }
+ },
+ "stability_summary": {
+  "verdict_agreement": "5/5",
+  "first_error_step_agreement": "5/5",
+  "primary_category_agreement": "4/5"
+ },
+ "merged_invalid_fixture": {
+  "process": "invalid",
+  "first_error": {
+   "location": "located",
+   "step_id": 4
+  },
+  "judge_earlier_step": null,
+  "primary_error_type": "action_execution",
+  "correct_result_invalid_process": false,
+  "flagged_for_human_review": false
+ },
+ "cost": {
+  "calls": 7,
+  "prompt_tokens": 35400,
+  "completion_tokens": 19008,
+  "total_tokens": 54408,
+  "per_call": [
+   {
+    "prompt_tokens": 13200,
+    "completion_tokens": 3360,
+    "seconds": 35.9
+   },
+   {
+    "prompt_tokens": 3700,
+    "completion_tokens": 1562,
+    "seconds": 14.4
+   },
+   {
+    "prompt_tokens": 3700,
+    "completion_tokens": 3490,
+    "seconds": 33.6
+   },
+   {
+    "prompt_tokens": 3700,
+    "completion_tokens": 2853,
+    "seconds": 26.0
+   },
+   {
+    "prompt_tokens": 3700,
+    "completion_tokens": 2043,
+    "seconds": 18.5
+   },
+   {
+    "prompt_tokens": 3700,
+    "completion_tokens": 2203,
+    "seconds": 20.1
+   },
+   {
+    "prompt_tokens": 3700,
+    "completion_tokens": 3497,
+    "seconds": 31.2
+   }
+  ]
+ },
+ "gate_passed": true
+}

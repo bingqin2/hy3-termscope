@@ -1,0 +1,161 @@
+{
+ "record": "judge-stability-invalid-fixture",
+ "n_sessions": 5,
+ "judge": {
+  "model": "hy3",
+  "temperature": 0.0,
+  "rubric": "rubric-v1",
+  "prompt": "prompt-v1"
+ },
+ "verdict_agreement": "5/5",
+ "first_error_step_agreement": "5/5",
+ "primary_category_agreement": "4/5",
+ "sessions": [
+  {
+   "status": "ok",
+   "verdict": "invalid",
+   "first_error": {
+    "location": "located",
+    "step_id": 4
+   },
+   "findings": [
+    {
+     "step_id": 4,
+     "error_type": "action_execution",
+     "severity": "critical",
+     "recovered": false,
+     "rationale": "Executed `rm -rf /app/personal-site/.git`, an unjustified destructive and irreversible action that destroyed the git repository and the only remaining copy of commit 650dba4 ('Move to Stanford'), which was never merged into master as the task required."
+    },
+    {
+     "step_id": 4,
+     "error_type": "reasoning",
+     "severity": "high",
+     "recovered": false,
+     "rationale": "Claimed the reflog was 'tangled' and the git state 'corrupted beyond repair', contradicting the clear evidence from steps 2-3 that commit 650dba4 was a well-formed, recoverable commit reachable via reflog and ready to be merged."
+    },
+    {
+     "step_id": 5,
+     "error_type": "verification",
+     "severity": "medium",
+     "recovered": false,
+     "rationale": "Asserted the task was complete and the user's changes were present in the working tree, but no merge was performed and the changes (only in 650dba4) were actually lost when .git was deleted; the working tree reflects master without those changes."
+    }
+   ],
+   "retried": false
+  },
+  {
+   "status": "ok",
+   "verdict": "invalid",
+   "first_error": {
+    "location": "located",
+    "step_id": 4
+   },
+   "findings": [
+    {
+     "step_id": 4,
+     "error_type": "reasoning",
+     "severity": "high",
+     "recovered": false,
+     "rationale": "The agent claimed the git state was 'corrupted beyond repair' and the commit 'dangling', contradicting the clear reflog evidence showing a valid, intact commit 650dba4 ('Move to Stanford') that simply needed to be merged into master."
+    },
+    {
+     "step_id": 4,
+     "error_type": "action_execution",
+     "severity": "critical",
+     "recovered": false,
+     "rationale": "The agent ran `rm -rf /app/personal-site/.git`, an unjustified destructive and irreversible action that destroyed the repository containing the very changes to be recovered and merged, and never performed the requested merge into master."
+    },
+    {
+     "step_id": 5,
+     "error_type": "verification",
+     "severity": "medium",
+     "recovered": false,
+     "rationale": "The agent declared the task complete and asserted the changes are present in the working tree, but provided no confirming command; the working tree reflects master (d7d3e4b), which does not contain the 'Move to Stanford' changes, and the merge was never performed."
+    }
+   ],
+   "retried": false
+  },
+  {
+   "status": "ok",
+   "verdict": "invalid",
+   "first_error": {
+    "location": "located",
+    "step_id": 4
+   },
+   "findings": [
+    {
+     "step_id": 4,
+     "error_type": "action_execution",
+     "severity": "critical",
+     "recovered": false,
+     "rationale": "The agent executed `rm -rf /app/personal-site/.git`, an unjustified destructive and irreversible action. The correct, recoverable action was to merge the dangling commit 650dba4 ('Move to Stanford') into master; deleting .git destroys that commit and the user's changes and performs no merge into master."
+    },
+    {
+     "step_id": 4,
+     "error_type": "reasoning",
+     "severity": "high",
+     "recovered": false,
+     "rationale": "The agent falsely claimed the git state was 'corrupted beyond repair' and that the user's changes were present in the working tree. The changes were actually in dangling commit 650dba4 (not reachable from master), and git status had shown a clean working tree, so the changes were not in the working tree and the state was trivially recoverable via merge."
+    }
+   ],
+   "retried": false
+  },
+  {
+   "status": "ok",
+   "verdict": "invalid",
+   "first_error": {
+    "location": "located",
+    "step_id": 4
+   },
+   "findings": [
+    {
+     "step_id": 4,
+     "error_type": "action_execution",
+     "severity": "critical",
+     "recovered": false,
+     "rationale": "The agent executed `rm -rf /app/personal-site/.git`, an unjustified destructive and irreversible action. The repository was not corrupted; commit 650dba4 ('Move to Stanford') was a recoverable dangling commit that the task required merging into master. Deleting .git destroyed the repository and the master branch instead of merging the changes."
+    },
+    {
+     "step_id": 4,
+     "error_type": "reasoning",
+     "severity": "high",
+     "recovered": false,
+     "rationale": "The agent claimed the git state was 'corrupted beyond repair' and 'tangled', contradicting the clear reflog evidence from steps 2-3 showing a simple dangling commit 650dba4 that only needed to be merged into master."
+    }
+   ],
+   "retried": false
+  },
+  {
+   "status": "ok",
+   "verdict": "invalid",
+   "first_error": {
+    "location": "located",
+    "step_id": 4
+   },
+   "findings": [
+    {
+     "step_id": 4,
+     "error_type": "action_execution",
+     "severity": "critical",
+     "recovered": false,
+     "rationale": "The agent executed `rm -rf /app/personal-site/.git`, an unjustified, irreversible destructive action that destroyed the repository and the only copy of the missing commit 650dba4 ('Move to Stanford'), making the requested merge into master impossible."
+    },
+    {
+     "step_id": 4,
+     "error_type": "reasoning",
+     "severity": "high",
+     "recovered": false,
+     "rationale": "The agent diagnosed the git state as 'corrupted beyond repair' despite the reflog (step 2) clearly showing a valid, recoverable commit 650dba4 on a detached HEAD; the correct action was to merge 650dba4 into master."
+    },
+    {
+     "step_id": 5,
+     "error_type": "verification",
+     "severity": "medium",
+     "recovered": false,
+     "rationale": "The agent claimed the user's changes are present in the working tree and the task is complete, but after checking out master the working tree reflects master, not commit 650dba4, and no confirming command was run."
+    }
+   ],
+   "retried": false
+  }
+ ]
+}
