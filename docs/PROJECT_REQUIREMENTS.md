@@ -6,7 +6,7 @@ open-source practical task, Hunyuan LLM track, **Task 2: 可验证场景：过�
 
 ## Submission rules (apply to the whole repo)
 
-1. Self-created public repository; no PR to the official Hy3 repo. ✔ github.com/bingqin2/hy3
+1. Self-created public repository; no PR to the official Hy3 repo. ✔ github.com/bingqin2/hy3-termscope
 2. README states project intro, how to run, environment requirements.
 3. No hardcoded API keys — environment variables / config files only.
 4. Project name and README marked as personal / activity work.

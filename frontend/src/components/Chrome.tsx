@@ -34,7 +34,7 @@ export function Header() {
           ))}
         </nav>
         <a
-          href="https://github.com/bingqin2/hy3"
+          href="https://github.com/bingqin2/hy3-termscope"
           target="_blank"
           rel="noreferrer"
           className="ml-auto font-mono text-xs text-ink-muted transition-colors hover:text-ink"
@@ -98,7 +98,7 @@ export function Footer() {
         </p>
         <p className="mt-3 font-mono text-xs text-ink-faint">
           <a
-            href="https://github.com/bingqin2/hy3"
+            href="https://github.com/bingqin2/hy3-termscope"
             target="_blank"
             rel="noreferrer"
             className="hover:text-ink"
