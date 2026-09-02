@@ -1,12 +1,25 @@
 import data from "../data/leaderboard.json";
-import type { LeaderboardData } from "../types";
-import { CONFIG_DOT, ConfigLabel, Section, Tip, th, td } from "./ui";
+import tasksData from "../data/tasks.json";
+import type { ConfigId, Difficulty, LeaderboardData, TasksData } from "../types";
+import { CONFIG_DOT, ConfigLabel, DifficultyChip, Section, Tip, th, td } from "./ui";
 
 const lb = data as unknown as LeaderboardData;
+const taskRows = (tasksData as unknown as TasksData).rows;
+const TIERS: Difficulty[] = ["easy", "medium", "hard"];
 
 function pct(x: number | null): string {
   return x == null ? "—" : `${Math.round(x * 100)}%`;
 }
+
+function tierCell(config: ConfigId, tier: Difficulty): string {
+  const rows = taskRows.filter((t) => t.difficulty === tier && t.cells[config] != null);
+  const won = rows.filter((t) => t.cells[config]?.outcome === "resolved").length;
+  return `${won}/${rows.length}`;
+}
+
+const tiersIdentical = TIERS.every(
+  (t) => new Set(lb.rows.map((r) => tierCell(r.config_id, t))).size === 1,
+);
 
 export function Leaderboard() {
   return (
@@ -68,6 +81,40 @@ export function Leaderboard() {
           </tbody>
         </table>
       </div>
+      <div className="mt-6 overflow-x-auto rounded border border-line">
+        <table className="w-full min-w-[480px] border-collapse">
+          <thead className="border-b border-line bg-surface">
+            <tr>
+              <th className={th}>Resolved by difficulty tier</th>
+              {TIERS.map((t) => (
+                <th key={t} className={`${th} text-right`}>
+                  <DifficultyChip difficulty={t} />
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {lb.rows.map((r) => (
+              <tr key={r.config_id} className="border-b border-line last:border-0 hover:bg-surface">
+                <td className={td}>
+                  <ConfigLabel id={r.config_id} />
+                </td>
+                {TIERS.map((t) => (
+                  <td key={t} className={`${td} text-right font-mono tabular-nums`}>
+                    {tierCell(r.config_id, t)}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      {tiersIdentical && (
+        <p className="mt-2 font-mono text-xs text-ink-faint">
+          the per-tier resolve counts are identical for both configurations — swapping the scaffold
+          moved which tasks were solved, not how many at each difficulty
+        </p>
+      )}
       <p className="mt-3 max-w-3xl font-mono text-xs leading-relaxed text-ink-faint">
         The predicted and adjudicated columns disagree on purpose: the validation section below
         measures the evaluator's semantic lane as too lenient (its verdicts call nearly every

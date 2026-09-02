@@ -1,11 +1,11 @@
+import { Fragment } from "react";
 import data from "../data/tasks.json";
-import type { ConfigId, Difficulty, TaskCell, TasksData } from "../types";
-import { CONFIG_SHORT, ConfigLabel, PROVENANCE_LABEL, Section, Tip, th, td } from "./ui";
+import type { ConfigId, Difficulty, TaskCell, TaskRow, TasksData } from "../types";
+import { CONFIG_SHORT, ConfigLabel, DifficultyChip, PROVENANCE_LABEL, Section, Tip, th, td } from "./ui";
 
 const tasks = data as unknown as TasksData;
 const CONFIGS: ConfigId[] = ["hy3-terminus-2", "hy3-mini-swe-agent"];
-
-const DIFF_ORDER: Record<Difficulty, number> = { easy: 1, medium: 2, hard: 3 };
+const TIERS: Difficulty[] = ["easy", "medium", "hard"];
 
 function Cell({ cell, task, config }: { cell: TaskCell | null; task: string; config: ConfigId }) {
   if (cell === null) {
@@ -38,24 +38,30 @@ function Cell({ cell, task, config }: { cell: TaskCell | null; task: string; con
   );
 }
 
+function resolvedCount(rows: TaskRow[], config: ConfigId): number {
+  return rows.filter((r) => r.cells[config]?.outcome === "resolved").length;
+}
+
 export function TaskMatrix() {
-  const rows = [...tasks.rows].sort(
-    (a, b) => DIFF_ORDER[a.difficulty] - DIFF_ORDER[b.difficulty] || a.name.localeCompare(b.name),
-  );
+  const groups = TIERS.map((tier) => ({
+    tier,
+    rows: tasks.rows
+      .filter((r) => r.difficulty === tier)
+      .sort((a, b) => a.name.localeCompare(b.name)),
+  })).filter((g) => g.rows.length > 0);
   return (
     <Section
       id="per-task"
       num="02"
       title="Per-task results"
-      blurb="Outcome (✓ resolved / ✗ unresolved) is the official Terminal-Bench verifier reward; the small letter is the adjudicated process verdict — V valid, P partial, I invalid, – no semantic verdict (an honest null). Hover a cell for its provenance."
+      blurb="Tasks are grouped by their official Terminal-Bench 2.0 difficulty tier; each tier header carries the per-configuration resolve count. Outcome (✓ resolved / ✗ unresolved) is the official verifier reward; the small letter is the adjudicated process verdict — V valid, P partial, I invalid, – no semantic verdict (an honest null). Hover a cell for its provenance."
     >
       <div className="overflow-x-auto rounded border border-line">
-        <table className="w-full min-w-[680px] border-collapse">
+        <table className="w-full min-w-[640px] border-collapse">
           <thead className="border-b border-line bg-surface">
             <tr>
               <th className={th}>Task</th>
               <th className={th}>Category</th>
-              <th className={th}>Diff.</th>
               {CONFIGS.map((c) => (
                 <th key={c} className={`${th} w-36 text-center`}>
                   <ConfigLabel id={c} />
@@ -64,27 +70,39 @@ export function TaskMatrix() {
             </tr>
           </thead>
           <tbody>
-            {rows.map((t) => (
-              <tr key={t.task_id} className="border-b border-line last:border-0 hover:bg-surface">
-                <td className={td}>{t.name}</td>
-                <td className={`${td} font-mono text-xs text-ink-muted`}>{t.category}</td>
-                <td className={`${td} font-mono text-xs text-ink-muted`}>
-                  {"●".repeat(DIFF_ORDER[t.difficulty])}
-                  {"○".repeat(3 - DIFF_ORDER[t.difficulty])}
-                </td>
-                {CONFIGS.map((c) => (
-                  <td key={c} className="px-1.5 py-1.5">
-                    <Cell cell={t.cells[c]} task={t.name} config={c} />
+            {groups.map((g) => (
+              <Fragment key={g.tier}>
+                <tr className="border-b border-line bg-surface-2">
+                  <td colSpan={2 + CONFIGS.length} className="px-3 py-2 font-mono text-xs">
+                    <DifficultyChip difficulty={g.tier} />
+                    <span className="text-ink-muted"> · {g.rows.length} tasks</span>
+                    {CONFIGS.map((c) => (
+                      <span key={c} className="text-ink-muted">
+                        {" "}
+                        · {CONFIG_SHORT[c]} {resolvedCount(g.rows, c)}/{g.rows.length} resolved
+                      </span>
+                    ))}
                   </td>
+                </tr>
+                {g.rows.map((t) => (
+                  <tr key={t.task_id} className="border-b border-line last:border-0 hover:bg-surface">
+                    <td className={td}>{t.name}</td>
+                    <td className={`${td} font-mono text-xs text-ink-muted`}>{t.category}</td>
+                    {CONFIGS.map((c) => (
+                      <td key={c} className="px-1.5 py-1.5">
+                        <Cell cell={t.cells[c]} task={t.name} config={c} />
+                      </td>
+                    ))}
+                  </tr>
                 ))}
-              </tr>
+              </Fragment>
             ))}
           </tbody>
         </table>
       </div>
       <p className="mt-3 font-mono text-xs text-ink-faint">
-        difficulty ●○○ easy · ●●○ medium · ●●● hard — slice frozen by pre-registration before the
-        campaign; identical flags for both configurations
+        difficulty tiers are the official Terminal-Bench 2.0 labels — slice frozen by
+        pre-registration before the campaign; identical flags for both configurations
       </p>
     </Section>
   );

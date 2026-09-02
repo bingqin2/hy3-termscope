@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import type { ConfigId, Process, Provenance, Severity } from "../types";
+import type { ConfigId, Difficulty, Process, Provenance, Severity } from "../types";
 
 /** Fixed categorical assignment — one color per configuration, never cycled. */
 export const CONFIG_DOT: Record<ConfigId, string> = {
@@ -34,6 +34,21 @@ export const PROVENANCE_LABEL: Record<Provenance, string> = {
 
 export function Dot({ className }: { className: string }) {
   return <span className={`inline-block h-2 w-2 shrink-0 rounded-full ${className}`} />;
+}
+
+export const DIFF_ORDER: Record<Difficulty, number> = { easy: 1, medium: 2, hard: 3 };
+
+/** Official Terminal-Bench 2.0 difficulty tier, spelled out with a filled-dot scale. */
+export function DifficultyChip({ difficulty }: { difficulty: Difficulty }) {
+  return (
+    <span className="inline-flex items-center gap-1.5 rounded-full border border-line px-2 py-0.5 font-mono text-[11px] text-ink-muted">
+      <span className="tracking-tighter text-accent">
+        {"●".repeat(DIFF_ORDER[difficulty])}
+        {"○".repeat(3 - DIFF_ORDER[difficulty])}
+      </span>
+      {difficulty}
+    </span>
+  );
 }
 
 export function ConfigLabel({ id, long }: { id: ConfigId; long?: string }) {
