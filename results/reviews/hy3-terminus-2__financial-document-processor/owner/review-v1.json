@@ -1,0 +1,16 @@
+{
+ "bundle_id": "b33f6c142a357628158d09a0a8e0661fe16b177711e1d331de81345c12ea7c99",
+ "reviewer": "owner",
+ "version": 1,
+ "blinded": false,
+ "created_at": "2026-09-02T20:43:55.794665Z",
+ "label": {
+  "process": "partial",
+  "first_error": {
+   "location": "located",
+   "step_id": 12
+  },
+  "error_type": "task_interpretation"
+ },
+ "notes": "Adjudicated: replay flip and rater agree at step 12; judge missed it."
+}

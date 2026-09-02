@@ -1,0 +1,12 @@
+[
+ {
+  "id": 1,
+  "stage": "human validation",
+  "preregistered": "Blinded human (owner) first-error labels on every gradeable failed campaign run, captured before any evaluator output is revealed (data/slices/preregistration.json, blinding protocol; EVALUATOR_SPEC §6 item 1).",
+  "actual": "Blinded labels on all 14 failed runs by an independent model rater (reviewer `claude-fable-5-1`: Claude Fable 5.1, one fresh-context session per run; inputs limited to the task instruction, the full raw trajectory, the frozen rubric-v1 text, and the import record's termination note; no evaluator output). The owner adjudicates flagged runs and rater-vs-evaluator disagreements after reveal (non-blinded, provenance `human`, excluded from localization metrics by construction) and may add blinded labels on a subset before any reveal.",
+  "reason": "Owner labeling capacity: the 14 trajectories total about 976,000 characters.",
+  "consequence": "Localization and inter-rater numbers are reported against `second_rater` labels wherever no blinded human label exists for the run; every exported metric row carries the label provenance. The blinding protocol, the append-only versioning, and the reveal marker are unchanged; only the reviewer identity differs from the pre-registration.",
+  "records": ["results/reviews/RATERS.json", "results/reviews/<run>/claude-fable-5-1/"],
+  "recorded_at": "2026-09-02"
+ }
+]

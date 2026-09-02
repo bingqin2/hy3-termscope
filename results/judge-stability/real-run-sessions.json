@@ -1,0 +1,115 @@
+{
+ "record": "judge-stability-real-flagged-run",
+ "run_id": "hy3-terminus-2__financial-document-processor",
+ "n_sessions": 5,
+ "verdict_agreement_with_official": "5/5",
+ "first_error_step_agreement_with_official": "5/5",
+ "primary_category_agreement_with_official": "5/5",
+ "sessions": [
+  {
+   "status": "ok",
+   "verdict": "valid",
+   "findings": [
+    {
+     "step_id": 12,
+     "error_type": "investigation",
+     "severity": "high",
+     "rationale": "WqWMArQQlSMv.jpg was moved to /app/other/ by the script's else-branch without its content ever being read; its OCR output was missing from step 11 and the step-12 analysis omitted it from the enumerated 'others' list (counted 6 instead of 7). This blind classification was recovered in step 14 when the agent OCR'd the file and confirmed it is an inter-office memo, correctly 'other'.",
+     "recovered": true
+    }
+   ],
+   "first_error": {
+    "location": "none",
+    "step_id": null
+   },
+   "rubric_version": "rubric-v1",
+   "prompt_version": "prompt-v1",
+   "judge_model": "hy3",
+   "retried": false
+  },
+  {
+   "status": "ok",
+   "verdict": "valid",
+   "findings": [
+    {
+     "step_id": 13,
+     "error_type": "investigation",
+     "severity": "medium",
+     "rationale": "WqWMArQQlSMv.jpg was moved to /app/other/ without its content ever being examined (it was absent from the OCR loop output and omitted from the step-12 analysis), a blind classification. The agent recognized this gap in step 14 and OCR-verified the file is an inter-office memo, confirming the classification was correct.",
+     "recovered": true
+    }
+   ],
+   "first_error": {
+    "location": "none",
+    "step_id": null
+   },
+   "rubric_version": "rubric-v1",
+   "prompt_version": "prompt-v1",
+   "judge_model": "hy3",
+   "retried": false
+  },
+  {
+   "status": "ok",
+   "verdict": "valid",
+   "findings": [
+    {
+     "step_id": 13,
+     "error_type": "investigation",
+     "severity": "medium",
+     "rationale": "WqWMArQQlSMv.jpg was moved to /app/other/ by the script's default branch without its content ever being examined (it was absent from the Step 10 OCR output and omitted from the Step 12 classification analysis); the agent later OCR'd it in Step 14 and confirmed it is an inter-office memo, correctly classified as 'other'.",
+     "recovered": true
+    }
+   ],
+   "first_error": {
+    "location": "none",
+    "step_id": null
+   },
+   "rubric_version": "rubric-v1",
+   "prompt_version": "prompt-v1",
+   "judge_model": "hy3",
+   "retried": false
+  },
+  {
+   "status": "ok",
+   "verdict": "valid",
+   "findings": [
+    {
+     "step_id": 12,
+     "error_type": "investigation",
+     "severity": "high",
+     "rationale": "The agent's Step 12 analysis enumerated only 16 of the 17 files, omitting WqWMArQQlSMv.jpg, and the script classified it as 'other' by default without reading its content (it was absent from the OCR output). This is a blind classification. It was recovered in Step 14 when the agent OCR'd the file and confirmed it is an inter-office memo, correctly 'other'.",
+     "recovered": true
+    }
+   ],
+   "first_error": {
+    "location": "none",
+    "step_id": null
+   },
+   "rubric_version": "rubric-v1",
+   "prompt_version": "prompt-v1",
+   "judge_model": "hy3",
+   "retried": false
+  },
+  {
+   "status": "ok",
+   "verdict": "valid",
+   "findings": [
+    {
+     "step_id": 12,
+     "error_type": "investigation",
+     "severity": "high",
+     "rationale": "WqWMArQQlSMv.jpg was moved to /app/other/ via the script's default else-branch without the agent ever examining its content; the Step 12 classification reasoning omitted it from both the invoice and other lists (accounting for only 16 of the 17 files). The gap was recognized in Step 14 and verified by OCR to be an inter-office memo, confirming the correct classification.",
+     "recovered": true
+    }
+   ],
+   "first_error": {
+    "location": "none",
+    "step_id": null
+   },
+   "rubric_version": "rubric-v1",
+   "prompt_version": "prompt-v1",
+   "judge_model": "hy3",
+   "retried": false
+  }
+ ]
+}

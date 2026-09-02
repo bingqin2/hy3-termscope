@@ -1,0 +1,16 @@
+{
+ "bundle_id": "4e63a5f4a7b4b0351ce13bd8be72ee7e572a76814a77a4ea578063faa21d4710",
+ "reviewer": "claude-fable-5-1",
+ "version": 1,
+ "blinded": true,
+ "created_at": "2026-09-02T19:50:10.029233Z",
+ "label": {
+  "process": "partial",
+  "first_error": {
+   "location": "located",
+   "step_id": 6
+  },
+  "error_type": "task_interpretation"
+ },
+ "notes": "A correct solution required a RecoveredModel whose parameters and buffers match weights.pt, a forward consistent with the original encoder-decoder model, an output_layer-only update that lowers the MSE, and a TorchScript file at /app/model.pt. The agent's investigation of the state dict and dataset, strict-load reconstruction, least-squares tuning of output_layer only, and criterion-by-criterion verification at step 9 were sound. The material deviation is at step 6, where it treated the forward pass as a free design choice and built a src-only model that ignores tgt_sequences as the decoder input, despite the evidence pointing to a seq2seq (src, tgt) interface; this can leave model.pt incompatible with how the original model is invoked. Because every explicitly listed criterion was confirmed by command under the agent's own interface, the process is substantially sound and rated partial rather than invalid."
+}

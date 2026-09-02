@@ -1,0 +1,21 @@
+{
+ "status": "ok",
+ "verdict": "valid",
+ "findings": [
+  {
+   "step_id": 4,
+   "error_type": "implementation",
+   "severity": "high",
+   "rationale": "The initial post-receive hook deployed the main branch to /var/www/main while nginx root was configured as /var/www, so https://localhost:8443/index.html would 404. This was a temporary misconfiguration, detected during end-to-end testing (step 10) and corrected in step 11 by deploying main to /var/www.",
+   "recovered": true
+  }
+ ],
+ "first_error": {
+  "location": "none",
+  "step_id": null
+ },
+ "rubric_version": "rubric-v1",
+ "prompt_version": "prompt-v1",
+ "judge_model": "hy3",
+ "retried": true
+}

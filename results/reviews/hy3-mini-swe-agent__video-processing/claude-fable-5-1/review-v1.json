@@ -1,0 +1,16 @@
+{
+ "bundle_id": "e02bdf56d493d71cd493ba5e9c4ef65b82219260c7fd1271c490e280ebe86fd9",
+ "reviewer": "claude-fable-5-1",
+ "version": 1,
+ "blinded": true,
+ "created_at": "2026-09-02T19:50:10.246328Z",
+ "label": {
+  "process": "invalid",
+  "first_error": {
+   "location": "located",
+   "step_id": 26
+  },
+  "error_type": "reasoning"
+ },
+ "notes": "A correct solution had to isolate the athlete and report the frame where the feet leave the ground and the frame where they regain it; the agent's own evidence (Step 8 frame-difference ymax 360 at frame 52, feet rising from frame 54 and back to about 367 at frame 62; Step 18 mask of frame 52 with foreground reaching y 374 beneath the torso) puts the feet on the ground at frame 52 and touchdown at 62. At Step 26 the agent dismissed the conflicting vt=20 reading with an unsupported 'merged with hurdle' claim and retuned varThreshold to recover takeoff=52, a fragmentation artifact of using the largest component's bottom as the feet; the Step 27 sweep then split 6/6 between 52 and 55, yet the agent finalized 25 (Step 28) and reported 'all reasonable settings' (Step 32). The reported 52/61 therefore rests on parameter fitting rather than on the evidence, the method's fragility was left unaddressed for the unseen test videos, and the landing convention (last airborne frame rather than the touchdown frame the agent itself calls the landing) is a further unexamined choice; the exploration and output-format verification were otherwise thorough."
+}

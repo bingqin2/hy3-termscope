@@ -1,13 +1,19 @@
 """Export the site/report tables from stored evaluation artifacts.
 
-Every table is re-derived from results/per_run/* (+ human reviews when
-present) so the numbers are reproducible from the repo alone. Output is
-byte-stable: sorted keys, fixed ordering, and an `updated` stamp derived from
-the campaign manifest rather than the wall clock.
+Every table is re-derived from results/per_run/* (+ reviews when present) so
+the numbers are reproducible from the repo alone. Output is byte-stable:
+sorted keys, fixed ordering, and an `updated` stamp derived from the campaign
+manifest rather than the wall clock.
 
-Provenance (EVALUATOR_SPEC §6): outcomes are `official` (verifier); process
-labels are `human` where an adjudication exists, else `evaluator`; empty
-denominators export null, never a fabricated zero.
+Provenance (EVALUATOR_SPEC §6): outcomes are `official` (verifier). Process
+labels come from reviews (results/reviews/<run>/<reviewer>/review-vN.json,
+reviewers documented in results/reviews/RATERS.json): the owner's latest label
+(a blinded label, or an adjudication after reveal) overrides with provenance
+`human`; else the independent model rater's blinded label with provenance
+`second_rater`; else the evaluator's merged verdict. Validation metrics use
+blinded labels only — the owner's when present, otherwise the model rater's —
+and report how many of each. Empty denominators export null, never a
+fabricated zero.
 
 Usage:
     python scripts/export_results.py [--out DIR]   (default: results/)
@@ -26,7 +32,8 @@ from termscope.evaluator.merge import merge_lanes
 
 REPO = Path(__file__).resolve().parent.parent
 PER_RUN = REPO / "results" / "per_run"
-REVIEWS = REPO / "results" / "human_reviews"
+REVIEWS = REPO / "results" / "reviews"
+HUMAN_REVIEWER = "owner"
 WORK = Path.home() / "termscope-work"
 MANIFEST = WORK / "campaign-manifest.json"
 
@@ -63,26 +70,48 @@ def load_run(d: Path) -> dict | None:
         merged, provisional = merge_lanes(bundle, facts, replay, judge), True
     else:
         merged, provisional = None, True
-    review = latest_blinded_review(d.name)
+    reviews = load_reviews(d.name)
+    review, review_prov = reference_review(reviews)
     return {"key": d.name, "bundle": bundle, "facts": facts, "judge": judge, "replay": replay,
-            "merged": merged, "provisional": provisional, "review": review}
+            "merged": merged, "provisional": provisional, "reviews": reviews,
+            "review": review, "review_provenance": review_prov}
 
 
-def latest_blinded_review(key: str) -> dict | None:
+def load_reviews(key: str) -> dict[str, dict]:
+    """Per reviewer: the latest review version and the latest *blinded* version."""
     rd = REVIEWS / key
+    out: dict[str, dict] = {}
     if not rd.exists():
-        return None
-    versions = sorted(rd.glob("review-v*.json"))
-    if not versions:
-        return None
-    return json.loads(versions[-1].read_text())
+        return out
+    for sub in sorted(p for p in rd.iterdir() if p.is_dir()):
+        paths = [p for p in sub.glob("review-v*.json") if not p.name.endswith(".attachment.json")]
+        versions = [json.loads(p.read_text())
+                    for p in sorted(paths, key=lambda p: int(p.stem.rsplit("-v", 1)[1]))]
+        if versions:
+            blinded = [v for v in versions if v.get("blinded")]
+            out[sub.name] = {"latest": versions[-1], "latest_blinded": blinded[-1] if blinded else None}
+    return out
+
+
+def reference_review(reviews: dict[str, dict]) -> tuple[dict | None, str | None]:
+    """Blinded reference label for validation metrics: the owner's blinded label when
+    present, else the independent model rater's. Non-blinded labels never qualify."""
+    if reviews.get(HUMAN_REVIEWER, {}).get("latest_blinded"):
+        return reviews[HUMAN_REVIEWER]["latest_blinded"], "human"
+    for name in sorted(reviews):
+        if name != HUMAN_REVIEWER and reviews[name].get("latest_blinded"):
+            return reviews[name]["latest_blinded"], "second_rater"
+    return None, None
 
 
 def process_label(run: dict) -> tuple[str | None, str]:
-    """Adjudicated process label with provenance: human overrides evaluator."""
-    review = run["review"]
-    if review and review.get("label", {}).get("process"):
-        return review["label"]["process"], "human"
+    """Adjudicated process label with provenance: the owner's latest label (blinded, or an
+    adjudication after reveal) overrides; else the rater's blinded label; else evaluator."""
+    human = run["reviews"].get(HUMAN_REVIEWER, {}).get("latest")
+    if human and human.get("label", {}).get("process"):
+        return human["label"]["process"], "human"
+    if run["review"] and run["review"].get("label", {}).get("process"):
+        return run["review"]["label"]["process"], run["review_provenance"]
     if run["merged"] is not None:
         return run["merged"].process, "evaluator"
     return None, "evaluator"
@@ -131,7 +160,7 @@ def main(argv: list[str] | None = None) -> int:
             "tasks_won": len(resolved),
             "provenance": {"resolve_rate": "official",
                            "process_validity_rate_predicted": "evaluator",
-                           "process_validity_rate_adjudicated": "mixed" if any(x[2] == "human" for x in adj) else "evaluator"},
+                           "process_validity_rate_adjudicated": "mixed" if any(x[2] != "evaluator" for x in adj) else "evaluator"},
         })
     dump(out / "leaderboard.json", {"sample": False, "updated": updated, "rows": rows})
 
@@ -203,7 +232,8 @@ def main(argv: list[str] | None = None) -> int:
                 "input": b.token_usage.input_tokens, "output": b.token_usage.output_tokens,
                 "total": b.token_usage.total_tokens},
             "wall_sec": mrun.get("wall_sec"),
-            "human_review": None if r["review"] is None else {
+            "reference_review": None if r["review"] is None else {
+                "reviewer": r["review"]["reviewer"], "provenance": r["review_provenance"],
                 "version": r["review"]["version"], "blinded": r["review"]["blinded"],
                 "label": r["review"]["label"]},
         })
@@ -238,7 +268,7 @@ def main(argv: list[str] | None = None) -> int:
     # --- validation (denominators filled by the Day 7/8 protocol) -------------
     day5 = REPO / "data" / "environment-checks" / "day5-judge-gate.json"
     stability = json.loads(day5.read_text())["stability_summary"] if day5.exists() else None
-    labeled_failed = [r for r in runs if r["review"] and r["review"].get("blinded")
+    labeled_failed = [r for r in runs if r["review"] is not None
                       and r["bundle"].outcome == "unresolved"]
     exact = pm1 = 0
     for r in labeled_failed:
@@ -247,18 +277,24 @@ def main(argv: list[str] | None = None) -> int:
         if hs is not None and ms is not None:
             exact += hs == ms
             pm1 += abs(hs - ms) <= 1
+    label_prov = Counter(r["review_provenance"] for r in labeled_failed)
     flagged_resolved = [r for r in runs if r["merged"] and r["merged"].correct_result_invalid_process]
-    audited = [r for r in flagged_resolved if r["review"]]
-    false_alarms = [r for r in audited if r["review"]["label"].get("process") == "valid"]
+    audited = [r for r in flagged_resolved
+               if r["reviews"].get(HUMAN_REVIEWER, {}).get("latest")]
+    false_alarms = [r for r in audited
+                    if r["reviews"][HUMAN_REVIEWER]["latest"]["label"].get("process") == "valid"]
     validation = {
         "sample": False,
         "localization_exact": {"num": exact if labeled_failed else None, "den": len(labeled_failed) or None},
         "localization_pm1": {"num": pm1 if labeled_failed else None, "den": len(labeled_failed) or None},
+        "reference_labels": {"human": label_prov.get("human", 0),
+                             "second_rater": label_prov.get("second_rater", 0)} if labeled_failed else None,
         "false_positive_rate": {"num": len(false_alarms) if audited else None, "den": len(audited) or None},
         "discriminative": None,
         "stability": stability,
         "regression": None,
-        "provenance": {"localization": "mixed (replay/judge vs human)", "false_positive_rate": "human"},
+        "provenance": {"localization": "mixed (replay/judge vs blinded reference labels; see reference_labels)",
+                       "false_positive_rate": "human"},
     }
     dump(out / "validation.json", validation)
 

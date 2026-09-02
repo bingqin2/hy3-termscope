@@ -1,0 +1,16 @@
+{
+ "bundle_id": "603b2dcd10b95333cc050b8b6e65f4c6a435b1360ec4f2d7049031adbbd354a9",
+ "reviewer": "claude-fable-5-1",
+ "version": 1,
+ "blinded": true,
+ "created_at": "2026-09-02T19:50:09.883119Z",
+ "label": {
+  "process": "valid",
+  "first_error": {
+   "location": "none",
+   "step_id": null
+  },
+  "error_type": null
+ },
+ "notes": "A correct solution required downloading the YouTube video, OCR-transcribing the on-screen Zork terminal, and writing the committed commands one per line to /app/solution.txt. The agent installed yt-dlp, ffmpeg and tesseract, downloaded the video, validated OCR quality on sampled frames, extracted 380 frames at 2 fps, ran a full OCR pass, read its output, diagnosed that partial typing was being captured, then cached raw per-frame text in a second pass and iterated three extraction algorithms (last-'>' line, typing-to-response transition, scrollback suffix alignment), checking each result against debug output; it was mid-debugging the suffix alignment at step 41 when the budget expired and never wrote solution.txt. The run was budget-terminated; the process before the cut-off was sound though slow, its only slips (inline OCR at step 23, the sleep-30 job kill at step 27, the tail misread at step 33) all noticed and repaired, and the costly second OCR pass at step 34 was a reasoned design change after reading the first pass rather than a blind re-run."
+}

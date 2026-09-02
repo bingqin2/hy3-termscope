@@ -1,0 +1,19 @@
+{
+ "owner": {
+  "kind": "human",
+  "identity": "project owner",
+  "provenance": "human",
+  "role": "adjudication of flagged runs and rater-vs-evaluator disagreements after reveal (non-blinded, excluded from localization metrics); blinded labels on any subset captured before a reveal are reference labels",
+  "inputs": "task instruction, raw trajectory (annotate.py show), and after reveal the evaluator output and the rater's notes"
+ },
+ "claude-fable-5-1": {
+  "kind": "model",
+  "identity": "Claude Fable 5.1 (Anthropic), one fresh-context session per run",
+  "provenance": "second_rater",
+  "role": "blinded independent labels on every failed campaign run",
+  "inputs": "task instruction, the full raw trajectory dump (annotate.py show --full), the frozen rubric-v1 text, and the import record's termination note (time budget, context window, or memory kill) for the run; the only outcome information given was that the run failed",
+  "blinding": "never given any deterministic, replay, or judge output; the orchestrating session passed nothing derived from those lanes and the rater sessions were forbidden to open the repository's results directory; each session reports the last step id it read as a coverage check",
+  "independence": "a different model family from the judge (Hy3); the rater did not see the judge prompt, only the same rubric text; caveat: the same model family wrote the rubric and the evaluator code",
+  "output": "the raw rater JSON (findings with step citations, notes, confidence) is stored next to each review as review-vN.attachment.json"
+ }
+}

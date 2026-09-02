@@ -1,0 +1,30 @@
+{
+ "discriminative": null,
+ "false_positive_rate": {
+  "den": null,
+  "num": null
+ },
+ "localization_exact": {
+  "den": 14,
+  "num": 1
+ },
+ "localization_pm1": {
+  "den": 14,
+  "num": 1
+ },
+ "provenance": {
+  "false_positive_rate": "human",
+  "localization": "mixed (replay/judge vs blinded reference labels; see reference_labels)"
+ },
+ "reference_labels": {
+  "human": 0,
+  "second_rater": 14
+ },
+ "regression": null,
+ "sample": false,
+ "stability": {
+  "first_error_step_agreement": "5/5",
+  "primary_category_agreement": "4/5",
+  "verdict_agreement": "5/5"
+ }
+}

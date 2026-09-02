@@ -1,0 +1,336 @@
+{
+ "record": "judge-consistency-one-session-per-campaign-run",
+ "n_runs": 40,
+ "both_ok": 39,
+ "verdict_agreement": "38/40",
+ "first_error_step_agreement": "38/40",
+ "first_error_pm1_agreement": "0/40",
+ "primary_category_agreement": "38/40",
+ "rows": [
+  {
+   "run_id": "hy3-mini-swe-agent__cobol-modernization",
+   "both_ok": true,
+   "verdict_agree": true,
+   "first_error_step_agree": true,
+   "first_error_pm1": false,
+   "primary_category_agree": true
+  },
+  {
+   "run_id": "hy3-mini-swe-agent__constraints-scheduling",
+   "both_ok": true,
+   "verdict_agree": true,
+   "first_error_step_agree": true,
+   "first_error_pm1": false,
+   "primary_category_agree": true
+  },
+  {
+   "run_id": "hy3-mini-swe-agent__count-dataset-tokens",
+   "both_ok": true,
+   "verdict_agree": true,
+   "first_error_step_agree": true,
+   "first_error_pm1": false,
+   "primary_category_agree": true
+  },
+  {
+   "run_id": "hy3-mini-swe-agent__dna-insert",
+   "both_ok": true,
+   "verdict_agree": true,
+   "first_error_step_agree": true,
+   "first_error_pm1": false,
+   "primary_category_agree": true
+  },
+  {
+   "run_id": "hy3-mini-swe-agent__extract-moves-from-video",
+   "both_ok": true,
+   "verdict_agree": true,
+   "first_error_step_agree": true,
+   "first_error_pm1": false,
+   "primary_category_agree": true
+  },
+  {
+   "run_id": "hy3-mini-swe-agent__feal-differential-cryptanalysis",
+   "both_ok": true,
+   "verdict_agree": true,
+   "first_error_step_agree": true,
+   "first_error_pm1": false,
+   "primary_category_agree": true
+  },
+  {
+   "run_id": "hy3-mini-swe-agent__financial-document-processor",
+   "both_ok": true,
+   "verdict_agree": true,
+   "first_error_step_agree": true,
+   "first_error_pm1": false,
+   "primary_category_agree": true
+  },
+  {
+   "run_id": "hy3-mini-swe-agent__fix-git",
+   "both_ok": true,
+   "verdict_agree": true,
+   "first_error_step_agree": true,
+   "first_error_pm1": false,
+   "primary_category_agree": true
+  },
+  {
+   "run_id": "hy3-mini-swe-agent__git-multibranch",
+   "both_ok": true,
+   "verdict_agree": true,
+   "first_error_step_agree": true,
+   "first_error_pm1": false,
+   "primary_category_agree": true
+  },
+  {
+   "run_id": "hy3-mini-swe-agent__llm-inference-batching-scheduler",
+   "both_ok": true,
+   "verdict_agree": true,
+   "first_error_step_agree": true,
+   "first_error_pm1": false,
+   "primary_category_agree": true
+  },
+  {
+   "run_id": "hy3-mini-swe-agent__multi-source-data-merger",
+   "both_ok": true,
+   "verdict_agree": true,
+   "first_error_step_agree": true,
+   "first_error_pm1": false,
+   "primary_category_agree": true
+  },
+  {
+   "run_id": "hy3-mini-swe-agent__overfull-hbox",
+   "both_ok": true,
+   "verdict_agree": true,
+   "first_error_step_agree": true,
+   "first_error_pm1": false,
+   "primary_category_agree": true
+  },
+  {
+   "run_id": "hy3-mini-swe-agent__portfolio-optimization",
+   "both_ok": true,
+   "verdict_agree": true,
+   "first_error_step_agree": true,
+   "first_error_pm1": false,
+   "primary_category_agree": true
+  },
+  {
+   "run_id": "hy3-mini-swe-agent__pytorch-model-recovery",
+   "both_ok": true,
+   "verdict_agree": true,
+   "first_error_step_agree": true,
+   "first_error_pm1": false,
+   "primary_category_agree": true
+  },
+  {
+   "run_id": "hy3-mini-swe-agent__raman-fitting",
+   "both_ok": true,
+   "verdict_agree": true,
+   "first_error_step_agree": true,
+   "first_error_pm1": false,
+   "primary_category_agree": true
+  },
+  {
+   "run_id": "hy3-mini-swe-agent__sam-cell-seg",
+   "both_ok": true,
+   "verdict_agree": true,
+   "first_error_step_agree": true,
+   "first_error_pm1": false,
+   "primary_category_agree": true
+  },
+  {
+   "run_id": "hy3-mini-swe-agent__schemelike-metacircular-eval",
+   "both_ok": true,
+   "verdict_agree": true,
+   "first_error_step_agree": true,
+   "first_error_pm1": false,
+   "primary_category_agree": true
+  },
+  {
+   "run_id": "hy3-mini-swe-agent__sparql-university",
+   "both_ok": true,
+   "verdict_agree": true,
+   "first_error_step_agree": true,
+   "first_error_pm1": false,
+   "primary_category_agree": true
+  },
+  {
+   "run_id": "hy3-mini-swe-agent__sqlite-db-truncate",
+   "both_ok": true,
+   "verdict_agree": true,
+   "first_error_step_agree": true,
+   "first_error_pm1": false,
+   "primary_category_agree": true
+  },
+  {
+   "run_id": "hy3-mini-swe-agent__video-processing",
+   "both_ok": true,
+   "verdict_agree": true,
+   "first_error_step_agree": true,
+   "first_error_pm1": false,
+   "primary_category_agree": true
+  },
+  {
+   "run_id": "hy3-terminus-2__cobol-modernization",
+   "both_ok": true,
+   "verdict_agree": true,
+   "first_error_step_agree": true,
+   "first_error_pm1": false,
+   "primary_category_agree": true
+  },
+  {
+   "run_id": "hy3-terminus-2__constraints-scheduling",
+   "both_ok": true,
+   "verdict_agree": true,
+   "first_error_step_agree": true,
+   "first_error_pm1": false,
+   "primary_category_agree": true
+  },
+  {
+   "run_id": "hy3-terminus-2__count-dataset-tokens",
+   "both_ok": true,
+   "verdict_agree": true,
+   "first_error_step_agree": true,
+   "first_error_pm1": false,
+   "primary_category_agree": true
+  },
+  {
+   "run_id": "hy3-terminus-2__dna-insert",
+   "both_ok": true,
+   "verdict_agree": true,
+   "first_error_step_agree": true,
+   "first_error_pm1": false,
+   "primary_category_agree": true
+  },
+  {
+   "run_id": "hy3-terminus-2__extract-moves-from-video",
+   "both_ok": true,
+   "verdict_agree": true,
+   "first_error_step_agree": true,
+   "first_error_pm1": false,
+   "primary_category_agree": true
+  },
+  {
+   "run_id": "hy3-terminus-2__feal-differential-cryptanalysis",
+   "both_ok": true,
+   "verdict_agree": true,
+   "first_error_step_agree": true,
+   "first_error_pm1": false,
+   "primary_category_agree": true
+  },
+  {
+   "run_id": "hy3-terminus-2__financial-document-processor",
+   "both_ok": true,
+   "verdict_agree": false,
+   "first_error_step_agree": false,
+   "first_error_pm1": false,
+   "primary_category_agree": false
+  },
+  {
+   "run_id": "hy3-terminus-2__fix-git",
+   "both_ok": true,
+   "verdict_agree": true,
+   "first_error_step_agree": true,
+   "first_error_pm1": false,
+   "primary_category_agree": true
+  },
+  {
+   "run_id": "hy3-terminus-2__git-multibranch",
+   "both_ok": true,
+   "verdict_agree": true,
+   "first_error_step_agree": true,
+   "first_error_pm1": false,
+   "primary_category_agree": true
+  },
+  {
+   "run_id": "hy3-terminus-2__llm-inference-batching-scheduler",
+   "both_ok": true,
+   "verdict_agree": true,
+   "first_error_step_agree": true,
+   "first_error_pm1": false,
+   "primary_category_agree": true
+  },
+  {
+   "run_id": "hy3-terminus-2__multi-source-data-merger",
+   "both_ok": true,
+   "verdict_agree": true,
+   "first_error_step_agree": true,
+   "first_error_pm1": false,
+   "primary_category_agree": true
+  },
+  {
+   "run_id": "hy3-terminus-2__overfull-hbox",
+   "both_ok": true,
+   "verdict_agree": true,
+   "first_error_step_agree": true,
+   "first_error_pm1": false,
+   "primary_category_agree": true
+  },
+  {
+   "run_id": "hy3-terminus-2__portfolio-optimization",
+   "both_ok": true,
+   "verdict_agree": true,
+   "first_error_step_agree": true,
+   "first_error_pm1": false,
+   "primary_category_agree": true
+  },
+  {
+   "run_id": "hy3-terminus-2__pytorch-model-recovery",
+   "both_ok": true,
+   "verdict_agree": true,
+   "first_error_step_agree": true,
+   "first_error_pm1": false,
+   "primary_category_agree": true
+  },
+  {
+   "run_id": "hy3-terminus-2__raman-fitting",
+   "both_ok": true,
+   "verdict_agree": true,
+   "first_error_step_agree": true,
+   "first_error_pm1": false,
+   "primary_category_agree": true
+  },
+  {
+   "run_id": "hy3-terminus-2__sam-cell-seg",
+   "both_ok": true,
+   "verdict_agree": true,
+   "first_error_step_agree": true,
+   "first_error_pm1": false,
+   "primary_category_agree": true
+  },
+  {
+   "run_id": "hy3-terminus-2__schemelike-metacircular-eval",
+   "both_ok": false,
+   "verdict_agree": false,
+   "first_error_step_agree": false,
+   "first_error_pm1": false,
+   "primary_category_agree": false
+  },
+  {
+   "run_id": "hy3-terminus-2__sparql-university",
+   "both_ok": true,
+   "verdict_agree": true,
+   "first_error_step_agree": true,
+   "first_error_pm1": false,
+   "primary_category_agree": true
+  },
+  {
+   "run_id": "hy3-terminus-2__sqlite-db-truncate",
+   "both_ok": true,
+   "verdict_agree": true,
+   "first_error_step_agree": true,
+   "first_error_pm1": false,
+   "primary_category_agree": true
+  },
+  {
+   "run_id": "hy3-terminus-2__video-processing",
+   "both_ok": true,
+   "verdict_agree": true,
+   "first_error_step_agree": true,
+   "first_error_pm1": false,
+   "primary_category_agree": true
+  }
+ ],
+ "real_run_stability": {
+  "run_id": "hy3-terminus-2__financial-document-processor",
+  "verdict": "5/5",
+  "step": "5/5"
+ }
+}

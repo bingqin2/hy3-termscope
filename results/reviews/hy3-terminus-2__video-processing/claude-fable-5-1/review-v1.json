@@ -1,0 +1,16 @@
+{
+ "bundle_id": "649b72bfdf141ce2307bc93ccc160c279baea814e8a6ba1e9fcd43761d3a83d2",
+ "reviewer": "claude-fable-5-1",
+ "version": 1,
+ "blinded": true,
+ "created_at": "2026-09-02T20:33:54.537561Z",
+ "label": {
+  "process": "invalid",
+  "first_error": {
+   "location": "located",
+   "step_id": 16
+  },
+  "error_type": "reasoning"
+ },
+ "notes": "A correct solution had to locate the single flight phase in the example video with a method that generalizes; the agent's own outputs at Steps 10 and 11 already contained the most jump-like pattern in the whole run, a parabolic rise and return of the silhouette bottom at frames ~53-62 reproduced across frame differencing and three background thresholds. At Step 16 the agent instead read the post-71 drop of the largest-component bottom as 'airborne' even though it never returned to baseline, and at Steps 28-29 it rationalized the contradicting ASCII fragments and x-centroid jumps rather than resolving them, so every later step searched only frames 68-91. The final script was tuned until it emitted the presupposed 72/78, meaning the deliverable encodes a segmentation artifact; the process is invalid because the decisive inference contradicted evidence the agent had displayed and was never re-examined."
+}

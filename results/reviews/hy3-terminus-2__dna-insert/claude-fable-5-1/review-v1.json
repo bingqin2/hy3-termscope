@@ -1,0 +1,16 @@
+{
+ "bundle_id": "d04d21455cea73413a36492a823962a8d6566d5ce1c0c23b390b431d5ca8bba5",
+ "reviewer": "claude-fable-5-1",
+ "version": 1,
+ "blinded": true,
+ "created_at": "2026-09-02T19:50:10.319156Z",
+ "label": {
+  "process": "invalid",
+  "first_error": {
+   "location": "located",
+   "step_id": 7
+  },
+  "error_type": "reasoning"
+ },
+ "notes": "A correct solution had to design one primer pair whose extension products, after Q5 amplification and blunt-end ligation, add the 39-nt insert exactly once at position 215, with annealing regions of 15-45 nt and matched oligotm Tms. The agent correctly located the insertion, installed the ground-truth oligotm binary, and searched the Tm space, but at step 7 it committed to placing the full insert on the 5' tail of both primers, which duplicates the insert in the circularized product; that design was written to primers.fasta at step 9 and never re-examined. This is material because the deliverable would not produce the requested output plasmid, and the step-10 verification checked only length/Tm rules while treating an unrelated reconstruction check as validation of the design."
+}

@@ -187,6 +187,17 @@ committed Day 1 gate records.
 label with a timestamp before any reveal; reviews are append-only versions; any non-blinded
 review is marked as such and excluded from validation metrics by construction.
 
+**Reviewers and label provenance.** Two reviewer identities exist (`results/reviews/RATERS.json`):
+the human owner (provenance `human`) and an independent model rater (provenance `second_rater`:
+Claude Fable 5.1, a different model family from the judge, run as a fresh-context session per run
+with only the task instruction, the raw trajectory, the frozen rubric text, and the import
+record's termination note — never any evaluator output). Where the owner's blinded label exists
+it is the reference label; otherwise the rater's blinded label is, and every metric row says
+which. Human adjudication after reveal overrides the process label with provenance `human` but
+never enters localization metrics. Labeling by the model rater instead of the owner is a
+documented deviation from the pre-registration (`results/protocol-deviations.json`): the
+blinding protocol is unchanged, the reviewer identity is not.
+
 **Judge stability (bounded; decision 12 carve-out).** Five repeated judge sessions on the
 invalid fixture (Day 5, part of the gate) and five on one real flagged campaign run (Day 7).
 Per-session verdict / first-error step / category agreement is reported under

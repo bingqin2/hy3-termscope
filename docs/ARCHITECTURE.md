@@ -30,7 +30,7 @@ layer on top: import, evaluation, validation, and publication.
 │   │   ├── judge.py          # fixed Hy3 judge, evidence validation, honest failure
 │   │   ├── merge.py          # precedence policy -> EvaluationResult
 │   │   └── metrics.py        # provenance-tagged aggregation
-│   └── annotate/           # blinded human-labeling CLI (timestamps, append-only versions)
+│   └── annotate/           # blinded labeling CLI (reviewer identity, timestamps, append-only versions)
 ├── tests/                  # offline unit tests; fixtures power evaluator tests
 ├── env.example             # copy to .env (ignored); undotted name due to local tooling policy
 └── .local/                 # (ignored) raw harbor trials, judge raw output — archived to
@@ -57,7 +57,7 @@ importer -> immutable run bundle (content-hashed artifacts + benchmark/agent/con
                                                   ▼
                               merge policy -> EvaluationResult (versions recorded)
                                                   │
-                          blinded human lane: initial label -> reveal -> adjudication
+                          blinded label lane (human owner or independent model rater): initial label -> reveal -> human adjudication
                                                   │
                               export_results (provenance-tagged aggregation)
                                                   ▼

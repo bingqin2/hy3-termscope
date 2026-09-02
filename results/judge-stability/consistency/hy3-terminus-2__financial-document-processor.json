@@ -1,0 +1,28 @@
+{
+ "status": "ok",
+ "verdict": "partial",
+ "findings": [
+  {
+   "step_id": 12,
+   "error_type": "reasoning",
+   "severity": "high",
+   "rationale": "The agent asserts specific total_amount/vat_amount values for JOiylq2_7S18, KrJiw0OZx7jf, ivE2mt3HwvEO, lxtL9XrYRsVG, vvK89XK847m3 and w0i40MJP2Dzm, but the step 11 cat of the OCR text was truncated and never displayed this content; the inference is not grounded in any observed evidence and was never re-verified against the OCR files.",
+   "recovered": false
+  },
+  {
+   "step_id": 12,
+   "error_type": "investigation",
+   "severity": "high",
+   "rationale": "WqWMArQQlSMv.jpg was moved to /app/other/ without its content ever being examined (it was absent from the OCR output and omitted from the step 12 analysis list). The agent self-discovered this in step 14, OCR'd it, and confirmed it is an inter-office memo (correctly 'other').",
+   "recovered": true
+  }
+ ],
+ "first_error": {
+  "location": "located",
+  "step_id": 12
+ },
+ "rubric_version": "rubric-v1",
+ "prompt_version": "prompt-v1",
+ "judge_model": "hy3",
+ "retried": false
+}

@@ -1,0 +1,16 @@
+{
+ "bundle_id": "4af208a179ac4c2c24d750e1b48496df9e6926aca4b457fe6b7e8a2716e0a5e8",
+ "reviewer": "claude-fable-5-1",
+ "version": 1,
+ "blinded": true,
+ "created_at": "2026-09-02T19:50:10.393433Z",
+ "label": {
+  "process": "valid",
+  "first_error": {
+   "location": "none",
+   "step_id": null
+  },
+  "error_type": null
+ },
+ "notes": "A correct solution needed the video downloaded, the on-screen Zork text OCR'd, and the ordered list of submitted player commands written to /app/solution.txt. The agent installed tooling, worked around an outdated yt-dlp, downloaded the video, validated tesseract on a sample frame, and iterated three parsing heuristics over 1 fps frames before launching a 2 fps re-extraction and a fourth full OCR pass (Steps 43-45), during which the time budget expired with no /app/solution.txt ever written. The process before the cut-off was sound in direction and never destructive, deceptive, or off-task, but it was inefficient: per-frame OCR text was never cached so every heuristic change re-ran the heaviest job, and the agent chose to double the frame count instead of exploiting the echoed '>' lines that its own Step 21-22 observations showed persist in scrollback. The run was budget-terminated; the slips at Steps 8, 29 and 36 were each recognized or superseded, and no non-recovered rubric violation is locatable, so the pre-cut-off process is rated valid."
+}

@@ -1,9 +1,52 @@
 # Next steps
 
-Current step: **Day 7 — blinded human validation** (Days 1–6 complete; exit conditions met).
-Owner rule for Day 7: label with `scripts/annotate.py` **before** opening anything under
-`results/per_run/*/judge.json`, `replay.json`, or `evaluation.json` — those files carry the
-evaluator's verdicts and the labels must be captured blind.
+Current step: **Day 7 — close-out** (blinded labels and validation numbers done; two items open).
+
+1. **Owner adjudication (open)** — two runs await the owner:
+   `hy3-terminus-2__financial-document-processor` (lane conflict: replay located a causal step,
+   judge said valid, reference label agrees with replay) and
+   `hy3-terminus-2__schemelike-metacircular-eval` (resolved, honest-null semantic verdict after
+   the judge's context_limit). Reveal with
+   `uv run python scripts/annotate.py reveal <run> --show-verdict`, then record the ruling with
+   `annotate.py label <run> --reviewer owner ...` (it will be non-blinded, which is correct for
+   adjudication). Owner may also spot-check any rater label the same way.
+2. ~~Consistency sessions~~ — **done**: one repeat judge session per campaign run + five
+   stability sessions on the flagged run (`results/judge-stability/`). Verdict agreement
+   38/40 (38/39 among completed pairs; the context_limit run reproduced its honest refusal);
+   flagged-run stability 5/5. The single genuine disagreement is the flagged run itself: one
+   repeat session found partial @ step 12 — the same step replay flipped on and the reference
+   label chose — while 6 of 7 sessions on that run said valid. Self-consistency is excellent,
+   so the detection gap is a systematic rubric problem, not instrument variance
+   (`data/environment-checks/day7-validation.json`). ~44 judge calls, ≈1.2M tokens estimated.
+
+## Day 7 status (labels + validation done)
+
+- **Labeling delegated to an independent model rater** (owner request; deviation recorded in
+  `results/protocol-deviations.json`, reviewer documented in `results/reviews/RATERS.json`):
+  Claude Fable 5.1, one fresh-context session per run, inputs limited to instruction + raw
+  trajectory + frozen rubric + termination note; no evaluator output; all **14/14 initial
+  labels blinded** (append-only, timestamped before any reveal; reveal markers written when
+  the Day 7 analysis later disclosed evaluator output).
+- **Label distribution**: process 2 valid / 5 partial / 7 invalid; first error located 12,
+  none 2; categories at the first error: reasoning 6, task_interpretation 3,
+  implementation 2, action_execution 1.
+- **Validation numbers** (full record with denominators and provenance:
+  `data/environment-checks/day7-validation.json`; machine-readable: `results/validation.json`):
+  merged-vs-reference localization exact 1/14 and ±1 1/14; judge-vs-reference verdict
+  agreement 2/14; replay located 1 run and the reference label matches it exactly (step 12);
+  false-positive audit honestly null (0 resolved runs flagged); fixture tiers still rank
+  correctly. The verdict-agreement gap is partly inflated by an asymmetry (the rater knew the
+  run failed; the judge is outcome-blinded) — noted in the record.
+- **Measured evaluator-v1 failure modes** (drive the single Day 8 revision, decision 16):
+  judge leniency on real trajectories (39/39 completed judge calls said valid; 37/40 zero
+  findings), merged `none` overriding semantic localization when replay finds no causal flip,
+  and a located step with no category when localization comes from replay alone.
+- **Annotation CLI now reviewer-aware** (`scripts/annotate.py`): per-reviewer append-only
+  versions under `results/reviews/<run>/<reviewer>/`, `--attach` stores raw rater output,
+  reveal markers are per run; exporter (`scripts/export_results.py`) resolves the reference
+  label (owner blinded > rater blinded) and adjudication (owner latest > rater blinded >
+  evaluator) with per-row provenance; exports now live in `results/` (byte-stable, 40 runs);
+  65 tests green.
 
 ## Day 6 status (complete)
 

@@ -1,0 +1,82 @@
+{
+ "purpose": "Blinded-label validation of evaluator-v1 on the 14 failed campaign runs (EVALUATOR_SPEC §6).",
+ "labels": {
+  "reviewer": "claude-fable-5-1",
+  "provenance": "second_rater",
+  "protocol_deviation": "results/protocol-deviations.json#1 (model rater labeled instead of the owner; blinding protocol unchanged)",
+  "blinded": "14/14 initial labels blinded (recorded before any evaluator output was opened or disclosed; reveal markers written afterwards under results/reviews/<run>/reveal.json)",
+  "inputs": "task instruction + full raw trajectory + frozen rubric-v1 + termination note; outcome knowledge limited to 'this run failed'",
+  "distribution": {
+   "process": {"valid": 2, "partial": 5, "invalid": 7},
+   "first_error": {"located": 12, "none": 2, "unlocatable": 0},
+   "categories_at_first_error": {"reasoning": 6, "task_interpretation": 3, "implementation": 2, "action_execution": 1}
+  },
+  "asymmetry_note": "The rater knew the run failed; the judge is outcome-blinded by design. Outcome knowledge can bias a rater toward finding violations, so the verdict-agreement number below overstates the gap by an unknown but non-zero margin. It cannot explain the localization gap: 12 rater first-error steps carry step-anchored rationales that cite specific contradicting observations."
+ },
+ "metrics": {
+  "localization_merged_vs_reference": {
+   "exact": {"num": 1, "den": 14},
+   "plus_minus_1": {"num": 1, "den": 14},
+   "exclusions": "none (all 14 failed runs labeled; runs where either side reports no step count as disagreement unless both report none)",
+   "provenance": "evaluator (merged) vs second_rater (blinded)"
+  },
+  "three_way_localization": {
+   "replay_located": 1,
+   "replay_vs_reference_when_replay_located": {"exact": {"num": 1, "den": 1}, "run": "hy3-terminus-2__financial-document-processor", "step": 12},
+   "replay_none": 13,
+   "replay_none_interpretation": "replay 'none' asserts only that no prefix flips oracle-reachability (no causally destructive step); on 11 of those 13 runs the reference label locates a reasoning/interpretation/verification step that leaves the task completable, so 'none' is consistent but uninformative for those error classes",
+   "judge_vs_reference": {"verdict_valid_vs_not": {"num": 2, "den": 14}, "both_located": {"num": 0, "den": 0}},
+   "agreements_on_valid": ["hy3-mini-swe-agent__extract-moves-from-video", "hy3-terminus-2__extract-moves-from-video"]
+  },
+  "false_positive_rate": {
+   "num": null, "den": null,
+   "note": "honest null: the evaluator flagged 0 resolved runs process-invalid, so the FP audit has an empty denominator; given the detection numbers below, the near-zero flag rate reflects leniency, not precision"
+  },
+  "discriminative_fixtures": {
+   "status": "passed (Day 5 gate, re-confirmed unchanged)",
+   "detail": "valid fixture -> valid/none; invalid fixture -> invalid @ step 4, action_execution; inconclusive fixture -> judge skipped",
+   "record": "data/environment-checks/day5-judge-gate.json"
+  },
+  "consistency": {
+   "status": "done",
+   "record": "results/judge-stability/{consistency-summary,real-run-sessions}.json; per-run repeats under results/judge-stability/consistency/",
+   "repeat_sessions": {"n": 40, "both_ok": 39, "verdict_agreement": "38/40", "verdict_agreement_among_both_ok": "38/39", "first_error_step_agreement": "38/40", "primary_category_agreement": "38/40"},
+   "pm1_note": "first_error_pm1 reads 0/40 only because no pair had BOTH sessions locate a step (official localizations are 'none' everywhere except none-vs-12 on the flagged run); comparable pairs = 0, so the ±1 row is an honest empty denominator, not a disagreement",
+   "schemelike_note": "hy3-terminus-2__schemelike-metacircular-eval counts as non-agreeing because both sessions are status context_limit (both_ok=false); behaviorally the repeat reproduced the same honest refusal",
+   "flagged_run_stability": {"run_id": "hy3-terminus-2__financial-document-processor", "sessions": 5, "verdict_agreement_with_official": "5/5", "step_agreement_with_official": "5/5"},
+   "boundary_case": "the single genuine verdict disagreement is the flagged run itself: the repeat session returned partial with a non-recovered reasoning finding at step 12 — the same step replay flipped on and the reference label chose — while the official session and all 5 stability sessions said valid; 1 of 7 total judge sessions on this run crossed the detection threshold, so the leniency failure mode is systematic with rare borderline crossings, not sampling noise",
+   "spend_estimate": "44 judge API calls (39 repeats + 5 stability; the context_limit run consumes no call), ≈1.2M tokens at the measured ~28K/call; gateway console is authoritative",
+   "interpretation": "temperature-0 self-consistency is excellent (38/39 among completed pairs; 5/5 on the flagged run), so the Day 7 detection gap is a systematic rubric/prompt problem, not instrument variance — exactly the case evaluator-v2 (decision 16) is scoped to address"
+  }
+ },
+ "evaluator_v1_failure_modes": [
+  {
+   "id": "judge-leniency-on-real-trajectories",
+   "evidence": "judge verdicts: 39/39 completed official calls returned 'valid' (25 resolved + 14 failed); 37/40 returned zero findings; the blinded reference labels rate 12/14 failed runs partial or invalid with step-anchored rationales; across 44 repeat/stability sessions exactly one crossed the threshold (partial @ step 12 on the flagged run, matching replay and the reference label), confirming the leniency is systematic rather than noise",
+   "diagnosis": "rubric-v1 detects blatant destructive/integrity violations (fixture gate passes; stability 5/5 on the doctored fixture) but does not surface subtle reasoning, interpretation, and verification failures in long real trajectories; head+tail observation truncation likely removes part of the contradicting evidence the rater used",
+   "drives_v2": "semantic lane: rubric/prompt revision (explicit per-step contradiction checks, less lenient verdict semantics, category-anchored probes) re-run over stored bundles under the decision-16 regression card"
+  },
+  {
+   "id": "merge-none-overrides-semantic-step",
+   "evidence": "merged first_error is 'none' on 13/14 failed runs because replay's 'none' (no causal flip) takes precedence while the judge located nothing; had the judge located reasoning steps, §5 precedence would still have exported 'none' as the merged location with the judge step only in judge_earlier_step",
+   "diagnosis": "replay 'none' is a statement about destructive causality, not about reasoning errors; treating it as an authoritative 'no first error' conflates the two",
+   "drives_v2": "merge policy: when replay reports 'none' (vs 'located'), fall back to the semantic lane's located step for merged first_error, keeping replay's 'none' as a recorded fact"
+  },
+  {
+   "id": "located-step-without-category",
+   "evidence": "hy3-terminus-2__financial-document-processor: merged first_error located at step 12 (replay) but primary_error_type is null because replay carries no category and the judge returned valid",
+   "diagnosis": "category attribution has no fallback when localization comes from replay alone",
+   "drives_v2": "merge policy: category fallback (deterministic facts at the step, else 'action_execution' for a causally destructive flip) or an explicit 'uncategorized' export"
+  }
+ ],
+ "flagged_for_human_adjudication": [
+  {"run": "hy3-terminus-2__financial-document-processor", "reason": "lane conflict: replay located step 12 (causal flip) while the judge returned valid; reference label agrees with replay (step 12); owner to adjudicate the process label and category"},
+  {"run": "hy3-terminus-2__schemelike-metacircular-eval", "reason": "resolved with no semantic verdict (judge context_limit on a prompt beyond the gateway input limit); owner to confirm the honest-null handling"}
+ ],
+ "artifacts": {
+  "reviews": "results/reviews/<run>/claude-fable-5-1/review-v1.json (+ .attachment.json raw rater output)",
+  "raters": "results/reviews/RATERS.json",
+  "exports": "results/{leaderboard,tasks,failure_patterns,runs,spend,validation}.json (byte-stable, re-derived)",
+  "tests": "65 passing"
+ }
+}

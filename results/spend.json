@@ -1,0 +1,261 @@
+{
+ "agent_tokens_total": 21273798,
+ "judge_tokens_recorded": 1155614,
+ "per_config": {
+  "hy3-mini-swe-agent": {
+   "agent_tokens": 12878141,
+   "agent_tokens_mean": 643907.05,
+   "n_runs": 20,
+   "wall_sec": 10536.300000000001
+  },
+  "hy3-terminus-2": {
+   "agent_tokens": 8395657,
+   "agent_tokens_mean": 419782.85,
+   "n_runs": 20,
+   "wall_sec": 12728.0
+  }
+ },
+ "runs": [
+  {
+   "agent_tokens": 306403,
+   "judge_tokens": 14582,
+   "run_id": "hy3-mini-swe-agent__cobol-modernization",
+   "wall_sec": 276.1
+  },
+  {
+   "agent_tokens": 62778,
+   "judge_tokens": 8461,
+   "run_id": "hy3-mini-swe-agent__constraints-scheduling",
+   "wall_sec": 152.6
+  },
+  {
+   "agent_tokens": 104721,
+   "judge_tokens": 10170,
+   "run_id": "hy3-mini-swe-agent__count-dataset-tokens",
+   "wall_sec": 219.1
+  },
+  {
+   "agent_tokens": 337774,
+   "judge_tokens": 11874,
+   "run_id": "hy3-mini-swe-agent__dna-insert",
+   "wall_sec": 332.1
+  },
+  {
+   "agent_tokens": 839239,
+   "judge_tokens": 23829,
+   "run_id": "hy3-mini-swe-agent__extract-moves-from-video",
+   "wall_sec": 1891.6
+  },
+  {
+   "agent_tokens": 759955,
+   "judge_tokens": 17144,
+   "run_id": "hy3-mini-swe-agent__feal-differential-cryptanalysis",
+   "wall_sec": 624.5
+  },
+  {
+   "agent_tokens": 185529,
+   "judge_tokens": 10767,
+   "run_id": "hy3-mini-swe-agent__financial-document-processor",
+   "wall_sec": 339.8
+  },
+  {
+   "agent_tokens": 115604,
+   "judge_tokens": 10300,
+   "run_id": "hy3-mini-swe-agent__fix-git",
+   "wall_sec": 132.4
+  },
+  {
+   "agent_tokens": 127538,
+   "judge_tokens": 10092,
+   "run_id": "hy3-mini-swe-agent__git-multibranch",
+   "wall_sec": 183.1
+  },
+  {
+   "agent_tokens": 2144705,
+   "judge_tokens": 38221,
+   "run_id": "hy3-mini-swe-agent__llm-inference-batching-scheduler",
+   "wall_sec": 1209.2
+  },
+  {
+   "agent_tokens": 69279,
+   "judge_tokens": 9203,
+   "run_id": "hy3-mini-swe-agent__multi-source-data-merger",
+   "wall_sec": 178.0
+  },
+  {
+   "agent_tokens": 181622,
+   "judge_tokens": 8792,
+   "run_id": "hy3-mini-swe-agent__overfull-hbox",
+   "wall_sec": 281.6
+  },
+  {
+   "agent_tokens": 202242,
+   "judge_tokens": 12882,
+   "run_id": "hy3-mini-swe-agent__portfolio-optimization",
+   "wall_sec": 332.9
+  },
+  {
+   "agent_tokens": 77585,
+   "judge_tokens": 12262,
+   "run_id": "hy3-mini-swe-agent__pytorch-model-recovery",
+   "wall_sec": 254.6
+  },
+  {
+   "agent_tokens": 556186,
+   "judge_tokens": 23840,
+   "run_id": "hy3-mini-swe-agent__raman-fitting",
+   "wall_sec": 542.7
+  },
+  {
+   "agent_tokens": 20343,
+   "judge_tokens": 7269,
+   "run_id": "hy3-mini-swe-agent__sam-cell-seg",
+   "wall_sec": 156.2
+  },
+  {
+   "agent_tokens": 5414805,
+   "judge_tokens": 37477,
+   "run_id": "hy3-mini-swe-agent__schemelike-metacircular-eval",
+   "wall_sec": 2405.3
+  },
+  {
+   "agent_tokens": 111553,
+   "judge_tokens": 12366,
+   "run_id": "hy3-mini-swe-agent__sparql-university",
+   "wall_sec": 257.5
+  },
+  {
+   "agent_tokens": 88545,
+   "judge_tokens": 10618,
+   "run_id": "hy3-mini-swe-agent__sqlite-db-truncate",
+   "wall_sec": 252.8
+  },
+  {
+   "agent_tokens": 1171735,
+   "judge_tokens": 33140,
+   "run_id": "hy3-mini-swe-agent__video-processing",
+   "wall_sec": 514.2
+  },
+  {
+   "agent_tokens": 191957,
+   "judge_tokens": 46086,
+   "run_id": "hy3-terminus-2__cobol-modernization",
+   "wall_sec": 397.9
+  },
+  {
+   "agent_tokens": 49403,
+   "judge_tokens": 29642,
+   "run_id": "hy3-terminus-2__constraints-scheduling",
+   "wall_sec": 258.9
+  },
+  {
+   "agent_tokens": 79063,
+   "judge_tokens": 11779,
+   "run_id": "hy3-terminus-2__count-dataset-tokens",
+   "wall_sec": 412.5
+  },
+  {
+   "agent_tokens": 138068,
+   "judge_tokens": 57321,
+   "run_id": "hy3-terminus-2__dna-insert",
+   "wall_sec": 608.8
+  },
+  {
+   "agent_tokens": 792460,
+   "judge_tokens": 29581,
+   "run_id": "hy3-terminus-2__extract-moves-from-video",
+   "wall_sec": 1871.4
+  },
+  {
+   "agent_tokens": 80009,
+   "judge_tokens": 56710,
+   "run_id": "hy3-terminus-2__feal-differential-cryptanalysis",
+   "wall_sec": 625.0
+  },
+  {
+   "agent_tokens": 126404,
+   "judge_tokens": 39152,
+   "run_id": "hy3-terminus-2__financial-document-processor",
+   "wall_sec": 576.2
+  },
+  {
+   "agent_tokens": 67031,
+   "judge_tokens": 11509,
+   "run_id": "hy3-terminus-2__fix-git",
+   "wall_sec": 110.2
+  },
+  {
+   "agent_tokens": 106574,
+   "judge_tokens": 25020,
+   "run_id": "hy3-terminus-2__git-multibranch",
+   "wall_sec": 260.7
+  },
+  {
+   "agent_tokens": 433221,
+   "judge_tokens": 120019,
+   "run_id": "hy3-terminus-2__llm-inference-batching-scheduler",
+   "wall_sec": 828.8
+  },
+  {
+   "agent_tokens": 33427,
+   "judge_tokens": 16617,
+   "run_id": "hy3-terminus-2__multi-source-data-merger",
+   "wall_sec": 139.5
+  },
+  {
+   "agent_tokens": 141386,
+   "judge_tokens": 56111,
+   "run_id": "hy3-terminus-2__overfull-hbox",
+   "wall_sec": 506.1
+  },
+  {
+   "agent_tokens": 73642,
+   "judge_tokens": 12565,
+   "run_id": "hy3-terminus-2__portfolio-optimization",
+   "wall_sec": 204.2
+  },
+  {
+   "agent_tokens": 61936,
+   "judge_tokens": 22059,
+   "run_id": "hy3-terminus-2__pytorch-model-recovery",
+   "wall_sec": 266.6
+  },
+  {
+   "agent_tokens": 635257,
+   "judge_tokens": 116593,
+   "run_id": "hy3-terminus-2__raman-fitting",
+   "wall_sec": 696.7
+  },
+  {
+   "agent_tokens": 196642,
+   "judge_tokens": 46653,
+   "run_id": "hy3-terminus-2__sam-cell-seg",
+   "wall_sec": 1096.1
+  },
+  {
+   "agent_tokens": 3000745,
+   "judge_tokens": null,
+   "run_id": "hy3-terminus-2__schemelike-metacircular-eval",
+   "wall_sec": 2496.4
+  },
+  {
+   "agent_tokens": 100534,
+   "judge_tokens": 25437,
+   "run_id": "hy3-terminus-2__sparql-university",
+   "wall_sec": 331.8
+  },
+  {
+   "agent_tokens": 48125,
+   "judge_tokens": 27246,
+   "run_id": "hy3-terminus-2__sqlite-db-truncate",
+   "wall_sec": 206.5
+  },
+  {
+   "agent_tokens": 2039773,
+   "judge_tokens": 82225,
+   "run_id": "hy3-terminus-2__video-processing",
+   "wall_sec": 833.7
+  }
+ ],
+ "updated": "2026-09-02T08:27:39"
+}

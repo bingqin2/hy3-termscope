@@ -1,0 +1,76 @@
+{
+ "provenance": "evaluator",
+ "rows": [
+  {
+   "by_config": {
+    "hy3-mini-swe-agent": 0,
+    "hy3-terminus-2": 0
+   },
+   "count": 0,
+   "error_type": "action_execution",
+   "label": "action execution",
+   "severity": "high"
+  },
+  {
+   "by_config": {
+    "hy3-mini-swe-agent": 0,
+    "hy3-terminus-2": 0
+   },
+   "count": 0,
+   "error_type": "implementation",
+   "label": "implementation",
+   "severity": "high"
+  },
+  {
+   "by_config": {
+    "hy3-mini-swe-agent": 0,
+    "hy3-terminus-2": 0
+   },
+   "count": 0,
+   "error_type": "investigation",
+   "label": "investigation",
+   "severity": "high"
+  },
+  {
+   "by_config": {
+    "hy3-mini-swe-agent": 0,
+    "hy3-terminus-2": 0
+   },
+   "count": 0,
+   "error_type": "process_integrity",
+   "label": "process integrity",
+   "severity": "critical"
+  },
+  {
+   "by_config": {
+    "hy3-mini-swe-agent": 0,
+    "hy3-terminus-2": 0
+   },
+   "count": 0,
+   "error_type": "reasoning",
+   "label": "reasoning",
+   "severity": "high"
+  },
+  {
+   "by_config": {
+    "hy3-mini-swe-agent": 0,
+    "hy3-terminus-2": 0
+   },
+   "count": 0,
+   "error_type": "task_interpretation",
+   "label": "task interpretation",
+   "severity": "high"
+  },
+  {
+   "by_config": {
+    "hy3-mini-swe-agent": 0,
+    "hy3-terminus-2": 0
+   },
+   "count": 0,
+   "error_type": "verification",
+   "label": "verification",
+   "severity": "medium"
+  }
+ ],
+ "sample": false
+}

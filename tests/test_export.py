@@ -44,6 +44,19 @@ def write_run(per_run: Path, bundle: RunBundle, judge: JudgeResult | None) -> st
     return key
 
 
+def write_review(reviews: Path, key: str, bundle_id: str, reviewer: str, *,
+                 process: str, step: int | None, blinded: bool = True, version: int = 1) -> None:
+    fe = FirstError(location="located", step_id=step) if step is not None else FirstError(location="none")
+    d = reviews / key / reviewer
+    d.mkdir(parents=True, exist_ok=True)
+    (d / f"review-v{version}.json").write_text(HumanReview(
+        bundle_id=bundle_id, reviewer=reviewer, version=version, blinded=blinded,
+        created_at=datetime(2026, 9, 3, tzinfo=timezone.utc),
+        label=HumanLabel(process=process, first_error=fe,
+                         error_type=None if process == "valid" else "reasoning"),
+    ).model_dump_json())
+
+
 def test_export_tables(tmp_path):
     per_run, reviews, out = tmp_path / "per_run", tmp_path / "reviews", tmp_path / "out"
     valid_judge = JudgeResult(status="ok", verdict="valid", first_error=FirstError(location="none"))
@@ -55,15 +68,15 @@ def test_export_tables(tmp_path):
     write_run(per_run, make_bundle("fix-git", "hy3-terminus-2", "resolved", 1.0), valid_judge)
     k2 = write_run(per_run, make_bundle("cobol-modernization", "hy3-terminus-2", "unresolved", 0.0), invalid_judge)
     write_run(per_run, make_bundle("fix-git", "hy3-mini-swe-agent", "inconclusive", None), None)
-    # a blinded human label that disagrees with the evaluator on the failed run
+    k4 = write_run(per_run, make_bundle("cobol-modernization", "hy3-mini-swe-agent", "unresolved", 0.0), invalid_judge)
     b2 = RunBundle.model_validate_json((per_run / k2 / "bundle.json").read_text())
-    (reviews / k2).mkdir(parents=True)
-    (reviews / k2 / "review-v1.json").write_text(HumanReview(
-        bundle_id=b2.bundle_id, reviewer="owner", version=1, blinded=True,
-        created_at=datetime(2026, 9, 3, tzinfo=timezone.utc),
-        label=HumanLabel(process="partial", first_error=FirstError(location="located", step_id=3),
-                         error_type="reasoning"),
-    ).model_dump_json())
+    b4 = RunBundle.model_validate_json((per_run / k4 / "bundle.json").read_text())
+    # k2: rater label exists but the owner's blinded label (disagreeing with the
+    # evaluator) outranks it for both adjudication and validation
+    write_review(reviews, k2, b2.bundle_id, "claude-fable-5-1", process="invalid", step=2)
+    write_review(reviews, k2, b2.bundle_id, "owner", process="partial", step=3)
+    # k4: only the model rater labeled it (blinded), agreeing on the step
+    write_review(reviews, k4, b4.bundle_id, "claude-fable-5-1", process="partial", step=2)
     manifest = tmp_path / "manifest.json"
     manifest.write_text(json.dumps({"runs": {k2: {"finished": "2026-09-02T10:00:00+00:00", "wall_sec": 12.5}}}))
 
@@ -82,17 +95,49 @@ def test_export_tables(tmp_path):
     assert t2["process_validity_rate_adjudicated"] == 0.5  # human 'partial' replaces 'invalid'
     assert t2["provenance"]["process_validity_rate_adjudicated"] == "mixed"
     msa = lb["hy3-mini-swe-agent"]
-    assert msa["n_inconclusive"] == 1 and msa["resolve_rate"] is None  # honest null
+    assert msa["n_inconclusive"] == 1 and msa["resolve_rate"] == 0.0
 
     runs = {r["run_id"]: r for r in json.loads((out / "runs.json").read_text())["runs"]}
     assert runs[k2]["process"] == "partial" and runs[k2]["process_provenance"] == "human"
+    assert runs[k2]["reference_review"]["reviewer"] == "owner"
     assert runs[k2]["first_error_step"] == 2  # evaluator localization, replay absent
     assert runs[k2]["wall_sec"] == 12.5
+    assert runs[k4]["process"] == "partial" and runs[k4]["process_provenance"] == "second_rater"
+    assert runs[k4]["reference_review"]["reviewer"] == "claude-fable-5-1"
 
     val = json.loads((out / "validation.json").read_text())
-    assert val["localization_exact"] == {"num": 0, "den": 1}
-    assert val["localization_pm1"] == {"num": 1, "den": 1}
+    assert val["localization_exact"] == {"num": 1, "den": 2}  # k4 exact, k2 off by one
+    assert val["localization_pm1"] == {"num": 2, "den": 2}
+    assert val["reference_labels"] == {"human": 1, "second_rater": 1}
     assert val["false_positive_rate"] == {"num": None, "den": None}  # nothing flagged-resolved
 
     fp = {r["error_type"]: r for r in json.loads((out / "failure_patterns.json").read_text())["rows"]}
-    assert fp["reasoning"]["count"] == 1 and fp["process_integrity"]["count"] == 0
+    assert fp["reasoning"]["count"] == 2 and fp["process_integrity"]["count"] == 0
+
+
+def test_owner_adjudication_after_reveal_overrides_but_stays_out_of_validation(tmp_path):
+    per_run, reviews, out = tmp_path / "per_run", tmp_path / "reviews", tmp_path / "out"
+    invalid_judge = JudgeResult(
+        status="ok", verdict="invalid",
+        findings=(Finding(step_id=2, error_type="reasoning", severity="high", rationale="wrong"),),
+        first_error=FirstError(location="located", step_id=2),
+    )
+    k = write_run(per_run, make_bundle("cobol-modernization", "hy3-terminus-2", "unresolved", 0.0), invalid_judge)
+    b = RunBundle.model_validate_json((per_run / k / "bundle.json").read_text())
+    # blinded rater label, then a NON-blinded owner adjudication after reveal
+    write_review(reviews, k, b.bundle_id, "claude-fable-5-1", process="invalid", step=2)
+    write_review(reviews, k, b.bundle_id, "owner", process="valid", step=None, blinded=False)
+    manifest = tmp_path / "manifest.json"
+    manifest.write_text(json.dumps({"runs": {}}))
+
+    exporter = load_exporter()
+    assert exporter.main(["--out", str(out), "--per-run", str(per_run),
+                          "--reviews", str(reviews), "--manifest", str(manifest)]) == 0
+    runs = {r["run_id"]: r for r in json.loads((out / "runs.json").read_text())["runs"]}
+    # adjudication wins the process label with human provenance...
+    assert runs[k]["process"] == "valid" and runs[k]["process_provenance"] == "human"
+    # ...but the blinded rater review stays the validation reference
+    assert runs[k]["reference_review"]["reviewer"] == "claude-fable-5-1"
+    val = json.loads((out / "validation.json").read_text())
+    assert val["localization_exact"] == {"num": 1, "den": 1}
+    assert val["reference_labels"] == {"human": 0, "second_rater": 1}

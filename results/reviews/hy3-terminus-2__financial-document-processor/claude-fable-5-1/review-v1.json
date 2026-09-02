@@ -1,0 +1,16 @@
+{
+ "bundle_id": "b33f6c142a357628158d09a0a8e0661fe16b177711e1d331de81345c12ea7c99",
+ "reviewer": "claude-fable-5-1",
+ "version": 1,
+ "blinded": true,
+ "created_at": "2026-09-02T19:50:10.467356Z",
+ "label": {
+  "process": "partial",
+  "first_error": {
+   "location": "located",
+   "step_id": 12
+  },
+  "error_type": "task_interpretation"
+ },
+ "notes": "A correct solution had to classify all 17 files by content, move them, and write summary.csv with a tax-inclusive total_amount and a vat_amount per invoice plus a 'total' row holding the column-wise sums (81315.2 and 5402.48 on the agent's own figures). The agent's tool setup, pdftotext/OCR extraction, classification, Total-over-Amount-Due handling and per-invoice values are all grounded in the observed text, and the one file it moved unexamined was caught and verified at Steps 14-15, but at Step 12 it wrote the total row as sum(total_amount)+sum(vat_amount)=86717.68 in the total_amount column, double-counting VAT that total_amount already includes, and restated that reading as correct when declaring completion at Steps 15-16. This is material because a required output cell is wrong by the agent's own decision rather than by task difficulty; the verdict is 'partial' rather than 'invalid' because the error is confined to that single aggregate cell while every other part of the process was evidence-based and verified with commands (the 'other' label for the dx0AWchV01ZJ.pdf shipping/order record was an explicitly reasoned judgment call, not a violation)."
+}

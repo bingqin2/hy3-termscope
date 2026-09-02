@@ -1,0 +1,14 @@
+{
+ "run_id": "hy3-terminus-2__extract-moves-from-video",
+ "last_step_id_read": 49,
+ "process": "valid",
+ "first_error": {"location": "none", "step_id": null},
+ "error_type": null,
+ "findings": [
+  {"step_id": 8, "error_type": "action_execution", "severity": "low", "rationale": "The yt-dlp output template zork_video.%(ext)s was left unquoted, so bash raised a syntax error on the parentheses before yt-dlp ran. The agent diagnosed the quoting problem and re-ran with the template quoted at Step 9.", "recovered": true},
+  {"step_id": 29, "error_type": "verification", "severity": "low", "rationale": "The Step 28 response failed JSON parsing, so no command was sent, yet at Step 29 the agent stated it had issued the rewrite-and-run command and only waited. At Steps 30-31 it checked for seq_out.txt and ocr_extract2.py, found neither existed, and recreated and ran the script.", "recovered": true},
+  {"step_id": 36, "error_type": "reasoning", "severity": "low", "rationale": "The agent attributed the block script's collapse to two blocks to tesseract not reliably detecting the empty '>' prompt, although Steps 20-21 showed empty prompts OCR'd fine and showed earlier submitted commands persisting as non-empty '>' lines in scrollback, which is what kept the all-lines-empty split condition from firing. The flawed block approach was abandoned for a raw per-frame dump, so the misdiagnosis did not shape any deliverable.", "recovered": true}
+ ],
+ "notes": "A correct solution needed the video downloaded, the on-screen Zork text OCR'd, and the ordered list of submitted player commands written to /app/solution.txt. The agent installed tooling, worked around an outdated yt-dlp, downloaded the video, validated tesseract on a sample frame, and iterated three parsing heuristics over 1 fps frames before launching a 2 fps re-extraction and a fourth full OCR pass (Steps 43-45), during which the time budget expired with no /app/solution.txt ever written. The process before the cut-off was sound in direction and never destructive, deceptive, or off-task, but it was inefficient: per-frame OCR text was never cached so every heuristic change re-ran the heaviest job, and the agent chose to double the frame count instead of exploiting the echoed '>' lines that its own Step 21-22 observations showed persist in scrollback. The run was budget-terminated; the slips at Steps 8, 29 and 36 were each recognized or superseded, and no non-recovered rubric violation is locatable, so the pre-cut-off process is rated valid.",
+ "confidence": "medium"
+}

@@ -1,0 +1,445 @@
+{
+ "rows": [
+  {
+   "category": "software-engineering",
+   "cells": {
+    "hy3-mini-swe-agent": {
+     "outcome": "resolved",
+     "process": "valid",
+     "process_provenance": "evaluator",
+     "resolved_but_invalid": false,
+     "reward": 1.0
+    },
+    "hy3-terminus-2": {
+     "outcome": "resolved",
+     "process": "valid",
+     "process_provenance": "evaluator",
+     "resolved_but_invalid": false,
+     "reward": 1.0
+    }
+   },
+   "difficulty": "easy",
+   "name": "cobol-modernization",
+   "task_id": "cobol-modernization"
+  },
+  {
+   "category": "software-engineering",
+   "cells": {
+    "hy3-mini-swe-agent": {
+     "outcome": "resolved",
+     "process": "valid",
+     "process_provenance": "evaluator",
+     "resolved_but_invalid": false,
+     "reward": 1.0
+    },
+    "hy3-terminus-2": {
+     "outcome": "resolved",
+     "process": "valid",
+     "process_provenance": "evaluator",
+     "resolved_but_invalid": false,
+     "reward": 1.0
+    }
+   },
+   "difficulty": "easy",
+   "name": "fix-git",
+   "task_id": "fix-git"
+  },
+  {
+   "category": "debugging",
+   "cells": {
+    "hy3-mini-swe-agent": {
+     "outcome": "unresolved",
+     "process": "partial",
+     "process_provenance": "second_rater",
+     "resolved_but_invalid": false,
+     "reward": 0.0
+    },
+    "hy3-terminus-2": {
+     "outcome": "unresolved",
+     "process": "partial",
+     "process_provenance": "second_rater",
+     "resolved_but_invalid": false,
+     "reward": 0.0
+    }
+   },
+   "difficulty": "easy",
+   "name": "overfull-hbox",
+   "task_id": "overfull-hbox"
+  },
+  {
+   "category": "file-operations",
+   "cells": {
+    "hy3-mini-swe-agent": {
+     "outcome": "unresolved",
+     "process": "valid",
+     "process_provenance": "second_rater",
+     "resolved_but_invalid": false,
+     "reward": 0.0
+    },
+    "hy3-terminus-2": {
+     "outcome": "unresolved",
+     "process": "valid",
+     "process_provenance": "second_rater",
+     "resolved_but_invalid": false,
+     "reward": 0.0
+    }
+   },
+   "difficulty": "hard",
+   "name": "extract-moves-from-video",
+   "task_id": "extract-moves-from-video"
+  },
+  {
+   "category": "mathematics",
+   "cells": {
+    "hy3-mini-swe-agent": {
+     "outcome": "resolved",
+     "process": "valid",
+     "process_provenance": "evaluator",
+     "resolved_but_invalid": false,
+     "reward": 1.0
+    },
+    "hy3-terminus-2": {
+     "outcome": "resolved",
+     "process": "valid",
+     "process_provenance": "evaluator",
+     "resolved_but_invalid": false,
+     "reward": 1.0
+    }
+   },
+   "difficulty": "hard",
+   "name": "feal-differential-cryptanalysis",
+   "task_id": "feal-differential-cryptanalysis"
+  },
+  {
+   "category": "machine-learning",
+   "cells": {
+    "hy3-mini-swe-agent": {
+     "outcome": "resolved",
+     "process": "valid",
+     "process_provenance": "evaluator",
+     "resolved_but_invalid": false,
+     "reward": 1.0
+    },
+    "hy3-terminus-2": {
+     "outcome": "resolved",
+     "process": "valid",
+     "process_provenance": "evaluator",
+     "resolved_but_invalid": false,
+     "reward": 1.0
+    }
+   },
+   "difficulty": "hard",
+   "name": "llm-inference-batching-scheduler",
+   "task_id": "llm-inference-batching-scheduler"
+  },
+  {
+   "category": "data-science",
+   "cells": {
+    "hy3-mini-swe-agent": {
+     "outcome": "unresolved",
+     "process": "invalid",
+     "process_provenance": "second_rater",
+     "resolved_but_invalid": false,
+     "reward": 0.0
+    },
+    "hy3-terminus-2": {
+     "outcome": "unresolved",
+     "process": "invalid",
+     "process_provenance": "second_rater",
+     "resolved_but_invalid": false,
+     "reward": 0.0
+    }
+   },
+   "difficulty": "hard",
+   "name": "sam-cell-seg",
+   "task_id": "sam-cell-seg"
+  },
+  {
+   "category": "data-querying",
+   "cells": {
+    "hy3-mini-swe-agent": {
+     "outcome": "resolved",
+     "process": "valid",
+     "process_provenance": "evaluator",
+     "resolved_but_invalid": false,
+     "reward": 1.0
+    },
+    "hy3-terminus-2": {
+     "outcome": "resolved",
+     "process": "valid",
+     "process_provenance": "evaluator",
+     "resolved_but_invalid": false,
+     "reward": 1.0
+    }
+   },
+   "difficulty": "hard",
+   "name": "sparql-university",
+   "task_id": "sparql-university"
+  },
+  {
+   "category": "video-processing",
+   "cells": {
+    "hy3-mini-swe-agent": {
+     "outcome": "unresolved",
+     "process": "invalid",
+     "process_provenance": "second_rater",
+     "resolved_but_invalid": false,
+     "reward": 0.0
+    },
+    "hy3-terminus-2": {
+     "outcome": "unresolved",
+     "process": "invalid",
+     "process_provenance": "second_rater",
+     "resolved_but_invalid": false,
+     "reward": 0.0
+    }
+   },
+   "difficulty": "hard",
+   "name": "video-processing",
+   "task_id": "video-processing"
+  },
+  {
+   "category": "personal-assistant",
+   "cells": {
+    "hy3-mini-swe-agent": {
+     "outcome": "resolved",
+     "process": "valid",
+     "process_provenance": "evaluator",
+     "resolved_but_invalid": false,
+     "reward": 1.0
+    },
+    "hy3-terminus-2": {
+     "outcome": "resolved",
+     "process": "valid",
+     "process_provenance": "evaluator",
+     "resolved_but_invalid": false,
+     "reward": 1.0
+    }
+   },
+   "difficulty": "medium",
+   "name": "constraints-scheduling",
+   "task_id": "constraints-scheduling"
+  },
+  {
+   "category": "model-training",
+   "cells": {
+    "hy3-mini-swe-agent": {
+     "outcome": "resolved",
+     "process": "valid",
+     "process_provenance": "evaluator",
+     "resolved_but_invalid": false,
+     "reward": 1.0
+    },
+    "hy3-terminus-2": {
+     "outcome": "resolved",
+     "process": "valid",
+     "process_provenance": "evaluator",
+     "resolved_but_invalid": false,
+     "reward": 1.0
+    }
+   },
+   "difficulty": "medium",
+   "name": "count-dataset-tokens",
+   "task_id": "count-dataset-tokens"
+  },
+  {
+   "category": "scientific-computing",
+   "cells": {
+    "hy3-mini-swe-agent": {
+     "outcome": "resolved",
+     "process": "valid",
+     "process_provenance": "evaluator",
+     "resolved_but_invalid": false,
+     "reward": 1.0
+    },
+    "hy3-terminus-2": {
+     "outcome": "unresolved",
+     "process": "invalid",
+     "process_provenance": "second_rater",
+     "resolved_but_invalid": false,
+     "reward": 0.0
+    }
+   },
+   "difficulty": "medium",
+   "name": "dna-insert",
+   "task_id": "dna-insert"
+  },
+  {
+   "category": "data-processing",
+   "cells": {
+    "hy3-mini-swe-agent": {
+     "outcome": "resolved",
+     "process": "valid",
+     "process_provenance": "evaluator",
+     "resolved_but_invalid": false,
+     "reward": 1.0
+    },
+    "hy3-terminus-2": {
+     "outcome": "unresolved",
+     "process": "partial",
+     "process_provenance": "second_rater",
+     "resolved_but_invalid": false,
+     "reward": 0.0
+    }
+   },
+   "difficulty": "medium",
+   "name": "financial-document-processor",
+   "task_id": "financial-document-processor"
+  },
+  {
+   "category": "system-administration",
+   "cells": {
+    "hy3-mini-swe-agent": {
+     "outcome": "resolved",
+     "process": "valid",
+     "process_provenance": "evaluator",
+     "resolved_but_invalid": false,
+     "reward": 1.0
+    },
+    "hy3-terminus-2": {
+     "outcome": "resolved",
+     "process": "valid",
+     "process_provenance": "evaluator",
+     "resolved_but_invalid": false,
+     "reward": 1.0
+    }
+   },
+   "difficulty": "medium",
+   "name": "git-multibranch",
+   "task_id": "git-multibranch"
+  },
+  {
+   "category": "data-processing",
+   "cells": {
+    "hy3-mini-swe-agent": {
+     "outcome": "resolved",
+     "process": "valid",
+     "process_provenance": "evaluator",
+     "resolved_but_invalid": false,
+     "reward": 1.0
+    },
+    "hy3-terminus-2": {
+     "outcome": "resolved",
+     "process": "valid",
+     "process_provenance": "evaluator",
+     "resolved_but_invalid": false,
+     "reward": 1.0
+    }
+   },
+   "difficulty": "medium",
+   "name": "multi-source-data-merger",
+   "task_id": "multi-source-data-merger"
+  },
+  {
+   "category": "optimization",
+   "cells": {
+    "hy3-mini-swe-agent": {
+     "outcome": "resolved",
+     "process": "valid",
+     "process_provenance": "evaluator",
+     "resolved_but_invalid": false,
+     "reward": 1.0
+    },
+    "hy3-terminus-2": {
+     "outcome": "resolved",
+     "process": "valid",
+     "process_provenance": "evaluator",
+     "resolved_but_invalid": false,
+     "reward": 1.0
+    }
+   },
+   "difficulty": "medium",
+   "name": "portfolio-optimization",
+   "task_id": "portfolio-optimization"
+  },
+  {
+   "category": "model-training",
+   "cells": {
+    "hy3-mini-swe-agent": {
+     "outcome": "unresolved",
+     "process": "partial",
+     "process_provenance": "second_rater",
+     "resolved_but_invalid": false,
+     "reward": 0.0
+    },
+    "hy3-terminus-2": {
+     "outcome": "resolved",
+     "process": "valid",
+     "process_provenance": "evaluator",
+     "resolved_but_invalid": false,
+     "reward": 1.0
+    }
+   },
+   "difficulty": "medium",
+   "name": "pytorch-model-recovery",
+   "task_id": "pytorch-model-recovery"
+  },
+  {
+   "category": "scientific-computing",
+   "cells": {
+    "hy3-mini-swe-agent": {
+     "outcome": "unresolved",
+     "process": "invalid",
+     "process_provenance": "second_rater",
+     "resolved_but_invalid": false,
+     "reward": 0.0
+    },
+    "hy3-terminus-2": {
+     "outcome": "unresolved",
+     "process": "invalid",
+     "process_provenance": "second_rater",
+     "resolved_but_invalid": false,
+     "reward": 0.0
+    }
+   },
+   "difficulty": "medium",
+   "name": "raman-fitting",
+   "task_id": "raman-fitting"
+  },
+  {
+   "category": "software-engineering",
+   "cells": {
+    "hy3-mini-swe-agent": {
+     "outcome": "unresolved",
+     "process": "partial",
+     "process_provenance": "second_rater",
+     "resolved_but_invalid": false,
+     "reward": 0.0
+    },
+    "hy3-terminus-2": {
+     "outcome": "resolved",
+     "process": null,
+     "process_provenance": "evaluator",
+     "resolved_but_invalid": null,
+     "reward": 1.0
+    }
+   },
+   "difficulty": "medium",
+   "name": "schemelike-metacircular-eval",
+   "task_id": "schemelike-metacircular-eval"
+  },
+  {
+   "category": "debugging",
+   "cells": {
+    "hy3-mini-swe-agent": {
+     "outcome": "resolved",
+     "process": "valid",
+     "process_provenance": "evaluator",
+     "resolved_but_invalid": false,
+     "reward": 1.0
+    },
+    "hy3-terminus-2": {
+     "outcome": "resolved",
+     "process": "valid",
+     "process_provenance": "evaluator",
+     "resolved_but_invalid": false,
+     "reward": 1.0
+    }
+   },
+   "difficulty": "medium",
+   "name": "sqlite-db-truncate",
+   "task_id": "sqlite-db-truncate"
+  }
+ ],
+ "sample": false
+}

@@ -27,7 +27,7 @@ ErrorType = Literal[
 ]
 Severity = Literal["low", "medium", "high", "critical"]
 Localization = Literal["located", "none", "unlocatable"]
-Provenance = Literal["official", "evaluator", "human", "mixed"]
+Provenance = Literal["official", "evaluator", "human", "second_rater", "mixed"]
 CheckStatus = Literal["passed", "failed", "skipped", "other"]
 JudgeStatus = Literal["ok", "unavailable", "context_limit"]
 

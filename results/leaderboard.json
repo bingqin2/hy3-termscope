@@ -1,0 +1,38 @@
+{
+ "rows": [
+  {
+   "config_id": "hy3-terminus-2",
+   "label": "Hy3 × terminus-2",
+   "mean_score": 0.65,
+   "n_inconclusive": 0,
+   "n_runs": 20,
+   "process_validity_rate_adjudicated": 0.6842105263157895,
+   "process_validity_rate_predicted": 1.0,
+   "provenance": {
+    "process_validity_rate_adjudicated": "mixed",
+    "process_validity_rate_predicted": "evaluator",
+    "resolve_rate": "official"
+   },
+   "resolve_rate": 0.65,
+   "tasks_won": 13
+  },
+  {
+   "config_id": "hy3-mini-swe-agent",
+   "label": "Hy3 × mini-swe-agent",
+   "mean_score": 0.65,
+   "n_inconclusive": 0,
+   "n_runs": 20,
+   "process_validity_rate_adjudicated": 0.7,
+   "process_validity_rate_predicted": 1.0,
+   "provenance": {
+    "process_validity_rate_adjudicated": "mixed",
+    "process_validity_rate_predicted": "evaluator",
+    "resolve_rate": "official"
+   },
+   "resolve_rate": 0.65,
+   "tasks_won": 13
+  }
+ ],
+ "sample": false,
+ "updated": "2026-09-02T08:27:39"
+}
