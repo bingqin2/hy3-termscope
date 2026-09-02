@@ -1,33 +1,39 @@
 import meta from "../data/meta.json";
 import type { MetaData } from "../types";
+import type { PageId } from "../App";
 
 const m = meta as MetaData;
 
-const NAV = [
-  ["01", "Leaderboard", "#leaderboard"],
-  ["02", "Tasks", "#per-task"],
-  ["03", "Failures", "#failure-patterns"],
-  ["04", "Taxonomy", "#taxonomy"],
-  ["05", "Runs", "#run-explorer"],
-  ["06", "Validation", "#validation"],
-] as const;
+const NAV: readonly [string, string, PageId][] = [
+  ["01", "Leaderboard", "leaderboard"],
+  ["02", "Tasks", "per-task"],
+  ["03", "Failures", "failure-patterns"],
+  ["04", "Taxonomy", "taxonomy"],
+  ["05", "Runs", "run-explorer"],
+  ["06", "Validation", "validation"],
+];
 
-export function Header() {
+export function Header({ active }: { active: PageId }) {
   return (
     <header className="sticky top-0 z-30 border-b border-line bg-ground/90 backdrop-blur">
-      <div className="mx-auto flex h-14 max-w-5xl items-center gap-6 px-6">
-        <a href="#top" className="flex items-center gap-2.5">
+      <div className="mx-auto flex max-w-5xl flex-wrap items-center gap-x-6 gap-y-1 px-6 py-3">
+        <a href="#leaderboard" className="flex items-center gap-2.5">
           <span className="grid h-7 w-7 place-items-center rounded-sm bg-accent font-mono text-[11px] font-bold text-ground">
             TS
           </span>
           <span className="font-display text-lg font-semibold tracking-tight">TermScope</span>
         </a>
-        <nav className="hidden items-center gap-4 md:flex">
-          {NAV.map(([num, label, href]) => (
+        <nav className="flex flex-wrap items-center gap-x-4 gap-y-1">
+          {NAV.map(([num, label, id]) => (
             <a
-              key={num}
-              href={href}
-              className="font-mono text-xs text-ink-muted transition-colors hover:text-ink"
+              key={id}
+              href={`#${id}`}
+              aria-current={active === id ? "page" : undefined}
+              className={`font-mono text-xs transition-colors hover:text-ink ${
+                active === id
+                  ? "rounded-full border border-accent/50 bg-surface px-2.5 py-0.5 text-ink"
+                  : "text-ink-muted"
+              }`}
             >
               <span className="text-accent">{num}</span> {label}
             </a>

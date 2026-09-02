@@ -1,7 +1,46 @@
 # Next steps
 
-Current step: **Day 10 — report, audits, demo, freeze** (Day 9 complete; the owner pushes and
-enables Pages to put the site live).
+Current step: **project frozen — submission** (Days 1–10 complete).
+
+Remaining owner actions (nothing else blocks submission):
+
+1. **Repository rename + push + Pages** — the local remote may still point at the old slug:
+   `gh repo rename hy3-termscope -R bingqin2/hy3 --yes` (or rename in the web UI and
+   `git remote set-url origin https://github.com/bingqin2/hy3-termscope.git`), commit, push
+   `main`, then Settings → Pages → Source = "GitHub Actions". The site publishes to
+   https://bingqin2.github.io/hy3-termscope/.
+2. **Demo GIF (owner records it)** — ≤ 2 minutes; suggested walk: leaderboard → task matrix →
+   a solved and a failed run in the explorer → the labeled first-error step → validation.
+   Embed in the README when done ([PROJECT_REQUIREMENTS.md](PROJECT_REQUIREMENTS.md)
+   checklist item).
+3. **Optional**: adjudicate `hy3-terminus-2__schemelike-metacircular-eval` (the honest-null
+   run) via `annotate.py reveal … --show-verdict` + `label --reviewer owner`; the exports
+   re-derive with one command afterwards.
+
+## Day 10 status (complete)
+
+- **Analysis report** ([REPORT.md](REPORT.md)): headline quadrant (25 resolved-valid /
+  1 honest null / 2-5-7 failed valid-partial-invalid; zero resolved-but-invalid), identical
+  per-difficulty resolve rates across scaffolds, the category cliff, five case studies
+  (including the cross-config repeated raman reasoning failure and the triple-concordant
+  causal flip), the full validation table, the measured audit-then-absolve negative result,
+  limitations, and reproduction pointers — every number derived from committed artifacts.
+- **Requirements audit** ([PROJECT_REQUIREMENTS.md](PROJECT_REQUIREMENTS.md)): all seven
+  acceptance deliverables checked with per-item evidence pointers.
+- **Site restructured into standalone pages** (owner request — no long scroll): hash-routed
+  views, one per section (leaderboard with the hero, tasks, failures, taxonomy, runs,
+  validation), header nav always visible with the active page highlighted, scroll reset on
+  switch, old section links (`#run-explorer` etc.) still resolve. The demo GIF is recorded by
+  the owner (see the open item above).
+- **Clean-clone verification**: a fresh clone contains no `.env` or credential file (full
+  history checked for added env/creds paths — none), `uv sync && uv run pytest` passes 73
+  tests, and `scripts/export_results.py` re-derives all six result tables **byte-identical**
+  to the committed ones.
+- **Security/hygiene scan**: tracked tree and full history free of key-shaped strings, bearer
+  tokens, and cloud-credential patterns; `.env`, `.local/`, `dist/`, `node_modules/` ignored;
+  the site snapshot additionally passes the publication scan at build time.
+- **README finalized**: intro, live-site link, demo, headline results, run instructions,
+  layout, documentation map, license.
 
 ## Day 9 status (complete; owner to push + enable Pages)
 

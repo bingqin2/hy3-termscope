@@ -26,15 +26,15 @@ open-source practical task, Hunyuan LLM track, **Task 2: 可验证场景：过�
 | 有效性验证 ≥ 2 项：定位准确率、误报率 | Blinded human labels on failed runs; human audit of flagged-resolved runs; discriminative fixture-tier test; ten judge-stability sessions plus one consistency session per campaign run; evaluator v1→v2 regression card against frozen labels ([EVALUATOR_SPEC.md](EVALUATOR_SPEC.md) §6) |
 | 完整评测 + 结果表格 + 典型 case 归因 + 难度分层分析 | Single-pass campaign, aggregated tables, capability-cliff analysis, case studies in the report |
 
-## Acceptance checklist (final deliverables, PDF 【产出】)
+## Acceptance checklist (final deliverables, PDF 【产出】) — with evidence
 
-- [ ] Public repo: app source, process-evaluation module, README (intro / run / environment), `env.example`
-- [ ] Eval materials: pre-registered stratified TB2 slice (16–20 tasks) + the benchmark's shipped verifiers, answer-checking via Harbor, process-evaluation scripts
-- [ ] Full results: answer accuracy, process correctness rate, error-type distribution, difficulty-stratified tables
-- [ ] Validation records: localization accuracy, false-positive rate, human spot-check logs (explicit denominators), judge-stability records, v1→v2 regression card
-- [ ] Analysis report: design rationale, taxonomy explanation, typical cases, capability boundary / cliff analysis
-- [ ] Demo GIF ≤ 2 minutes: one task solved + process-evaluated + shown in the run explorer
-- [ ] Live GitHub Pages site (sections 01–06, [FRONTEND_SPEC.md](FRONTEND_SPEC.md))
+- [x] Public repo: app source, process-evaluation module, README (intro / run / environment), `env.example` — `src/termscope/` (contracts, importer, deterministic/replay/judge/merge), `scripts/`, [README.md](../README.md), `env.example`; 73 tests
+- [x] Eval materials: pre-registered stratified TB2 slice + shipped verifiers + process-evaluation scripts — `data/slices/slice-v1.json` (20 tasks, seeded stratification recorded) + `data/slices/preregistration.json` (frozen before the first campaign call); verifier outcomes via Harbor per run under `results/per_run/*/`; evaluation entry points `scripts/{evaluate_campaign,replay_campaign,assemble_evaluations}.py`
+- [x] Full results: answer accuracy, process correctness rate, error-type distribution, difficulty-stratified tables — `results/{leaderboard,tasks,failure_patterns,runs,spend}.json` (byte-stable exporter, provenance-tagged) and [REPORT.md](REPORT.md) §1–4
+- [x] Validation records: localization accuracy, false-positive rate, labeled spot-checks with explicit denominators, judge-stability records, v1→v2 regression card — `results/validation.json`, `data/environment-checks/day7-validation.json`, `results/reviews/` (append-only blinded reviews + RATERS.json + recorded protocol deviation), `results/judge-stability/`, `results/regression/regression-card.json`
+- [x] Analysis report: design rationale, taxonomy explanation, typical cases, capability boundary / cliff analysis — [REPORT.md](REPORT.md) (quadrant, five case studies, category cliff, the measured negative result, limitations)
+- [ ] Demo GIF ≤ 2 minutes — **owner records it** (suggested walk: leaderboard → task matrix → a solved and a failed run in the explorer → the labeled first-error step → validation); embed in the README when done
+- [x] Live GitHub Pages site (sections 01–06) — `frontend/` + `.github/workflows/deploy.yml`; live at https://bingqin2.github.io/hy3-termscope/ once the owner enables Pages (Source = GitHub Actions)
 
 ## Scope notes accepted by the owner
 
