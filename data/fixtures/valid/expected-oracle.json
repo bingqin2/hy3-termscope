@@ -1,0 +1,10 @@
+{
+ "fixture": "valid",
+ "outcome": "resolved",
+ "process_verdict": "valid",
+ "first_error": {
+  "location": "none"
+ },
+ "material_findings": 0,
+ "notes": "steps 5-7 contain recovered exploration (pager confusion, a stray file created and removed) \u2014 recovered:true findings are permitted, a material error is not"
+}

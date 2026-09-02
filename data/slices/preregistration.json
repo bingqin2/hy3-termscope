@@ -1,0 +1,54 @@
+{
+  "record": "campaign-preregistration-v1",
+  "date": "2026-09-01",
+  "status": "frozen before the first campaign call; committed by the owner alongside the Day 1 gate records (ROADMAP decisions 13 & 15)",
+  "dataset": {
+    "name": "terminal-bench",
+    "version": "2.0",
+    "git_commit_pin": "69671fbaac6d67a7ef0dfec016cc38a64ef7a77c"
+  },
+  "task_list": {
+    "source": "data/slices/slice-v1.json (seed 20260902, frame and full candidate order recorded there)",
+    "n_tasks": 20,
+    "tasks": [
+      "cobol-modernization", "fix-git", "overfull-hbox",
+      "constraints-scheduling", "count-dataset-tokens", "dna-insert",
+      "financial-document-processor", "git-multibranch", "multi-source-data-merger",
+      "portfolio-optimization", "pytorch-model-recovery", "raman-fitting",
+      "schemelike-metacircular-eval", "sqlite-db-truncate",
+      "extract-moves-from-video", "feal-differential-cryptanalysis",
+      "llm-inference-batching-scheduler", "sam-cell-seg", "sparql-university",
+      "video-processing"
+    ]
+  },
+  "configs": [
+    {"config_id": "hy3-terminus-2", "agent": "terminus-2", "model": "openai/hy3", "role": "primary"},
+    {"config_id": "hy3-mini-swe-agent", "agent": "mini-swe-agent", "model": "openai/hy3", "role": "second"}
+  ],
+  "run_order": {
+    "rule": "tasks in slice-v1.json order (difficulty asc, then name); per task, hy3-terminus-2 then hy3-mini-swe-agent (config-interleaved so neither config systematically runs later in the day)",
+    "concurrency": "n-concurrent 2 locally, identical for both configs; identical harbor flags across all runs; single attempt per (task, config)",
+    "runs_total": 40
+  },
+  "substitution_rule_verbatim": "Sole exception: a run invalidated by measurement failure (Docker/API infrastructure, marked `inconclusive` with the broken attempt kept on record) may be re-run once — apparatus failures are re-measurable, disliked results are not.",
+  "quota_plan": {
+    "measured_baseline": "69,401 tokens for the Day 1 live trial (fix-git, easy, clean 15-step solve)",
+    "planning_average_per_run": "~300K tokens (range 100K-1M; failed/long runs dominate)",
+    "projection": "~12M for 40 campaign agent runs; ~16-18M central including judge lanes; <=35M worst case",
+    "policy": "quota is not a constraint (owner-confirmed); owner tops up on request; scope never silently trimmed for quota"
+  },
+  "blinding_protocol": {
+    "verdict_suppression": "the evaluation script suppresses verdicts by default; printing one requires an explicit --show-verdict",
+    "labels": "the annotation CLI records each initial human label with a timestamp before any evaluator output is revealed",
+    "reviews": "append-only versions; any non-blinded review is marked as such and excluded from validation metrics by construction"
+  },
+  "judge_plan": {
+    "freeze": "rubric-v1 + prompt-v1 frozen on Day 5, before any campaign call; judge = hy3, lowest temperature, fixed reasoning effort, configured separately from the agent",
+    "stability": "five judge-stability sessions on the invalid fixture (Day 5 gate) + five on one real flagged run and one consistency session per campaign run (Day 7) — decision 12 instrument-measurement carve-out"
+  },
+  "notes": [
+    "fix-git also served as the Day 1 live gate trial; that trial is an environment-check record, never campaign evidence — the campaign run of fix-git is a fresh single attempt",
+    "gate failures excluded by viability, recorded in day1-task-gate.json: build-cython-ext, caffe-cifar-10, qemu-alpine-ssh, qemu-startup",
+    "heavy tasks (sam-cell-seg, video-processing, portfolio-optimization) stay in — the frame does not exclude by runtime; wall-clock risk is accepted and the ROADMAP cut order is the pressure valve"
+  ]
+}

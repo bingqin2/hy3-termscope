@@ -1,0 +1,194 @@
+{
+ "record": "slice-v1",
+ "date": "2026-09-01",
+ "dataset": "terminal-bench@2.0",
+ "git_commit_pin": "69671fbaac6d67a7ef0dfec016cc38a64ef7a77c",
+ "source_gate_record": "data/environment-checks/day1-task-gate.json",
+ "seed": 20260902,
+ "frame": {
+  "target": 20,
+  "band": "16-20 (floor 12)",
+  "tier_quota": {
+   "easy": 3,
+   "medium": 11,
+   "hard": 6
+  },
+  "per_category_cap": 2,
+  "cap_relaxations": [],
+  "rationale": "proportional to the gate-passing pool (4 easy / 16 medium / 7 hard); category cap for breadth; no exclusion by runtime or expected difficulty of grading \u2014 heavy tasks stay eligible"
+ },
+ "candidate_order": {
+  "easy": [
+   "cobol-modernization",
+   "fix-git",
+   "prove-plus-comm",
+   "overfull-hbox"
+  ],
+  "medium": [
+   "raman-fitting",
+   "multi-source-data-merger",
+   "dna-insert",
+   "constraints-scheduling",
+   "financial-document-processor",
+   "portfolio-optimization",
+   "count-dataset-tokens",
+   "pytorch-model-recovery",
+   "git-multibranch",
+   "schemelike-metacircular-eval",
+   "sqlite-db-truncate",
+   "extract-elf",
+   "hf-model-inference",
+   "compile-compcert",
+   "largest-eigenval",
+   "chess-best-move"
+  ],
+  "hard": [
+   "video-processing",
+   "extract-moves-from-video",
+   "llm-inference-batching-scheduler",
+   "feal-differential-cryptanalysis",
+   "sam-cell-seg",
+   "sparql-university",
+   "password-recovery"
+  ]
+ },
+ "n_selected": 20,
+ "categories": [
+  "data-processing",
+  "data-querying",
+  "data-science",
+  "debugging",
+  "file-operations",
+  "machine-learning",
+  "mathematics",
+  "model-training",
+  "optimization",
+  "personal-assistant",
+  "scientific-computing",
+  "software-engineering",
+  "system-administration",
+  "video-processing"
+ ],
+ "tasks": [
+  {
+   "name": "cobol-modernization",
+   "difficulty": "easy",
+   "category": "software-engineering",
+   "viability": "rosetta"
+  },
+  {
+   "name": "fix-git",
+   "difficulty": "easy",
+   "category": "software-engineering",
+   "viability": "rosetta"
+  },
+  {
+   "name": "overfull-hbox",
+   "difficulty": "easy",
+   "category": "debugging",
+   "viability": "rosetta"
+  },
+  {
+   "name": "extract-moves-from-video",
+   "difficulty": "hard",
+   "category": "file-operations",
+   "viability": "rosetta"
+  },
+  {
+   "name": "feal-differential-cryptanalysis",
+   "difficulty": "hard",
+   "category": "mathematics",
+   "viability": "rosetta"
+  },
+  {
+   "name": "llm-inference-batching-scheduler",
+   "difficulty": "hard",
+   "category": "machine-learning",
+   "viability": "rosetta"
+  },
+  {
+   "name": "sam-cell-seg",
+   "difficulty": "hard",
+   "category": "data-science",
+   "viability": "rosetta"
+  },
+  {
+   "name": "sparql-university",
+   "difficulty": "hard",
+   "category": "data-querying",
+   "viability": "rosetta"
+  },
+  {
+   "name": "video-processing",
+   "difficulty": "hard",
+   "category": "video-processing",
+   "viability": "rosetta"
+  },
+  {
+   "name": "constraints-scheduling",
+   "difficulty": "medium",
+   "category": "personal-assistant",
+   "viability": "rosetta"
+  },
+  {
+   "name": "count-dataset-tokens",
+   "difficulty": "medium",
+   "category": "model-training",
+   "viability": "rosetta"
+  },
+  {
+   "name": "dna-insert",
+   "difficulty": "medium",
+   "category": "scientific-computing",
+   "viability": "rosetta"
+  },
+  {
+   "name": "financial-document-processor",
+   "difficulty": "medium",
+   "category": "data-processing",
+   "viability": "rosetta"
+  },
+  {
+   "name": "git-multibranch",
+   "difficulty": "medium",
+   "category": "system-administration",
+   "viability": "rosetta"
+  },
+  {
+   "name": "multi-source-data-merger",
+   "difficulty": "medium",
+   "category": "data-processing",
+   "viability": "rosetta"
+  },
+  {
+   "name": "portfolio-optimization",
+   "difficulty": "medium",
+   "category": "optimization",
+   "viability": "rosetta"
+  },
+  {
+   "name": "pytorch-model-recovery",
+   "difficulty": "medium",
+   "category": "model-training",
+   "viability": "rosetta"
+  },
+  {
+   "name": "raman-fitting",
+   "difficulty": "medium",
+   "category": "scientific-computing",
+   "viability": "rosetta"
+  },
+  {
+   "name": "schemelike-metacircular-eval",
+   "difficulty": "medium",
+   "category": "software-engineering",
+   "viability": "rosetta"
+  },
+  {
+   "name": "sqlite-db-truncate",
+   "difficulty": "medium",
+   "category": "debugging",
+   "viability": "rosetta"
+  }
+ ]
+}

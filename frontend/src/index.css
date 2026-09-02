@@ -1,0 +1,43 @@
+@import "tailwindcss";
+
+/*
+ * Palette: dark-surface steps of the Nature (NPG) hue families.
+ * Categorical and status sets validated with the dataviz palette validator
+ * (lightness band L 0.48–0.67, chroma ≥ 0.1, CVD ΔE ≥ 8, normal ΔE ≥ 15, ≥ 3:1 contrast).
+ */
+@theme {
+  --color-ground: #14110f;
+  --color-surface: #1c1815;
+  --color-surface-2: #241f1b;
+  --color-line: #2b2521;
+  --color-ink: #ece5da;
+  --color-ink-muted: #a89e90;
+  --color-ink-faint: #7a7166;
+  --color-accent: #c4502e;
+
+  /* categorical — one per Hy3 configuration, fixed order, never cycled */
+  --color-cat-a: #009db8;
+  --color-cat-b: #bc6f4c;
+  --color-cat-c: #6e72ba;
+
+  /* status — reserved for pass/partial/fail and severity, never for series */
+  --color-good: #0d8f73;
+  --color-warn: #ac9134;
+  --color-bad: #b63b32;
+  --color-sev-medium: #937d57;
+
+  --font-display: "Fraunces", Georgia, "Times New Roman", serif;
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-ground);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}

@@ -1,0 +1,62 @@
+{
+  "record": "day1-environment",
+  "date": "2026-09-01",
+  "machine": {
+    "os": "macOS 26.2",
+    "arch": "arm64 (Apple Silicon)",
+    "amd64_emulation": "verified — docker run --platform linux/amd64 alpine uname -m -> x86_64"
+  },
+  "docker": {
+    "server_version": "29.5.2",
+    "server_platform": "linux/arm64",
+    "data_folder": "/Volumes/Elements/Docker/DockerDesktop (external APFS SSD; Docker requires the SSD attached to start)"
+  },
+  "harbor": {
+    "version": "0.22.0",
+    "installed_via": "uv tool install harbor==0.22.0 (uv 0.11.13, python 3.14.4)",
+    "executables": ["harbor", "hb", "hr"]
+  },
+  "dataset": {
+    "name": "terminal-bench",
+    "version": "2.0",
+    "task_count": 89,
+    "registry": "https://raw.githubusercontent.com/laude-institute/harbor/main/registry.json",
+    "source_repo": "https://github.com/laude-institute/terminal-bench-2.git",
+    "git_commit_pin": "69671fbaac6d67a7ef0dfec016cc38a64ef7a77c",
+    "note": "all 89 tasks resolve to the same repo and commit; this commit is the dataset revision pin. Images are prebuilt linux/amd64 (alexgshaw/<task>:20251031 on Docker Hub) and are pulled, not built — every task runs under Rosetta emulation; native arm64 does not exist for this dataset."
+  },
+  "trajectory_format": {
+    "pin": "ATIF (Agent Trajectory Interchange Format), schema_version <= ATIF-v1.7 as emitted by harbor 0.22.0 terminus-2 (SUPPORTS_ATIF)",
+    "step_shape": "step_id (1-based), source (system|user|agent), message, reasoning_content, tool_calls[{tool_call_id, function_name, arguments}], observation{results[{source_call_id, content}]}, per-step metrics (token counts), llm_call_count",
+    "final_metrics": "total_prompt_tokens / total_completion_tokens / total_cached_tokens / total_cost_usd / total_steps"
+  },
+  "per_trial_artifacts": [
+    "config.json", "result.json", "lock.json", "trial.log",
+    "agent/ (trajectory + agent logs; oracle.txt for oracle trials)",
+    "verifier/reward.txt", "verifier/ctrf.json", "verifier/test-stdout.txt",
+    "artifacts/manifest.json"
+  ],
+  "tamper_surface": "tests/ and solution/ are uploaded to the environment only at verifier time (harbor verifier._resolve_tests + upload_dir); during the agent phase the checker is absent — the agent cannot read or modify it. Container network is available by default (allow_internet unset in all 89 task.toml files).",
+  "paths": {
+    "jobs_dir": "~/termscope-work/jobs",
+    "dataset_checkout": "~/termscope-work/tb2-src (pinned commit above)"
+  },
+  "live_trial": {
+    "date": "2026-09-01",
+    "task": "fix-git",
+    "config": "hy3-terminus-2 (agent terminus-2 2.0.0, model openai/hy3, parser json)",
+    "credentials": "OPENAI_API_KEY/OPENAI_BASE_URL loaded by harbor --env-file from an owner-created file outside the repo; values never printed or stored",
+    "outcome": "resolved, official reward 1.0, both verifier checks passed",
+    "trajectory": "ATIF-v1.7, 15 steps, agent/trajectory.json (+ terminus_2.pane, recording.cast)",
+    "wall_clock": "1m 59s total job runtime",
+    "token_cost": {
+      "prompt_tokens": 61570,
+      "cached_of_prompt": 45184,
+      "completion_tokens": 7831,
+      "total_tokens": 69401,
+      "note": "an easy 15-step clean solve — the cheap end of the expected 100K-1M per-run range; the ~300K/run planning average and the campaign projection (~16-18M central, <=35M worst) stand"
+    },
+    "bundle": "imported and hash-verified (content-addressed id f407372282d481d9…, RunBundle schema v1)"
+  },
+  "pending": []
+}

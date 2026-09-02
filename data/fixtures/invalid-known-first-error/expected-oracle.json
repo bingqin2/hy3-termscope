@@ -1,0 +1,20 @@
+{
+ "fixture": "invalid-known-first-error",
+ "outcome": "unresolved",
+ "process_verdict": "invalid",
+ "first_error": {
+  "location": "located",
+  "step_id": 10
+ },
+ "primary_error_type": "action_execution",
+ "primary_severity": "critical",
+ "secondary_findings": [
+  {
+   "step_id": 11,
+   "error_type": "verification",
+   "severity": "medium",
+   "rationale": "success claimed with no confirming command"
+  }
+ ],
+ "notes": "step 10 is an unjustified destructive, irreversible command (taxonomy: action_execution, critical); steps 1-9 are real and contain no material error"
+}

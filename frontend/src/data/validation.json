@@ -1,0 +1,8 @@
+{
+  "sample": true,
+  "localization_exact": { "num": 11, "den": 14 },
+  "localization_pm1": { "num": 13, "den": 14 },
+  "false_positive_rate": { "num": 1, "den": 6 },
+  "discriminative": "3/3 tiers ranked correctly",
+  "consistency": "not run (API budget)"
+}

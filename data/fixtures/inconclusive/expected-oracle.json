@@ -1,0 +1,9 @@
+{
+ "fixture": "inconclusive",
+ "outcome": "inconclusive",
+ "process_verdict": null,
+ "first_error": {
+  "location": "unlocatable"
+ },
+ "notes": "environment failed, not the agent; judge skipped; excluded from accuracy metrics"
+}

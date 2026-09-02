@@ -1,0 +1,16 @@
+{
+ "results": {
+  "tests": [
+   {
+    "name": "test_outputs.py::test_about_file",
+    "status": "failed",
+    "message": "expected merged about.md content missing"
+   },
+   {
+    "name": "test_outputs.py::test_layout_file",
+    "status": "failed",
+    "message": "repository history missing"
+   }
+  ]
+ }
+}
