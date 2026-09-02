@@ -1,8 +1,41 @@
 # Next steps
 
-Current step: **Day 6 — campaign** (Days 1–5 complete; exit conditions met).
-Before launching: confirm the account balance covers the projection (agents dominate;
-the judge measured far cheaper than planned).
+Current step: **Day 7 — blinded human validation** (Days 1–6 complete; exit conditions met).
+Owner rule for Day 7: label with `scripts/annotate.py` **before** opening anything under
+`results/per_run/*/judge.json`, `replay.json`, or `evaluation.json` — those files carry the
+evaluator's verdicts and the labels must be captured blind.
+
+## Day 6 status (complete)
+
+- **Campaign executed exactly as pre-registered**: 40 runs (20 tasks × 2 configs), single
+  attempt each, tasks in slice order, per task `hy3-terminus-2` then `hy3-mini-swe-agent`,
+  total concurrency 2 (`scripts/run_campaign.py`); 3.55 h wall-clock; no run left
+  inconclusive; no re-run was needed — the decision-12 exception mechanism exists
+  (`--rerun KEY --reason`) but stayed unused.
+- **Official outcomes**: `hy3-terminus-2` 13/20 resolved, `hy3-mini-swe-agent` 13/20
+  resolved (per-difficulty and per-run detail in
+  `data/environment-checks/day6-campaign-record.json`).
+- **Spend recorded**: agents 21,273,798 tokens (terminus-2 ≈ 420K/run, mini-swe-agent
+  ≈ 644K/run; failed heavy runs consumed their time budgets); judge ≈ 1.16M recorded
+  (the first 18 calls carry estimated prompt tokens — `results/campaign-incidents.json`).
+- **All bundles stored** under `results/per_run/<config>__<task>/` (bundle, deterministic
+  facts, judge result, judge usage); 39 judge lanes `ok`, 1 honest `context_limit`
+  (prompt larger than the gateway's 192K-token input limit).
+- **Every table re-derivable by one script**: `scripts/export_results.py` (byte-stable,
+  provenance-tagged, honest nulls; unit-tested). Exports stay in a preview directory outside
+  the repo until the Day 7 labels exist.
+- **Incidents (4), all classified with evidence** in `results/campaign-incidents.json`:
+  judge generation budget (reasoning counted in `max_tokens`), an agent exhausting the
+  model's context window, a judge prompt beyond the gateway limit, and an agent process
+  SIGKILLed inside its task's official 4 GiB memory limit. Outcome policy now names time,
+  memory, and context budgets as agent failures (EVALUATOR_SPEC §3).
+- **Replay lane complete** over all 14 failed runs (`scripts/replay_campaign.py`): 33
+  probes, none timed out, ~78 s per probe, 44 minutes total, zero model calls. In aggregate
+  the lane found one causal destructive step and reported `none` for the other 13 —
+  most Hy3 failures on this slice leave the task still completable, so their localization
+  rests on the judge's reasoning-level citation (merge precedence, EVALUATOR_SPEC §5).
+- **Evaluator-v1 results assembled**: `evaluation.json` for all 40 runs
+  (`scripts/assemble_evaluations.py`, immutable; 14 with replay evidence).
 
 ## Day 5 status (complete)
 

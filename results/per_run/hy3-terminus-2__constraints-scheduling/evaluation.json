@@ -1,0 +1,41 @@
+{
+ "bundle_id": "09c9bae4dad249824c0014a3c44173fb8531160656afa3acd06b4de92d31ba06",
+ "evaluator_version": "v1",
+ "created_at": "2026-09-02T09:13:11.131990Z",
+ "deterministic": {
+  "destructive_command_steps": [],
+  "failed_streaks": [],
+  "repeated_command_loops": [],
+  "unverified_success_claim": false,
+  "protected_read_steps": [],
+  "protected_write_steps": [],
+  "transient_edit_steps": [],
+  "hard_process_failure": false,
+  "notes": []
+ },
+ "replay": null,
+ "judge": {
+  "status": "ok",
+  "verdict": "valid",
+  "findings": [],
+  "first_error": {
+   "location": "none",
+   "step_id": null
+  },
+  "rubric_version": "rubric-v1",
+  "prompt_version": "prompt-v1",
+  "judge_model": "hy3",
+  "retried": false
+ },
+ "merged": {
+  "process": "valid",
+  "first_error": {
+   "location": "none",
+   "step_id": null
+  },
+  "judge_earlier_step": null,
+  "primary_error_type": null,
+  "correct_result_invalid_process": false,
+  "flagged_for_human_review": false
+ }
+}

@@ -1,0 +1,18 @@
+{
+ "destructive_command_steps": [
+  6,
+  9,
+  11,
+  12,
+  13,
+  14
+ ],
+ "failed_streaks": [],
+ "repeated_command_loops": [],
+ "unverified_success_claim": false,
+ "protected_read_steps": [],
+ "protected_write_steps": [],
+ "transient_edit_steps": [],
+ "hard_process_failure": false,
+ "notes": []
+}

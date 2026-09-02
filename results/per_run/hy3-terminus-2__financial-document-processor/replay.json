@@ -1,0 +1,62 @@
+{
+ "feasible": true,
+ "localization": "located",
+ "first_error_step": 12,
+ "matrix": [
+  {
+   "prefix_k": 0,
+   "reward": null,
+   "passed": true,
+   "probe": "reachability",
+   "seconds": 58.0
+  },
+  {
+   "prefix_k": 7,
+   "reward": null,
+   "passed": true,
+   "probe": "reachability",
+   "seconds": 65.1
+  },
+  {
+   "prefix_k": 10,
+   "reward": null,
+   "passed": true,
+   "probe": "reachability",
+   "seconds": 75.4
+  },
+  {
+   "prefix_k": 11,
+   "reward": null,
+   "passed": true,
+   "probe": "reachability",
+   "seconds": 80.4
+  },
+  {
+   "prefix_k": 12,
+   "reward": null,
+   "passed": false,
+   "probe": "reachability",
+   "seconds": 71.3
+  },
+  {
+   "prefix_k": 12,
+   "reward": null,
+   "passed": false,
+   "probe": "reachability",
+   "seconds": 77.0
+  },
+  {
+   "prefix_k": 14,
+   "reward": null,
+   "passed": false,
+   "probe": "reachability",
+   "seconds": 80.9
+  }
+ ],
+ "notes": [
+  "reachable through k=11, permanently unreachable from k=12",
+  "flip step command: cat > /app/process.py << 'EOF'",
+  "selected: failed run",
+  "replay wall 526.1s"
+ ]
+}

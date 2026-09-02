@@ -69,6 +69,38 @@ def test_outcome_policy():
     assert derive_outcome(1.0, "{'kind': 'infra'}") == "inconclusive"
 
 
+def test_agent_timeout_is_agent_failure_not_inconclusive(tmp_path):
+    assert derive_outcome(0.0, '{"exception_type": "AgentTimeoutError"}') == "unresolved"
+    assert derive_outcome(1.0, '{"exception_type": "AgentTimeoutError"}') == "resolved"
+    bundle = import_trial(
+        make_trial(tmp_path, reward="0", exception={"exception_type": "AgentTimeoutError",
+                                                     "exception_message": "timed out"}),
+        task=TASK, config=ORACLE,
+    )
+    assert bundle.outcome == "unresolved"
+    assert bundle.exception is not None  # still recorded for transparency
+
+
+def test_context_window_exhaustion_is_agent_failure(tmp_path):
+    exc = '{"exception_type": "NonZeroAgentExitCodeError"}'
+    assert derive_outcome(0.0, exc, "ContextWindowExceededError") == "unresolved"
+    assert derive_outcome(0.0, exc, None) == "inconclusive"  # unexplained crash stays honest
+    trial = make_trial(tmp_path, reward="0",
+                       exception={"exception_type": "NonZeroAgentExitCodeError"})
+    (trial / "agent" / "mini-swe-agent.trajectory.json").write_text(
+        json.dumps({"info": {"exit_status": "ContextWindowExceededError"}, "messages": []}))
+    bundle = import_trial(trial, task=TASK, config=ORACLE)
+    assert bundle.outcome == "unresolved"
+    assert "ContextWindowExceededError" in (bundle.exception or "")
+
+
+def test_resource_kill_is_agent_failure(tmp_path):
+    killed = '{"exception_message": "Command failed (exit 137): mini-swe-agent ...", "exception_type": "NonZeroAgentExitCodeError"}'
+    assert derive_outcome(0.0, killed) == "unresolved"
+    crashed = '{"exception_message": "Command failed (exit 1): mini-swe-agent ...", "exception_type": "NonZeroAgentExitCodeError"}'
+    assert derive_outcome(0.0, crashed) == "inconclusive"
+
+
 def test_exception_is_inconclusive(tmp_path):
     bundle = import_trial(
         make_trial(tmp_path, exception={"type": "EnvironmentBuildError"}),
@@ -120,6 +152,18 @@ def test_import_atif_trajectory(tmp_path):
     assert bundle.token_usage.input_tokens == 900
     assert bundle.token_usage.total_tokens == 980
     assert verify_bundle(bundle)
+
+
+def test_import_prefers_atif_over_native_sibling(tmp_path):
+    """mini-swe-agent emits its native trajectory next to the ATIF one."""
+    trial = make_trial(tmp_path)
+    (trial / "agent" / "mini-swe-agent.trajectory.json").write_text(
+        json.dumps({"trajectory_format": "mini-swe-agent-1", "messages": [{"role": "user", "content": "x"}]})
+    )
+    (trial / "agent" / "trajectory.json").write_text(json.dumps(ATIF))
+    bundle = import_trial(trial, task=TASK, config=ORACLE)
+    assert bundle.trajectory is not None and len(bundle.trajectory) == 2
+    assert bundle.token_usage is not None and bundle.token_usage.input_tokens == 900
 
 
 def test_write_bundle_refuses_conflicting_overwrite(tmp_path):

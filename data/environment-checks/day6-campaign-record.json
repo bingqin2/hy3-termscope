@@ -1,0 +1,112 @@
+{
+ "record": "day6-campaign-record",
+ "preregistration": "data/slices/preregistration.json",
+ "runs_total": 40,
+ "superseded_attempts": [],
+ "started": "2026-09-02T04:54:54.179569+00:00",
+ "finished": "2026-09-02T08:27:39.004545+00:00",
+ "wall_clock_hours": 3.55,
+ "concurrency": "2 (one lane per config; second lane never starts a task before the first has started it)",
+ "per_config": {
+  "hy3-terminus-2": {
+   "n_runs": 20,
+   "outcomes": {
+    "resolved": 13,
+    "unresolved": 7
+   },
+   "resolve_rate_official": 0.65,
+   "by_difficulty": {
+    "easy": {
+     "n": 3,
+     "resolved": 2
+    },
+    "medium": {
+     "n": 11,
+     "resolved": 8
+    },
+    "hard": {
+     "n": 6,
+     "resolved": 3
+    }
+   },
+   "agent_tokens": {
+    "total": 8395657,
+    "mean": 419783,
+    "max": 3000745,
+    "n_with_usage": 20
+   },
+   "wall_sec": {
+    "total": 12728.0,
+    "mean": 636.4,
+    "max": 2496.4
+   },
+   "exceptions": [
+    {
+     "run": "hy3-terminus-2__schemelike-metacircular-eval",
+     "exception": "AgentTimeoutError",
+     "outcome_after_policy": "resolved"
+    },
+    {
+     "run": "hy3-terminus-2__extract-moves-from-video",
+     "exception": "AgentTimeoutError",
+     "outcome_after_policy": "unresolved"
+    }
+   ]
+  },
+  "hy3-mini-swe-agent": {
+   "n_runs": 20,
+   "outcomes": {
+    "resolved": 13,
+    "unresolved": 7
+   },
+   "resolve_rate_official": 0.65,
+   "by_difficulty": {
+    "easy": {
+     "n": 3,
+     "resolved": 2
+    },
+    "medium": {
+     "n": 11,
+     "resolved": 8
+    },
+    "hard": {
+     "n": 6,
+     "resolved": 3
+    }
+   },
+   "agent_tokens": {
+    "total": 12878141,
+    "mean": 643907,
+    "max": 5414805,
+    "n_with_usage": 20
+   },
+   "wall_sec": {
+    "total": 10536.3,
+    "mean": 526.8,
+    "max": 2405.3
+   },
+   "exceptions": [
+    {
+     "run": "hy3-mini-swe-agent__schemelike-metacircular-eval",
+     "exception": "NonZeroAgentExitCodeError",
+     "outcome_after_policy": "unresolved"
+    },
+    {
+     "run": "hy3-mini-swe-agent__extract-moves-from-video",
+     "exception": "AgentTimeoutError",
+     "outcome_after_policy": "unresolved"
+    },
+    {
+     "run": "hy3-mini-swe-agent__sam-cell-seg",
+     "exception": "NonZeroAgentExitCodeError",
+     "outcome_after_policy": "unresolved"
+    }
+   ]
+  }
+ },
+ "agent_tokens_total": 21273798,
+ "judge_tokens_recorded": 1155614,
+ "judge_usage_entries_estimated": 18,
+ "incidents": "results/campaign-incidents.json",
+ "note": "official verifier outcomes and spend only; evaluator verdicts are withheld from this record by design"
+}

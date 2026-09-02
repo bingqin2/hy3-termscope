@@ -49,7 +49,10 @@ mistake is not a material error (§4.9).
 
 From the bundle: artifact identity and hashes; trajectory structure validation (pinned format,
 sequential steps); verifier output parsed into the outcome policy —
-`resolved` / `unresolved` / `inconclusive` (environment failed, not the agent); trajectory
+`resolved` / `unresolved` / `inconclusive` (environment failed, not the agent — an agent that
+exhausts its official time budget, the task's declared memory limit, or the model's context
+window is an agent failure, graded by the verifier's reward like any other run; an unexplained
+agent crash stays `inconclusive`); trajectory
 facts — destructive commands, failed-command streaks, repeated-command loops, and final success
 claims never verified by a confirming command (claim-vs-evidence comparison).
 

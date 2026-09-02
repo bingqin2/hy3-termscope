@@ -83,13 +83,54 @@ def _parse_reward(trial_dir: Path, result: dict) -> float | None:
     return None
 
 
-def derive_outcome(reward: float | None, exception: str | None) -> Outcome:
-    """Outcome policy (EVALUATOR_SPEC §3): infrastructure failure is inconclusive."""
-    if exception is not None:
+AGENT_FAILURE_EXCEPTIONS = ("AgentTimeoutError",)
+# agent-side exit statuses (from the agent's native trajectory) that mean the
+# model/scaffold pair hit its own limits rather than the environment breaking
+MODEL_LIMIT_EXIT_STATUSES = ("ContextWindowExceededError",)
+# exit 137 = SIGKILL: the agent process was killed inside the task's official
+# resource limits (cgroup memory cap) — a budget violated by the agent's own
+# actions, graded like a timeout
+RESOURCE_KILL_MARKERS = ("(exit 137)",)
+
+
+def derive_outcome(
+    reward: float | None, exception: str | None, agent_exit_status: str | None = None
+) -> Outcome:
+    """Outcome policy (EVALUATOR_SPEC §3): infrastructure failure is inconclusive.
+
+    An agent exhausting its official time budget, or the model's context
+    window, is the agent failing — not the environment: harbor still runs the
+    verifier, and the reward decides.
+    """
+    agent_failure = exception is not None and (
+        any(name in exception for name in AGENT_FAILURE_EXCEPTIONS)
+        or (
+            "NonZeroAgentExitCodeError" in exception
+            and (
+                (agent_exit_status is not None
+                 and any(s in agent_exit_status for s in MODEL_LIMIT_EXIT_STATUSES))
+                or any(m in exception for m in RESOURCE_KILL_MARKERS)
+            )
+        )
+    )
+    if exception is not None and not agent_failure:
         return "inconclusive"
     if reward is None:
         return "inconclusive"
     return "resolved" if reward > 0 else "unresolved"
+
+
+def agent_exit_status(trial_dir: Path) -> str | None:
+    """The agent's own exit status from a native trajectory file, if recorded."""
+    for path in sorted(trial_dir.glob("agent/*.trajectory.json")):
+        try:
+            data = json.loads(path.read_text())
+        except (OSError, json.JSONDecodeError):
+            continue
+        info = data.get("info") if isinstance(data, dict) else None
+        if isinstance(info, dict) and info.get("exit_status"):
+            return str(info["exit_status"])
+    return None
 
 
 def _text(value) -> str:
@@ -117,11 +158,10 @@ def load_trajectory(trial_dir: Path) -> tuple[TrajectoryStep, ...] | None:
     tool_calls: [{tool_call_id, function_name, arguments}],
     observation: {results: [{source_call_id, content}]}, metrics}.
     """
-    candidates = sorted(trial_dir.glob("agent/*trajectory*.json"))
-    if not candidates:
+    data = _load_atif(trial_dir)
+    if data is None:
         return None
-    data = json.loads(candidates[0].read_text())
-    raw_steps = data.get("steps") if isinstance(data, dict) else data
+    raw_steps = data.get("steps")
     if not isinstance(raw_steps, list):
         return None
     steps = []
@@ -161,11 +201,36 @@ def load_trajectory(trial_dir: Path) -> tuple[TrajectoryStep, ...] | None:
     return tuple(steps)
 
 
+def _load_atif(trial_dir: Path) -> dict | None:
+    """Locate the ATIF trajectory among agent files.
+
+    Some agents (mini-swe-agent) also emit their native trajectory next to the
+    ATIF one; only a document with an ATIF ``schema_version`` and a ``steps``
+    list qualifies. ``agent/trajectory.json`` is preferred when present.
+    """
+    candidates = sorted(
+        trial_dir.glob("agent/*trajectory*.json"),
+        key=lambda p: (p.name != "trajectory.json", p.name),
+    )
+    for path in candidates:
+        try:
+            data = json.loads(path.read_text())
+        except (OSError, json.JSONDecodeError):
+            continue
+        if (
+            isinstance(data, dict)
+            and str(data.get("schema_version", "")).startswith("ATIF")
+            and isinstance(data.get("steps"), list)
+        ):
+            return data
+    return None
+
+
 def _token_usage(result: dict, trial_dir: Path) -> TokenUsage | None:
     """Prefer the ATIF trajectory's final_metrics; fall back to agent_result."""
-    for path in sorted(trial_dir.glob("agent/*trajectory*.json")):
-        data = json.loads(path.read_text())
-        fm = data.get("final_metrics") if isinstance(data, dict) else None
+    data = _load_atif(trial_dir)
+    if data is not None:
+        fm = data.get("final_metrics")
         if isinstance(fm, dict) and any(
             fm.get(k) for k in ("total_prompt_tokens", "total_completion_tokens")
         ):
@@ -205,8 +270,12 @@ def import_trial(
     )
 
     exception = None
+    exit_status = agent_exit_status(trial_dir)
     if result.get("exception_info"):
-        exception = json.dumps(result["exception_info"], sort_keys=True)
+        info = dict(result["exception_info"])
+        if exit_status:
+            info["agent_exit_status"] = exit_status
+        exception = json.dumps(info, sort_keys=True)
 
     reward = _parse_reward(trial_dir, result)
     bundle = RunBundle(
@@ -214,7 +283,7 @@ def import_trial(
         created_at=created_at or datetime.now(timezone.utc),
         task=task,
         config=config,
-        outcome=derive_outcome(reward, exception),
+        outcome=derive_outcome(reward, exception, exit_status),
         reward=reward,
         verifier=VerifierRecord(
             reward=reward, checks=_parse_ctrf(trial_dir / "verifier" / "ctrf.json")

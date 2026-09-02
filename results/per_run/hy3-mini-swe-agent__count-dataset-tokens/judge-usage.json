@@ -1,0 +1,8 @@
+[
+ {
+  "prompt_tokens": 10170,
+  "completion_tokens": null,
+  "estimated": true,
+  "note": "prompt tokens estimated from prompt size with a ratio calibrated on the first measured batch; completion tokens for the first 18 calls are known only as batch sums (47,796 total)"
+ }
+]

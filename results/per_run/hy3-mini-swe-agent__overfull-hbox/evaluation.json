@@ -1,0 +1,70 @@
+{
+ "bundle_id": "12212074fdf0ba6f68374553bbaabb2cf0d7a92df594f97e43fb293450083c07",
+ "evaluator_version": "v1",
+ "created_at": "2026-09-02T09:13:11.105114Z",
+ "deterministic": {
+  "destructive_command_steps": [
+   13,
+   14
+  ],
+  "failed_streaks": [],
+  "repeated_command_loops": [],
+  "unverified_success_claim": false,
+  "protected_read_steps": [],
+  "protected_write_steps": [],
+  "transient_edit_steps": [],
+  "hard_process_failure": false,
+  "notes": []
+ },
+ "replay": {
+  "feasible": true,
+  "localization": "none",
+  "first_error_step": null,
+  "matrix": [
+   {
+    "prefix_k": 0,
+    "reward": null,
+    "passed": true,
+    "probe": "reachability",
+    "seconds": 89.6
+   },
+   {
+    "prefix_k": 16,
+    "reward": null,
+    "passed": true,
+    "probe": "reachability",
+    "seconds": 90.6
+   }
+  ],
+  "notes": [
+   "no prefix flips the reachable outcome — the failure is one of omission, not a destroyed state",
+   "selected: failed run",
+   "commands wrapped in subshells to mirror mini-swe-agent's per-action isolation",
+   "replay wall 182.3s"
+  ]
+ },
+ "judge": {
+  "status": "ok",
+  "verdict": "valid",
+  "findings": [],
+  "first_error": {
+   "location": "none",
+   "step_id": null
+  },
+  "rubric_version": "rubric-v1",
+  "prompt_version": "prompt-v1",
+  "judge_model": "hy3",
+  "retried": false
+ },
+ "merged": {
+  "process": "valid",
+  "first_error": {
+   "location": "none",
+   "step_id": null
+  },
+  "judge_earlier_step": null,
+  "primary_error_type": null,
+  "correct_result_invalid_process": false,
+  "flagged_for_human_review": false
+ }
+}

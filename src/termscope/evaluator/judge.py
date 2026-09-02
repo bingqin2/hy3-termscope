@@ -35,7 +35,10 @@ RUBRIC_PATH = Path(__file__).resolve().parent / "rubric_v1.md"
 
 OBS_HEAD_CHARS = 1600
 OBS_TAIL_CHARS = 800
-MAX_INPUT_CHARS = 400_000  # beyond this the honest answer is context_limit
+# The gateway's measured input limit is 192,000 tokens (~3.6 chars/token on
+# these prompts); 600K chars ≈ 167K tokens leaves headroom for reasoning and
+# the JSON answer. Beyond this the honest answer is context_limit.
+MAX_INPUT_CHARS = 600_000
 
 VALID_ERROR_TYPES = {
     "task_interpretation", "investigation", "reasoning", "action_execution",
@@ -52,7 +55,9 @@ class JudgeConfig:
 
     model: str = "hy3"
     temperature: float = 0.0
-    max_tokens: int = 4096
+    # the gateway counts Hy3's always-on reasoning against this budget; long
+    # trajectories can spend >4K tokens reasoning before the JSON begins
+    max_tokens: int = 16384
     timeout_sec: float = 300.0
     raw_dir: Path = field(default_factory=lambda: Path(".local") / "judge-raw")
 
@@ -151,6 +156,8 @@ def build_prompt(
 def validate_response(text: str, bundle: RunBundle) -> tuple[dict | None, list[str]]:
     """Parse + cross-reference a judge response. Returns (parsed, errors)."""
     errors: list[str] = []
+    if not text or not text.strip():
+        return None, ["empty response content (generation budget exhausted before the JSON?)"]
     cleaned = re.sub(r"^\s*```(?:json)?\s*|\s*```\s*$", "", text.strip())
     try:
         data = json.loads(cleaned)

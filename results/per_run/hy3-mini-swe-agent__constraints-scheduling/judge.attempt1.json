@@ -1,0 +1,10 @@
+{
+ "status": "unavailable",
+ "verdict": null,
+ "findings": [],
+ "first_error": null,
+ "rubric_version": "rubric-v1",
+ "prompt_version": "prompt-v1",
+ "judge_model": "hy3",
+ "retried": true
+}

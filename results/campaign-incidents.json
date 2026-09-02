@@ -1,0 +1,51 @@
+{
+ "record": "campaign-incidents",
+ "policy": "decision 12: apparatus failures are re-measurable once with the broken attempt kept on record; disliked results are never re-run",
+ "incidents": [
+  {
+   "id": 1,
+   "lane": "judge",
+   "run": "hy3-mini-swe-agent__constraints-scheduling",
+   "symptom": "both judge attempts returned empty message content (0 chars); validator error 'response is not valid JSON'; lane result 'unavailable'",
+   "cause": "the gateway counts Hy3's always-on reasoning against max_tokens; the 4096-token generation budget was exhausted before the JSON began on a long trajectory",
+   "fix": "JudgeConfig.max_tokens raised 4096 -> 16384 (an operational transport limit; rubric-v1, prompt-v1, model, and temperature unchanged); evaluate_campaign.py records finish_reason per call and gained --retry-unavailable, which archives the prior result as judge.attemptN.json before re-measuring",
+   "re_measurement": "one judge call; result 'ok'; prior attempt archived as results/per_run/hy3-mini-swe-agent__constraints-scheduling/judge.attempt1.json; raw responses under .local/judge-raw/",
+   "scope": "all later judge calls use the 16384 budget; the 9 earlier successful calls are unaffected (their content was complete)"
+  },
+  {
+   "id": 2,
+   "lane": "import/outcome policy",
+   "run": "hy3-mini-swe-agent__schemelike-metacircular-eval",
+   "symptom": "harbor NonZeroAgentExitCodeError at 2405 s; the agent's native trajectory records exit_status ContextWindowExceededError (its conversation reached 195,224 tokens against the gateway's 192,000-token input limit after 104 messages); the verifier ran, reward 0",
+   "cause": "the model/scaffold pair exhausted its own context window — a capability boundary of the configuration, not an environment failure",
+   "fix": "importer rule: NonZeroAgentExitCodeError with an agent-side exit status naming a model limit (ContextWindowExceededError) classifies as agent failure -> outcome from the verifier reward (unresolved); the exception and agent exit status stay recorded in the bundle; EVALUATOR_SPEC outcome-policy wording extended",
+   "re_measurement": "none of the agent run (the single attempt stands); the bundle was re-imported under the corrected rule before any judge call existed for it",
+   "scope": "applies to any run whose agent records a model-limit exit status; unexplained non-zero exits remain inconclusive"
+  },
+  {
+   "id": 3,
+   "lane": "judge",
+   "run": "hy3-terminus-2__schemelike-metacircular-eval",
+   "symptom": "judge lane returned context_limit: the blinded prompt exceeded the 400,000-character input cap chosen before the gateway limit was known",
+   "cause": "the cap was a conservative guess; the gateway's input limit is now measured at 192,000 tokens (~3.6 chars/token on these prompts)",
+   "fix": "MAX_INPUT_CHARS recalibrated 400,000 -> 600,000 (~167K tokens, headroom for reasoning and the answer); rubric-v1, prompt-v1, model, and temperature unchanged; --retry-unavailable now also re-measures context_limit results, archiving the prior as judge.attemptN.json",
+   "re_measurement": "one judge call if the prompt fits the recalibrated cap; otherwise the honest context_limit stands",
+   "scope": "all later judge calls use the recalibrated cap",
+   "result": "prompt measured at 823,574 chars (~229K tokens) — larger than the gateway input limit itself; context_limit stands as the honest semantic-lane result (no truncation beyond the fixed rule, which would be a prompt-version change); deterministic and replay lanes still cover the run and the merge policy flags it for human review"
+  },
+  {
+   "id": 4,
+   "lane": "import/outcome policy",
+   "run": "hy3-mini-swe-agent__sam-cell-seg",
+   "symptom": "harbor NonZeroAgentExitCodeError with exit 137 (SIGKILL) 89 s into the agent phase against a 7200 s budget; the agent's last action launched a background `pip install torch torchvision ...` inside the container; the native trajectory records no exit status; the verifier ran on the state left behind, reward 0",
+   "evidence": "task.toml declares memory = \"4G\" and cpus = 1 (official per-task limits); the sibling terminus-2 container on the same task used ~581 MiB of its own 4 GiB cap at the time, and the Docker VM has 15.6 GB — host-level memory pressure is implausible, a cgroup OOM kill inside the official limit is the consistent explanation",
+   "decision": "classified as an agent failure -> outcome unresolved; NO re-run. Decision 12 re-runs only measurement failures (Docker/API apparatus); here the agent's own action violated an official resource budget, which the outcome policy treats like exhausting the time budget or the context window. A re-run was considered and rejected on that basis",
+   "ambiguity_recorded": "the kernel OOM killer's victim choice is not deterministic — the same agent behaviour could have killed only the pip process and let the agent continue; this is inherent to running under a resource cap and is noted for the report",
+   "fix": "importer rule: NonZeroAgentExitCodeError carrying exit 137 classifies as agent failure (RESOURCE_KILL_MARKERS); EVALUATOR_SPEC outcome policy names the memory limit; the provisional inconclusive import (no judge existed) was replaced by the corrected import; the run then received its single judge evaluation",
+   "scope": "exit-137 kills inside the task's declared limits; other unexplained non-zero exits remain inconclusive and eligible for the decision-12 re-run (runner --rerun KEY --reason ...)"
+  }
+ ],
+ "accounting_notes": [
+  "judge usage per run is persisted (judge-usage.json) from the 19th judge call onward; the first 18 calls carry estimated prompt tokens (ratio calibrated on the measured first batch of 6 calls = 147,380 prompt tokens) and their completion tokens are known only as batch sums totalling 47,796"
+ ]
+}

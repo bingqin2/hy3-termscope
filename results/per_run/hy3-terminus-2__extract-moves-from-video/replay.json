@@ -1,0 +1,26 @@
+{
+ "feasible": true,
+ "localization": "none",
+ "first_error_step": null,
+ "matrix": [
+  {
+   "prefix_k": 0,
+   "reward": null,
+   "passed": true,
+   "probe": "reachability",
+   "seconds": 28.4
+  },
+  {
+   "prefix_k": 45,
+   "reward": null,
+   "passed": true,
+   "probe": "reachability",
+   "seconds": 158.7
+  }
+ ],
+ "notes": [
+  "no prefix flips the reachable outcome — the failure is one of omission, not a destroyed state",
+  "selected: failed run",
+  "replay wall 189.4s"
+ ]
+}

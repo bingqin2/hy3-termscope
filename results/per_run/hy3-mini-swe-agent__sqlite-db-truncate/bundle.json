@@ -1,0 +1,196 @@
+{
+ "bundle_id": "ca40cc996472053eaeb501c1b80aad9b2ddb06c5e283e7cb5235463a8842caba",
+ "created_at": "2026-09-02T06:59:09.669150Z",
+ "task": {
+  "name": "sqlite-db-truncate",
+  "dataset": "terminal-bench@2.0",
+  "git_commit": "69671fbaac6d67a7ef0dfec016cc38a64ef7a77c",
+  "difficulty": "medium",
+  "category": "debugging"
+ },
+ "config": {
+  "config_id": "hy3-mini-swe-agent",
+  "agent": "mini-swe-agent",
+  "model": "openai/hy3"
+ },
+ "outcome": "resolved",
+ "reward": 1.0,
+ "verifier": {
+  "reward": 1.0,
+  "checks": [
+   {
+    "name": "test_outputs.py::test_json_data",
+    "status": "passed",
+    "message": null
+   }
+  ]
+ },
+ "trajectory": [
+  {
+   "step_id": 1,
+   "source": "system",
+   "content": "You are a helpful assistant that can interact with a computer.",
+   "command": null,
+   "observation": null,
+   "extra": {}
+  },
+  {
+   "step_id": 2,
+   "source": "user",
+   "content": "Please solve this issue: I have a sqlite database in /app/trunc.db that was corrupted through binary truncation. Recover as many of the rows as possible, and create a JSON file in /app/recover.json. The output should have the format [{\"word\": \"testwordXY\", \"value\": M}, {\"word\": \"testwordZZ\",\"value\": N}, ...]\n\n\nYou can execute bash commands and edit files to implement the necessary changes.\n\n## Recommended Workflow\n\nThis workflow should be done step-by-step so that you can iterate on your changes and any possible problems.\n\n1. Analyze the codebase by finding and reading relevant files\n2. Create a script to reproduce the issue\n3. Edit the source code to resolve the issue\n4. Verify your fix works by running your script again\n5. Test edge cases to ensure your fix is robust\n6. Submit your changes and finish your work by issuing the following command: `echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT`.\n   Do not combine it with any other command. <important>After this command, you cannot continue working on this task.</important>\n\n## Command Execution Rules\n\nYou are operating in an environment where\n\n1. You issue at least one command\n2. The system executes the command(s) in a subshell\n3. You see the result(s)\n4. You write your next command(s)\n\nEach response should include:\n\n1. **Reasoning text** where you explain your analysis and plan\n2. At least one tool call with your command\n\n**CRITICAL REQUIREMENTS:**\n\n- Your response SHOULD include reasoning text explaining what you're doing\n- Your response MUST include AT LEAST ONE bash tool call\n- Directory or environment variable changes are not persistent. Every action is executed in a new subshell.\n- However, you can prefix any action with `MY_ENV_VAR=MY_VALUE cd /path/to/working/dir && ...` or write/load environment variables from files\n- Submit your changes and finish your work by issuing the following command: `echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT`.\n  Do not combine it with any other command. <important>After this command, you cannot continue working on this task.</important>\n\nExample of a CORRECT response:\n<example_response>\nI need to understand the structure of the repository first. Let me check what files are in the current directory to get a better understanding of the codebase.\n\n[Makes bash tool call with {\"command\": \"ls -la\"} as arguments]\n</example_response>\n\n<system_information>\nLinux 6.12.76-linuxkit #1 SMP Wed May 13 14:27:36 UTC 2026 x86_64\n</system_information>\n\n## Useful command examples\n\n### Create a new file:\n\n```bash\ncat <<'EOF' > newfile.py\nimport numpy as np\nhello = \"world\"\nprint(hello)\nEOF\n```\n\n### Edit files with sed:```bash\n# Replace all occurrences\nsed -i 's/old_string/new_string/g' filename.py\n\n# Replace only first occurrence\nsed -i 's/old_string/new_string/' filename.py\n\n# Replace first occurrence on line 1\nsed -i '1s/old_string/new_string/' filename.py\n\n# Replace all occurrences in lines 1-10\nsed -i '1,10s/old_string/new_string/g' filename.py\n```\n\n### View file content:\n\n```bash\n# View specific lines with numbers\nnl -ba filename.py | sed -n '10,20p'\n```\n\n### Any other command you want to run\n\n```bash\nanything\n```",
+   "command": null,
+   "observation": null,
+   "extra": {}
+  },
+  {
+   "step_id": 3,
+   "source": "agent",
+   "content": "I'll start by analyzing the corrupted SQLite database to understand its structure.",
+   "command": "cd /app && ls -la && file trunc.db && du -h trunc.db",
+   "observation": "{\n  \"returncode\": 127,\n  \"output\": \"total 12\\ndrwxr-xr-x 1 root root 4096 Aug 22  2025 .\\ndrwxr-xr-x 1 root root 4096 Sep  2 06:51 ..\\n-rw-r--r-- 1 root root 4096 Aug 11  2025 trunc.db\\n/bin/sh: 1: file: not found\\n\"\n}",
+   "extra": {
+    "reasoning_content": "I'll start by analyzing the corrupted SQLite database to understand its structure."
+   }
+  },
+  {
+   "step_id": 4,
+   "source": "agent",
+   "content": "The database is 4096 bytes. Let me examine its structure with a hex dump and try opening it with sqlite3.",
+   "command": "cd /app && which sqlite3 python3; echo \"---\"; xxd trunc.db | head -50",
+   "observation": "{\n  \"returncode\": 0,\n  \"output\": \"/usr/local/bin/python3\\n---\\n/bin/sh: 1: xxd: not found\\n\"\n}",
+   "extra": {
+    "reasoning_content": "The database is 4096 bytes. Let me examine its structure with a hex dump and try opening it with sqlite3."
+   }
+  },
+  {
+   "step_id": 5,
+   "source": "agent",
+   "content": "",
+   "command": "cd /app && which od hexdump; echo \"---python---\"; python3 -c \"import sqlite3; print(sqlite3.sqlite_version)\"",
+   "observation": "{\n  \"returncode\": 0,\n  \"output\": \"/usr/bin/od\\n---python---\\n3.40.1\\n\"\n}",
+   "extra": {}
+  },
+  {
+   "step_id": 6,
+   "source": "agent",
+   "content": "",
+   "command": "cd /app && od -A d -t x1 trunc.db | head -40",
+   "observation": "{\n  \"returncode\": 0,\n  \"output\": \"0000000 0d 00 00 00 0a 0f 49 00 0f f0 0f df 0f ce 0f bd\\n0000016 0f ac 0f 9b 0f 8a 0f 79 0f 61 0f 49 00 00 00 00\\n0000032 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\\n*\\n0003904 00 00 00 00 00 00 00 00 00 16 0a 04 00 21 07 74\\n0003920 65 73 74 77 6f 72 64 30 39 3f e0 00 00 00 00 00\\n0003936 00 16 09 04 00 21 07 74 65 73 74 77 6f 72 64 30\\n0003952 38 40 58 ff 5c 28 f5 c2 8f 0f 08 04 00 21 01 74\\n0003968 65 73 74 77 6f 72 64 30 37 63 0f 07 04 00 21 01\\n0003984 74 65 73 74 77 6f 72 64 30 36 4b 0f 06 04 00 21\\n0004000 01 74 65 73 74 77 6f 72 64 30 35 32 0f 05 04 00\\n0004016 21 01 74 65 73 74 77 6f 72 64 30 34 2a 0f 04 04\\n0004032 00 21 01 74 65 73 74 77 6f 72 64 30 33 19 0f 03\\n0004048 04 00 21 01 74 65 73 74 77 6f 72 64 30 32 0a 0f\\n0004064 02 04 00 21 01 74 65 73 74 77 6f 72 64 30 31 02\\n0004080 0e 01 04 00 21 09 74 65 73 74 77 6f 72 64 30 30\\n0004096\\n\"\n}",
+   "extra": {}
+  },
+  {
+   "step_id": 7,
+   "source": "agent",
+   "content": "The database is a single 4096-byte page. The first byte `0d` indicates a table leaf b-tree page. Let me analyze the structure more carefully with Python.",
+   "command": "cd /app && od -A d -t x1 trunc.db | sed -n '1,3p;244,260p'",
+   "observation": "{\n  \"returncode\": 0,\n  \"output\": \"0000000 0d 00 00 00 0a 0f 49 00 0f f0 0f df 0f ce 0f bd\\n0000016 0f ac 0f 9b 0f 8a 0f 79 0f 61 0f 49 00 00 00 00\\n0000032 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00\\n\"\n}",
+   "extra": {
+    "reasoning_content": "The database is a single 4096-byte page. The first byte `0d` indicates a table leaf b-tree page. Let me analyze the structure more carefully with Python."
+   }
+  },
+  {
+   "step_id": 8,
+   "source": "agent",
+   "content": "Let me write a Python parser to extract and decode all the cells from this table leaf page.",
+   "command": "cd /app && cat <<'EOF' > parse.py\nimport struct, json\n\ndata = open('trunc.db','rb').read()\nprint(\"file size:\", len(data))\n\ndef read_varint(buf, off):\n    result = 0\n    for i in range(9):\n        b = buf[off+i]\n        if i == 8:\n            result = (result << 8) | b\n            return result, off+9\n        result = (result << 7) | (b & 0x7f)\n        if not (b & 0x80):\n            return result, off+i+1\n    return result, off+9\n\n# Parse page header (leaf table b-tree, type 0x0d)\npage_type = data[0]\nnum_cells = struct.unpack('>H', data[3:5])[0]\ncell_start = struct.unpack('>H', data[5:7])[0]\nprint(\"page_type\", hex(page_type), \"num_cells\", num_cells, \"cell_content_start\", cell_start)\n\n# cell pointer array starts at offset 8, 2 bytes each\ncell_pointers = []\nfor i in range(num_cells):\n    off = 8 + i*2\n    p = struct.unpack('>H', data[off:off+2])[0]\n    cell_pointers.append(p)\nprint(\"cell pointers:\", cell_pointers)\n\ndef parse_record(payload):\n    hdr_len, p = read_varint(payload, 0)\n    serials = []\n    while p < hdr_len:\n        st, p = read_varint(payload, p)\n        serials.append(st)\n    values = []\n    for st in serials:\n        if st == 0:\n            values.append(None)\n        elif st == 1:\n            v = int.from_bytes(payload[p:p+1], 'big', signed=True); p+=1; values.append(v)\n        elif st == 2:\n            v = int.from_bytes(payload[p:p+2], 'big', signed=True); p+=2; values.append(v)\n        elif st == 3:\n            v = int.from_bytes(payload[p:p+3], 'big', signed=True); p+=3; values.append(v)\n        elif st == 4:\n            v = int.from_bytes(payload[p:p+4], 'big', signed=True); p+=4; values.append(v)\n        elif st == 5:\n            v = int.from_bytes(payload[p:p+6], 'big', signed=True); p+=6; values.append(v)\n        elif st == 6:\n            v = int.from_bytes(payload[p:p+8], 'big', signed=True); p+=8; values.append(v)\n        elif st == 7:\n            v = struct.unpack('>d', payload[p:p+8])[0]; p+=8; values.append(v)\n        elif st == 8:\n            values.append(0); \n        elif st == 9:\n            values.append(1)\n        elif st >= 12 and st % 2 == 0:\n            n = (st-12)//2; v = payload[p:p+n]; p+=n; values.append(v)\n        elif st >= 13 and st % 2 == 1:\n            n = (st-13)//2; v = payload[p:p+n].decode('utf-8', errors='replace'); p+=n; values.append(v)\n        else:\n            values.append(None)\n    return values\n\nrows = []\nfor cp in cell_pointers:\n    payload_len, p = read_varint(data, cp)\n    rowid, p = read_varint(data, p)\n    payload = data[p:p+payload_len]\n    rec = parse_record(payload)\n    rows.append((rowid, rec))\n\nfor rowid, rec in rows:\n    print(rowid, rec)\nEOF\npython3 parse.py",
+   "observation": "{\n  \"returncode\": 0,\n  \"output\": \"file size: 4096\\npage_type 0xd num_cells 10 cell_content_start 3913\\ncell pointers: [4080, 4063, 4046, 4029, 4012, 3995, 3978, 3961, 3937, 3913]\\n1 [None, \\u0027testword00\\u0027, 1]\\n2 [None, \\u0027testword01\\u0027, 2]\\n3 [None, \\u0027testword02\\u0027, 10]\\n4 [None, \\u0027testword03\\u0027, 25]\\n5 [None, \\u0027testword04\\u0027, 42]\\n6 [None, \\u0027testword05\\u0027, 50]\\n7 [None, \\u0027testword06\\u0027, 75]\\n8 [None, \\u0027testword07\\u0027, 99]\\n9 [None, \\u0027testword08\\u0027, 99.99]\\n10 [None, \\u0027testword09\\u0027, 0.5]\\n\"\n}",
+   "extra": {
+    "reasoning_content": "Let me write a Python parser to extract and decode all the cells from this table leaf page."
+   }
+  },
+  {
+   "step_id": 9,
+   "source": "agent",
+   "content": "I now fully understand the structure. The page is a table leaf b-tree (type `0x0d`) with 10 cells. The records have 3 columns: a NULL placeholder (INTEGER PRIMARY KEY alias / rowid), the `word` text, and the `value` (number, stored as integer or float). \n\nThe recovered rows:\n- testword00→1, testword01→2, testword02→10, testword03→25, testword04→42, testword05→50, testword06→75, testword07→99, testword08→99.99, testword09→0.5\n\nLet me write the final recovery script that produces `/app/recover.json`.",
+   "command": "cd /app && cat <<'EOF' > recover.py\nimport struct, json\n\ndata = open('trunc.db','rb').read()\n\ndef read_varint(buf, off):\n    result = 0\n    for i in range(9):\n        b = buf[off+i]\n        if i == 8:\n            return (result << 8) | b, off+9\n        result = (result << 7) | (b & 0x7f)\n        if not (b & 0x80):\n            return result, off+i+1\n    return result, off+9\n\ndef parse_record(payload):\n    hdr_len, p = read_varint(payload, 0)\n    serials = []\n    while p < hdr_len:\n        st, p = read_varint(payload, p)\n        serials.append(st)\n    values = []\n    for st in serials:\n        if st == 0:\n            values.append(None)\n        elif st == 1:\n            values.append(int.from_bytes(payload[p:p+1], 'big', signed=True)); p += 1\n        elif st == 2:\n            values.append(int.from_bytes(payload[p:p+2], 'big', signed=True)); p += 2\n        elif st == 3:\n            values.append(int.from_bytes(payload[p:p+3], 'big', signed=True)); p += 3\n        elif st == 4:\n            values.append(int.from_bytes(payload[p:p+4], 'big', signed=True)); p += 4\n        elif st == 5:\n            values.append(int.from_bytes(payload[p:p+6], 'big', signed=True)); p += 6\n        elif st == 6:\n            values.append(int.from_bytes(payload[p:p+8], 'big', signed=True)); p += 8\n        elif st == 7:\n            values.append(struct.unpack('>d', payload[p:p+8])[0]); p += 8\n        elif st == 8:\n            values.append(0)\n        elif st == 9:\n            values.append(1)\n        elif st >= 12 and st % 2 == 0:\n            n = (st-12)//2; values.append(payload[p:p+n]); p += n\n        elif st >= 13 and st % 2 == 1:\n            n = (st-13)//2; values.append(payload[p:p+n].decode('utf-8', errors='replace')); p += n\n        else:\n            values.append(None)\n    return values\n\n# The file begins with a table leaf b-tree page (0x0d) - the 100-byte\n# database header was lost through truncation, so the page starts at offset 0.\npage_type = data[0]\nassert page_type == 0x0d, f\"Unexpected page type {page_type:#x}\"\nnum_cells = struct.unpack('>H', data[3:5])[0]\n\nrows = []\nfor i in range(num_cells):\n    cp = struct.unpack('>H', data[8+i*2:8+i*2+2])[0]\n    payload_len, p = read_varint(data, cp)\n    rowid, p = read_varint(data, p)\n    rec = parse_record(data[p:p+payload_len])\n    # rec = [NULL/rowid-alias, word, value]\n    word = rec[1]\n    value = rec[2]\n    rows.append((rowid, word, value))\n\n# Deduplicate by word (keep first) and sort by rowid for deterministic order\nseen = {}\nordered = sorted(rows, key=lambda r: r[0])\nout = []\nfor rowid, word, value in ordered:\n    if word in seen:\n        continue\n    seen[word] = True\n    out.append({\"word\": word, \"value\": value})\n\nwith open('recover.json', 'w') as f:\n    json.dump(out, f, indent=2)\n\nprint(f\"Recovered {len(out)} rows\")\nprint(json.dumps(out, indent=2))\nEOF\npython3 recover.py",
+   "observation": "{\n  \"returncode\": 0,\n  \"output\": \"Recovered 10 rows\\n[\\n  {\\n    \\\"word\\\": \\\"testword00\\\",\\n    \\\"value\\\": 1\\n  },\\n  {\\n    \\\"word\\\": \\\"testword01\\\",\\n    \\\"value\\\": 2\\n  },\\n  {\\n    \\\"word\\\": \\\"testword02\\\",\\n    \\\"value\\\": 10\\n  },\\n  {\\n    \\\"word\\\": \\\"testword03\\\",\\n    \\\"value\\\": 25\\n  },\\n  {\\n    \\\"word\\\": \\\"testword04\\\",\\n    \\\"value\\\": 42\\n  },\\n  {\\n    \\\"word\\\": \\\"testword05\\\",\\n    \\\"value\\\": 50\\n  },\\n  {\\n    \\\"word\\\": \\\"testword06\\\",\\n    \\\"value\\\": 75\\n  },\\n  {\\n    \\\"word\\\": \\\"testword07\\\",\\n    \\\"value\\\": 99\\n  },\\n  {\\n    \\\"word\\\": \\\"testword08\\\",\\n    \\\"value\\\": 99.99\\n  },\\n  {\\n    \\\"word\\\": \\\"testword09\\\",\\n    \\\"value\\\": 0.5\\n  }\\n]\\n\"\n}",
+   "extra": {
+    "reasoning_content": "I now fully understand the structure. The page is a table leaf b-tree (type `0x0d`) with 10 cells. The records have 3 columns: a NULL placeholder (INTEGER PRIMARY KEY alias / rowid), the `word` text, and the `value` (number, stored as integer or float). \n\nThe recovered rows:\n- testword00→1, testword01→2, testword02→10, testword03→25, testword04→42, testword05→50, testword06→75, testword07→99, testword08→99.99, testword09→0.5\n\nLet me write the final recovery script that produces `/app/recover.json`."
+   }
+  },
+  {
+   "step_id": 10,
+   "source": "agent",
+   "content": "I recovered all 10 rows. Let me verify the output file is valid JSON and matches the required format.",
+   "command": "cd /app && python3 -c \"import json; d=json.load(open('recover.json')); print('valid JSON, count =', len(d)); print('first:', d[0]); print('last:', d[-1]); assert all(set(x.keys())=={'word','value'} for x in d); print('all objects have word+value keys: OK')\" && echo \"--- file head ---\" && head -c 300 recover.json",
+   "observation": "{\n  \"returncode\": 0,\n  \"output\": \"valid JSON, count = 10\\nfirst: {\\u0027word\\u0027: \\u0027testword00\\u0027, \\u0027value\\u0027: 1}\\nlast: {\\u0027word\\u0027: \\u0027testword09\\u0027, \\u0027value\\u0027: 0.5}\\nall objects have word+value keys: OK\\n--- file head ---\\n[\\n  {\\n    \\\"word\\\": \\\"testword00\\\",\\n    \\\"value\\\": 1\\n  },\\n  {\\n    \\\"word\\\": \\\"testword01\\\",\\n    \\\"value\\\": 2\\n  },\\n  {\\n    \\\"word\\\": \\\"testword02\\\",\\n    \\\"value\\\": 10\\n  },\\n  {\\n    \\\"word\\\": \\\"testword03\\\",\\n    \\\"value\\\": 25\\n  },\\n  {\\n    \\\"word\\\": \\\"testword04\\\",\\n    \\\"value\\\": 42\\n  },\\n  {\\n    \\\"word\\\": \\\"testword05\\\",\\n    \\\"value\\\": 50\"\n}",
+   "extra": {
+    "reasoning_content": "I recovered all 10 rows. Let me verify the output file is valid JSON and matches the required format."
+   }
+  },
+  {
+   "step_id": 11,
+   "source": "agent",
+   "content": "The recovery is complete and verified. \n\n## Summary\n\nThe file `/app/trunc.db` was corrupted through binary truncation. Analysis revealed:\n- The file is exactly **4096 bytes = one database page**.\n- The 100-byte SQLite database header was lost, so the file begins directly with a **table leaf b-tree page** (page type `0x0d`).\n- The page header showed **10 cells**, with a cell pointer array pointing to each record.\n- Each record has 3 columns: a `NULL` placeholder (the `INTEGER PRIMARY KEY`/rowid alias), the **`word`** (text), and the **`value`** (number, stored either as an integer or an 8-byte IEEE float depending on the value).\n\nI wrote a custom parser that:\n1. Reads the page header and cell pointer array.\n2. For each cell, decodes the varint payload length and rowid.\n3. Parses the record's serial types and extracts the text `word` and numeric `value`.\n4. Outputs them as a JSON array in the required format `[{\"word\": ..., \"value\": ...}, ...]`.\n\nRecovered **10 rows** (testword00–testword09) with their correct values:\n\n| word | value |\n|------|-------|\n| testword00 | 1 |\n| testword01 | 2 |\n| testword02 | 10 |\n| testword03 | 25 |\n| testword04 | 42 |\n| testword05 | 50 |\n| testword06 | 75 |\n| testword07 | 99 |\n| testword08 | 99.99 |\n| testword09 | 0.5 |\n\nThe output file `/app/recover.json` is valid JSON and matches the requested format. Since the original database header (and any other pages) were truncated away, these 10 rows represent all recoverable data.",
+   "command": "echo COMPLETE_TASK_AND_SUBMIT_FINAL_OUTPUT",
+   "observation": "{\n  \"returncode\": -1,\n  \"output\": \"\", \"exception_info\": \"action was not executed\"\n}",
+   "extra": {
+    "reasoning_content": "The recovery is complete and verified. \n\n## Summary\n\nThe file `/app/trunc.db` was corrupted through binary truncation. Analysis revealed:\n- The file is exactly **4096 bytes = one database page**.\n- The 100-byte SQLite database header was lost, so the file begins directly with a **table leaf b-tree page** (page type `0x0d`).\n- The page header showed **10 cells**, with a cell pointer array pointing to each record.\n- Each record has 3 columns: a `NULL` placeholder (the `INTEGER PRIMARY KEY`/rowid alias), the **`word`** (text), and the **`value`** (number, stored either as an integer or an 8-byte IEEE float depending on the value).\n\nI wrote a custom parser that:\n1. Reads the page header and cell pointer array.\n2. For each cell, decodes the varint payload length and rowid.\n3. Parses the record's serial types and extracts the text `word` and numeric `value`.\n4. Outputs them as a JSON array in the required format `[{\"word\": ..., \"value\": ...}, ...]`.\n\nRecovered **10 rows** (testword00–testword09) with their correct values:\n\n| word | value |\n|------|-------|\n| testword00 | 1 |\n| testword01 | 2 |\n| testword02 | 10 |\n| testword03 | 25 |\n| testword04 | 42 |\n| testword05 | 50 |\n| testword06 | 75 |\n| testword07 | 99 |\n| testword08 | 99.99 |\n| testword09 | 0.5 |\n\nThe output file `/app/recover.json` is valid JSON and matches the requested format. Since the original database header (and any other pages) were truncated away, these 10 rows represent all recoverable data."
+   }
+  }
+ ],
+ "files": [
+  {
+   "path": "agent/mini-swe-agent.trajectory.json",
+   "sha256": "808962c4dabb9f907520c860dccddb18ef82545aa43c413e6edc430a5f9901b2",
+   "bytes": 166476
+  },
+  {
+   "path": "agent/mini-swe-agent.txt",
+   "sha256": "c0ae1a4f32e21c5e256cc8391c922c801f14630de1355b8f9b05c25b6c66a91b",
+   "bytes": 18006
+  },
+  {
+   "path": "agent/trajectory.json",
+   "sha256": "b35590f7ad0e9df951c798f0ae0626be9788ec3e103562f5452ca4051998e300",
+   "bytes": 32279
+  },
+  {
+   "path": "artifacts/manifest.json",
+   "sha256": "c1db653f487fb773c4f9247162ab3314e7f0584a486914b9874c4b3d6949e42d",
+   "bytes": 159
+  },
+  {
+   "path": "config.json",
+   "sha256": "af8b0435664846b4eb3d338f069bcff140faadd7462d1d574fdb30808ba1fc8e",
+   "bytes": 545
+  },
+  {
+   "path": "lock.json",
+   "sha256": "b5428f2a57585161fc1ce82d049a7e472c91ec70e12cc3990dae10f1b91363d6",
+   "bytes": 1131
+  },
+  {
+   "path": "result.json",
+   "sha256": "bf47fbf54d752102e66ebdf78c7ed30b1041485e93ff01ad388afd83a808966f",
+   "bytes": 4125
+  },
+  {
+   "path": "trial.log",
+   "sha256": "7744c955b5568dc36a4ba0403e1a7d6fd35f4d712f6e185272c6b064a948531c",
+   "bytes": 1415
+  },
+  {
+   "path": "verifier/ctrf.json",
+   "sha256": "c8c6dc493bcd080e3cf507fcce80b7baa1473c88186326a29e5fbbae79c86949",
+   "bytes": 747
+  },
+  {
+   "path": "verifier/reward.txt",
+   "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+   "bytes": 2
+  },
+  {
+   "path": "verifier/test-stdout.txt",
+   "sha256": "e016a6d7299d62b81b36b006be672cc2143f076d4ff17f595335ccd47970fe54",
+   "bytes": 1204
+  }
+ ],
+ "token_usage": {
+  "input_tokens": 70834,
+  "output_tokens": 17711,
+  "total_tokens": 88545
+ },
+ "trial_name": "sqlite-db-truncate__CiVKZTM",
+ "exception": null
+}

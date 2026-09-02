@@ -1,0 +1,2 @@
+probe k=0 reachability: passed=True (28s)
+probe k=27 reachability: passed=True (159s)
