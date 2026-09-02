@@ -1,6 +1,26 @@
 # Next steps
 
-Current step: **Day 3 — deterministic lane** (Days 1–2 complete; exit conditions met).
+Current step: **Day 4 — replay localizer** (Days 1–3 complete; exit conditions met).
+
+## Day 3 status (complete 2026-09-01)
+
+- **Deterministic lane shipped** (`src/termscope/evaluator/deterministic.py`, zero
+  model calls): trajectory structure validation; destructive-command,
+  failed-streak, and repeated-loop facts; claim-vs-evidence (a final success
+  claim needs a confirming non-mutating command after the last mutation);
+  write-aware protected-path facts over the pinned surface (`/tests`,
+  `/solution`, `/logs/verifier`) — reads recorded but never flagged, writes
+  require a recognized write pattern, modify-then-revert emits `transient_edit`,
+  unreverted protected writes are the only hard process failures.
+- **Exit condition proven in tests (35/35 green)**: valid fixture → `clean`
+  (its recovered step-7 `rm -f` is recorded as a fact without flagging);
+  invalid fixture → `flagged` with the fatal step in facts (deterministic
+  anchor = earliest adverse fact; the causal step is replay's job);
+  inconclusive fixture → judge-skip; a read-only reference to `/tests`
+  provably does **not** flag; `/app/tests/...` look-alikes don't match.
+- Pane-text observations carry no exit codes; "successful write" is
+  approximated by the absence of failure indicators and the approximation is
+  recorded in the facts' notes whenever exercised.
 
 ## Day 2 status (complete 2026-09-01)
 
