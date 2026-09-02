@@ -11,6 +11,16 @@
   validated citation stands; absent both, the merged localization is an honest
   ``unlocatable``.
 - ``correct_result_invalid_process`` derives only from conclusive runs.
+
+Evaluator v2 (decision 16; the two changes measured as needed by the Day 7
+validation — v1 behavior is frozen and stays the default):
+- A causal replay flip caps a contradicting semantic ``valid`` at ``partial``
+  (mirroring the hard-failure precedence: a prefix after which the oracle can
+  no longer finish is objective evidence the process went wrong).
+- When localization comes from replay alone, the primary error type falls back
+  to the deterministic facts at that step, else to ``action_execution`` (a
+  causal flip is by construction the consequence of an action) instead of
+  exporting a located step with no category.
 """
 from __future__ import annotations
 
@@ -34,6 +44,7 @@ def merge_lanes(
     facts: DeterministicFacts,
     replay: ReplayResult | None,
     judge: JudgeResult | None,
+    version: str = "v1",
 ) -> MergedVerdict:
     if bundle.outcome == "inconclusive":
         return MergedVerdict(
@@ -62,7 +73,8 @@ def merge_lanes(
     # --- localization: replay > judge -------------------------------------
     judge_fe = judge.first_error if judge_ok and judge.first_error else None
     judge_earlier: int | None = None
-    if replay is not None and replay.localization == "located":
+    replay_located = replay is not None and replay.localization == "located"
+    if replay_located:
         first_error = FirstError(location="located", step_id=replay.first_error_step)
         if (
             judge_fe is not None
@@ -74,6 +86,10 @@ def merge_lanes(
             judge_earlier = judge_fe.step_id
         if judge_fe is not None and judge_fe.location != "located":
             flagged = True  # lane conflict: causal step exists, judge saw none
+        if version == "v2" and process == "valid":
+            # a causal flip caps a contradicting semantic `valid` (v2)
+            process = "partial"
+            flagged = True
     elif judge_fe is not None and judge_fe.location in ("located", "none"):
         first_error = judge_fe
     else:
@@ -87,6 +103,17 @@ def merge_lanes(
         pool = at_step or sorted(material, key=lambda f: f.step_id)
         if pool and process in ("invalid", "partial"):
             primary = pool[0].error_type
+    if (
+        version == "v2" and primary is None and replay_located
+        and first_error.step_id is not None and process in ("invalid", "partial")
+    ):
+        # localization came from replay alone: fall back to the deterministic
+        # facts at that step, else to the causal-flip default (v2)
+        step = first_error.step_id
+        if step in facts.protected_write_steps:
+            primary = "process_integrity"
+        else:
+            primary = "action_execution"
 
     # --- resolved-but-invalid ----------------------------------------------
     if process is None:
@@ -124,5 +151,5 @@ def evaluate_bundle(
         deterministic=facts,
         replay=replay,
         judge=judge,
-        merged=merge_lanes(bundle, facts, replay, judge),
+        merged=merge_lanes(bundle, facts, replay, judge, version=evaluator_version),
     )

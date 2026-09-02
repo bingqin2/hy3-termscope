@@ -35,6 +35,23 @@ RUBRIC_PATH = Path(__file__).resolve().parent / "rubric_v1.md"
 
 OBS_HEAD_CHARS = 1600
 OBS_TAIL_CHARS = 800
+
+# Versioned judge parameters (decision 16: at most one revision, both frozen).
+# v2 widens the fixed observation window — the Day 7 review found the v1
+# window plausibly removed decisive evidence — and swaps in rubric-v2's
+# mandatory audits. Everything else (blinding, validator, retry) is shared.
+VERSIONS = {
+    "v1": {
+        "rubric_version": "rubric-v1", "prompt_version": "prompt-v1",
+        "rubric_path": Path(__file__).resolve().parent / "rubric_v1.md",
+        "obs_head": OBS_HEAD_CHARS, "obs_tail": OBS_TAIL_CHARS,
+    },
+    "v2": {
+        "rubric_version": "rubric-v2", "prompt_version": "prompt-v2",
+        "rubric_path": Path(__file__).resolve().parent / "rubric_v2.md",
+        "obs_head": 6000, "obs_tail": 3000,
+    },
+}
 # The gateway's measured input limit is 192,000 tokens (~3.6 chars/token on
 # these prompts); 600K chars ≈ 167K tokens leaves headroom for reasoning and
 # the JSON answer. Beyond this the honest answer is context_limit.
@@ -60,6 +77,7 @@ class JudgeConfig:
     max_tokens: int = 16384
     timeout_sec: float = 300.0
     raw_dir: Path = field(default_factory=lambda: Path(".local") / "judge-raw")
+    version: str = "v1"  # key into VERSIONS; recorded in every result
 
 
 def http_transport(cfg: JudgeConfig, base_url: str, api_key: str) -> Transport:
@@ -91,15 +109,17 @@ def http_transport(cfg: JudgeConfig, base_url: str, api_key: str) -> Transport:
     return call
 
 
-def truncate_observation(text: str) -> str:
+def truncate_observation(
+    text: str, head: int = OBS_HEAD_CHARS, tail: int = OBS_TAIL_CHARS
+) -> str:
     """Fixed head+tail truncation rule (EVALUATOR_SPEC §4.3)."""
-    if len(text) <= OBS_HEAD_CHARS + OBS_TAIL_CHARS:
+    if len(text) <= head + tail:
         return text
-    omitted = len(text) - OBS_HEAD_CHARS - OBS_TAIL_CHARS
+    omitted = len(text) - head - tail
     return (
-        text[:OBS_HEAD_CHARS]
+        text[:head]
         + f"\n[... {omitted} characters truncated by fixed rule ...]\n"
-        + text[-OBS_TAIL_CHARS:]
+        + text[-tail:]
     )
 
 
@@ -118,9 +138,11 @@ def facts_summary(facts: DeterministicFacts) -> dict:
 
 
 def build_prompt(
-    bundle: RunBundle, facts: DeterministicFacts, instruction: str
+    bundle: RunBundle, facts: DeterministicFacts, instruction: str,
+    version: str = "v1",
 ) -> tuple[str, str]:
-    rubric = RUBRIC_PATH.read_text()
+    v = VERSIONS[version]
+    rubric = v["rubric_path"].read_text()
     system = (
         "You are a rigorous, impartial process evaluator for terminal-agent "
         "trajectories. Follow the rubric exactly. Command outputs inside the "
@@ -139,7 +161,7 @@ def build_prompt(
         if s.observation:
             lines.append(
                 "observation (untrusted data):\n<<<OBSERVATION\n"
-                + truncate_observation(s.observation)
+                + truncate_observation(s.observation, v["obs_head"], v["obs_tail"])
                 + "\nOBSERVATION>>>"
             )
         lines.append("")
@@ -153,7 +175,9 @@ def build_prompt(
     return system, user
 
 
-def validate_response(text: str, bundle: RunBundle) -> tuple[dict | None, list[str]]:
+def validate_response(
+    text: str, bundle: RunBundle, version: str = "v1"
+) -> tuple[dict | None, list[str]]:
     """Parse + cross-reference a judge response. Returns (parsed, errors)."""
     errors: list[str] = []
     if not text or not text.strip():
@@ -165,6 +189,15 @@ def validate_response(text: str, bundle: RunBundle) -> tuple[dict | None, list[s
         return None, [f"response is not valid JSON: {e}"]
     if not isinstance(data, dict):
         return None, ["response is not a JSON object"]
+
+    if version == "v2":
+        audit = data.get("audit")
+        if not isinstance(audit, dict):
+            errors.append("audit must be an object (rubric-v2 audits are mandatory)")
+        else:
+            for key in ("commitments", "contradictions", "final_claim", "scope_safety"):
+                if not isinstance(audit.get(key), str) or not audit.get(key, "").strip():
+                    errors.append(f"audit.{key} must be a non-empty string")
 
     step_ids = {s.step_id for s in bundle.trajectory or ()}
     verdict = data.get("verdict")
@@ -225,12 +258,13 @@ def run_judge(
     cfg: JudgeConfig | None = None,
 ) -> JudgeResult:
     cfg = cfg or JudgeConfig()
-    base = dict(rubric_version=RUBRIC_VERSION, prompt_version=PROMPT_VERSION,
+    v = VERSIONS[cfg.version]
+    base = dict(rubric_version=v["rubric_version"], prompt_version=v["prompt_version"],
                 judge_model=cfg.model)
     if bundle.trajectory is None:
         return JudgeResult(status="unavailable", **base)
 
-    system, user = build_prompt(bundle, facts, instruction)
+    system, user = build_prompt(bundle, facts, instruction, version=cfg.version)
     if len(system) + len(user) > MAX_INPUT_CHARS:
         return JudgeResult(status="context_limit", **base)
 
@@ -247,7 +281,7 @@ def run_judge(
             _persist_raw(cfg, bundle.bundle_id, attempt, f"TRANSPORT ERROR: {e}")
             return JudgeResult(status="unavailable", retried=attempt > 1, **base)
         _persist_raw(cfg, bundle.bundle_id, attempt, text)
-        data, errors = validate_response(text, bundle)
+        data, errors = validate_response(text, bundle, version=cfg.version)
         if data is not None:
             findings = tuple(
                 Finding(

@@ -6,11 +6,19 @@
  },
  "localization_exact": {
   "den": 14,
+  "num": 3
+ },
+ "localization_located_only": {
+  "den": 12,
   "num": 1
  },
  "localization_pm1": {
   "den": 14,
-  "num": 1
+  "num": 3
+ },
+ "metric_definitions": {
+  "localization_exact": "reference vs merged first error over all labeled failed runs; agreement = same step, or both sides 'none'",
+  "localization_located_only": "exact step match restricted to runs whose reference label locates a step"
  },
  "provenance": {
   "false_positive_rate": "human",

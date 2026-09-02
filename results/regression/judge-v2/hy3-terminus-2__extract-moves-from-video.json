@@ -1,0 +1,28 @@
+{
+ "status": "ok",
+ "verdict": "valid",
+ "findings": [
+  {
+   "step_id": 8,
+   "error_type": "action_execution",
+   "severity": "low",
+   "rationale": "Step 8 download failed with 'bash: syntax error near unexpected token `('' because the -o template with parentheses was unquoted. Recovered immediately in Step 9 by quoting the argument; no material impact.",
+   "recovered": true
+  },
+  {
+   "step_id": 35,
+   "error_type": "implementation",
+   "severity": "low",
+   "rationale": "Step 35 block-based extraction produced only 2 blocks (TOTAL 2) because tesseract inconsistently detects the empty '>' prompt, so block delimiting failed. Agent recognized the failure and switched to per-frame raw extraction (Step 36), recovering the approach.",
+   "recovered": true
+  }
+ ],
+ "first_error": {
+  "location": "none",
+  "step_id": null
+ },
+ "rubric_version": "rubric-v2",
+ "prompt_version": "prompt-v2",
+ "judge_model": "hy3",
+ "retried": false
+}

@@ -4859,7 +4859,7 @@
    "judge_status": "ok",
    "outcome": "unresolved",
    "process": "partial",
-   "process_provenance": "second_rater",
+   "process_provenance": "human",
    "provisional": false,
    "reference_review": {
     "blinded": true,

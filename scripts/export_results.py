@@ -270,13 +270,22 @@ def main(argv: list[str] | None = None) -> int:
     stability = json.loads(day5.read_text())["stability_summary"] if day5.exists() else None
     labeled_failed = [r for r in runs if r["review"] is not None
                       and r["bundle"].outcome == "unresolved"]
-    exact = pm1 = 0
+    exact = pm1 = loc_num = loc_den = 0
     for r in labeled_failed:
-        hs = (r["review"]["label"].get("first_error") or {}).get("step_id")
+        fe = r["review"]["label"].get("first_error") or {}
+        hs, hloc = fe.get("step_id"), fe.get("location")
         ms = r["merged"].first_error.step_id if r["merged"] else None
+        mloc = r["merged"].first_error.location if r["merged"] else None
         if hs is not None and ms is not None:
             exact += hs == ms
             pm1 += abs(hs - ms) <= 1
+        elif hloc == mloc == "none":
+            # both sides assert "no first error": agreement under both tolerances
+            exact += 1
+            pm1 += 1
+        if hloc == "located":
+            loc_den += 1
+            loc_num += ms is not None and hs == ms
     label_prov = Counter(r["review_provenance"] for r in labeled_failed)
     flagged_resolved = [r for r in runs if r["merged"] and r["merged"].correct_result_invalid_process]
     audited = [r for r in flagged_resolved
@@ -287,6 +296,10 @@ def main(argv: list[str] | None = None) -> int:
         "sample": False,
         "localization_exact": {"num": exact if labeled_failed else None, "den": len(labeled_failed) or None},
         "localization_pm1": {"num": pm1 if labeled_failed else None, "den": len(labeled_failed) or None},
+        "localization_located_only": {"num": loc_num if loc_den else None, "den": loc_den or None},
+        "metric_definitions": {
+            "localization_exact": "reference vs merged first error over all labeled failed runs; agreement = same step, or both sides 'none'",
+            "localization_located_only": "exact step match restricted to runs whose reference label locates a step"},
         "reference_labels": {"human": label_prov.get("human", 0),
                              "second_rater": label_prov.get("second_rater", 0)} if labeled_failed else None,
         "false_positive_rate": {"num": len(false_alarms) if audited else None, "den": len(audited) or None},

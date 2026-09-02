@@ -1,8 +1,11 @@
 # Next steps
 
-Current step: **Day 7 — close-out** (blinded labels and validation numbers done; two items open).
+Current step: **Day 9 — site & deploy** (real `results/*.json` into the frontend, TB2
+relabeling, Pages deploy; Day 8 complete).
 
-1. **Owner adjudication (open)** — two runs await the owner:
+Owner items still open from Day 7 (they do not block Day 9):
+
+1. **Owner adjudication** — two runs await the owner:
    `hy3-terminus-2__financial-document-processor` (lane conflict: replay located a causal step,
    judge said valid, reference label agrees with replay) and
    `hy3-terminus-2__schemelike-metacircular-eval` (resolved, honest-null semantic verdict after
@@ -18,6 +21,39 @@ Current step: **Day 7 — close-out** (blinded labels and validation numbers don
    label chose — while 6 of 7 sessions on that run said valid. Self-consistency is excellent,
    so the detection gap is a systematic rubric problem, not instrument variance
    (`data/environment-checks/day7-validation.json`). ~44 judge calls, ≈1.2M tokens estimated.
+
+## Day 8 status (complete)
+
+- **Evaluator v2 shipped as the single permitted revision** (decision 16; v1 frozen and
+  default): `rubric_v2.md`/`prompt-v2` with four mandatory audits (commitments,
+  contradictions, final claim, scope/safety) enforced by the validator, valid-as-earned
+  verdict semantics, the externally-terminated-run principle, and a wider fixed observation
+  window (6000+3000 chars vs 1600+800); merge-v2 caps a semantic `valid` at `partial` on a
+  causal replay flip and adds a category fallback for replay-only localization. Selected via
+  `JudgeConfig(version="v2")` / `merge_lanes(..., version="v2")`; 73 tests green.
+- **v2 fixture gate passed first try before any campaign re-call**
+  (`results/regression/v2-gate.json`): valid fixture stays `valid` with zero findings (the
+  anti-leniency revision did not become flag-everything); invalid fixture → `invalid` located
+  at the known step with the right category.
+- **Regression card built against the frozen blinded labels**
+  (`results/regression/regression-card.json`; stored campaign evaluations untouched;
+  39 v2 judge calls, 1.43M tokens): detection of non-valid processes 0/12 → 1/12; three-way
+  verdict agreement 2/14 → 3/14; localization unchanged (exact 3/14, located-only 1/12); the
+  over-limit run stays an honest `context_limit`; v2 flags no resolved run (no new FP-audit
+  burden). **The only gain comes from merge-v2's causal-flip cap** — the flagged run now
+  merges `partial` at the replay step, matching the reference label.
+- **Headline negative result, measured and documented**: all completed v2 judge calls filled
+  the mandatory audits (zero validation retries) and still returned `valid` on 13/14 failed
+  runs (8 findings across 39 calls). The residual mode is **audit-then-absolve**: the judge
+  names the decisive commitment, sometimes even classifies the final check as insufficient,
+  then absolves inside the agent's own frame — measured self-evaluation bias (Hy3 judging
+  Hy3; EVALUATOR_SPEC §4.8), robust to rubric hardening. Localization credibility therefore
+  rests on the replay lane and the blinded reference labels; the semantic lane's limits are
+  reported as a finding, not patched further (the decision-16 loop is closed).
+- **Metric definitions unified** across the exporter, the regression card, and the validation
+  record: exact/±1 counts both-sides-`none` as agreement (3/14), and a stricter located-only
+  row (1/12) is reported alongside; the earlier 1/14 cut and its contradictory note are
+  corrected in place with a correction note.
 
 ## Day 7 status (labels + validation done)
 

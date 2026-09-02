@@ -1,0 +1,945 @@
+{
+ "record": "evaluator-v2-regression-card",
+ "v2_changes": [
+  "rubric-v2/prompt-v2: mandatory four-part audit (commitments, contradictions, final claim, scope/safety) enforced by the validator; valid-as-earned verdict semantics; quoted-evidence rationales; externally-terminated-run principle",
+  "wider fixed observation window (6000+3000 chars vs 1600+800)",
+  "merge-v2: a causal replay flip caps a contradicting semantic valid at partial; category fallback when localization comes from replay alone"
+ ],
+ "labels": "frozen blinded reference labels (results/reviews/, provenance second_rater; owner-blinded would take precedence where present)",
+ "fixture_gate": {
+  "passed": true,
+  "valid": true,
+  "invalid": true
+ },
+ "metrics": {
+  "denominators": {
+   "failed_labeled": 14,
+   "reference_nonvalid": 12,
+   "reference_located": 12,
+   "resolved": 26
+  },
+  "detection_nonvalid": {
+   "v1": "0/12",
+   "v2": "1/12"
+  },
+  "verdict_agreement_3way": {
+   "v1": "2/14",
+   "v2": "3/14"
+  },
+  "localization_exact": {
+   "v1": "3/14",
+   "v2": "3/14"
+  },
+  "localization_pm1": {
+   "v1": "3/14",
+   "v2": "3/14"
+  },
+  "localization_located_only": {
+   "v1": "1/12",
+   "v2": "1/12"
+  },
+  "category_agreement_at_exact_step": {
+   "v1": "0/12",
+   "v2": "0/12"
+  },
+  "resolved_flagged_invalid": {
+   "v1": [],
+   "v2": [],
+   "note": "v2 flags are the owner's false-positive audit set; none are auto-accepted"
+  }
+ },
+ "metric_definitions": {
+  "localization_exact/pm1": "reference vs merged first error over all labeled failed runs; agreement = same step (within tolerance), or both sides 'none'",
+  "localization_located_only": "exact step match restricted to runs whose reference label locates a step",
+  "detection_nonvalid": "merged process in {partial, invalid} on runs the reference labels non-valid"
+ },
+ "residual_failure_mode": {
+  "id": "audit-then-absolve",
+  "evidence": "all completed v2 calls filled the mandatory audits (zero validation retries), yet 13/14 failed runs still came back 'valid' with 8 findings total across 39 calls; e.g. on one spectroscopy run the audit names the decisive peak-assignment commitment, records that amplitude/offset 'swing wildly', and itself classifies the final check as 'a structural check, not a fit-correctness check' \u2014 then renders valid with zero findings",
+  "diagnosis": "the judge executes the audits but resolves them charitably inside the agent's own frame; it does not independently re-derive domain conclusions, and it shares the generating model's priors (measured self-evaluation bias, anticipated in EVALUATOR_SPEC \u00a74.8). The one detection gain in v2 comes from the merge change (causal replay flip capping 'valid'), not from the semantic lane",
+  "disposition": "decision 16 permits exactly one revision; v2 is it, measured and recorded. Stored campaign evaluations remain official v1; localization credibility rests on the replay lane and the blinded reference labels, and the semantic lane's limits are reported as a finding, not patched further"
+ },
+ "spend": {
+  "calls": 39,
+  "prompt_tokens": 1250268,
+  "completion_tokens": 177494
+ },
+ "provenance": {
+  "labels": "second_rater (blinded)",
+  "outcomes": "official",
+  "v1": "stored campaign evaluations (untouched)",
+  "v2": "results/regression/judge-v2 + merge-v2 over stored facts/replay"
+ },
+ "rows": [
+  {
+   "run_id": "hy3-mini-swe-agent__cobol-modernization",
+   "outcome": "resolved",
+   "reference": null,
+   "v1": {
+    "process": "valid",
+    "step": null,
+    "location": "none",
+    "primary_error_type": null,
+    "resolved_but_invalid": false
+   },
+   "v2": {
+    "process": "valid",
+    "step": null,
+    "location": "none",
+    "primary_error_type": null,
+    "resolved_but_invalid": false,
+    "judge_status": "ok"
+   }
+  },
+  {
+   "run_id": "hy3-mini-swe-agent__constraints-scheduling",
+   "outcome": "resolved",
+   "reference": null,
+   "v1": {
+    "process": "valid",
+    "step": null,
+    "location": "none",
+    "primary_error_type": null,
+    "resolved_but_invalid": false
+   },
+   "v2": {
+    "process": "valid",
+    "step": null,
+    "location": "none",
+    "primary_error_type": null,
+    "resolved_but_invalid": false,
+    "judge_status": "ok"
+   }
+  },
+  {
+   "run_id": "hy3-mini-swe-agent__count-dataset-tokens",
+   "outcome": "resolved",
+   "reference": null,
+   "v1": {
+    "process": "valid",
+    "step": null,
+    "location": "none",
+    "primary_error_type": null,
+    "resolved_but_invalid": false
+   },
+   "v2": {
+    "process": "valid",
+    "step": null,
+    "location": "none",
+    "primary_error_type": null,
+    "resolved_but_invalid": false,
+    "judge_status": "ok"
+   }
+  },
+  {
+   "run_id": "hy3-mini-swe-agent__dna-insert",
+   "outcome": "resolved",
+   "reference": null,
+   "v1": {
+    "process": "valid",
+    "step": null,
+    "location": "none",
+    "primary_error_type": null,
+    "resolved_but_invalid": false
+   },
+   "v2": {
+    "process": "valid",
+    "step": null,
+    "location": "none",
+    "primary_error_type": null,
+    "resolved_but_invalid": false,
+    "judge_status": "ok"
+   }
+  },
+  {
+   "run_id": "hy3-mini-swe-agent__extract-moves-from-video",
+   "outcome": "unresolved",
+   "reference": {
+    "process": "valid",
+    "step": null,
+    "location": "none",
+    "error_type": null
+   },
+   "v1": {
+    "process": "valid",
+    "step": null,
+    "location": "none",
+    "primary_error_type": null,
+    "resolved_but_invalid": false
+   },
+   "v2": {
+    "process": "valid",
+    "step": null,
+    "location": "none",
+    "primary_error_type": null,
+    "resolved_but_invalid": false,
+    "judge_status": "ok"
+   }
+  },
+  {
+   "run_id": "hy3-mini-swe-agent__feal-differential-cryptanalysis",
+   "outcome": "resolved",
+   "reference": null,
+   "v1": {
+    "process": "valid",
+    "step": null,
+    "location": "none",
+    "primary_error_type": null,
+    "resolved_but_invalid": false
+   },
+   "v2": {
+    "process": "valid",
+    "step": null,
+    "location": "none",
+    "primary_error_type": null,
+    "resolved_but_invalid": false,
+    "judge_status": "ok"
+   }
+  },
+  {
+   "run_id": "hy3-mini-swe-agent__financial-document-processor",
+   "outcome": "resolved",
+   "reference": null,
+   "v1": {
+    "process": "valid",
+    "step": null,
+    "location": "none",
+    "primary_error_type": null,
+    "resolved_but_invalid": false
+   },
+   "v2": {
+    "process": "valid",
+    "step": null,
+    "location": "none",
+    "primary_error_type": null,
+    "resolved_but_invalid": false,
+    "judge_status": "ok"
+   }
+  },
+  {
+   "run_id": "hy3-mini-swe-agent__fix-git",
+   "outcome": "resolved",
+   "reference": null,
+   "v1": {
+    "process": "valid",
+    "step": null,
+    "location": "none",
+    "primary_error_type": null,
+    "resolved_but_invalid": false
+   },
+   "v2": {
+    "process": "valid",
+    "step": null,
+    "location": "none",
+    "primary_error_type": null,
+    "resolved_but_invalid": false,
+    "judge_status": "ok"
+   }
+  },
+  {
+   "run_id": "hy3-mini-swe-agent__git-multibranch",
+   "outcome": "resolved",
+   "reference": null,
+   "v1": {
+    "process": "valid",
+    "step": null,
+    "location": "none",
+    "primary_error_type": null,
+    "resolved_but_invalid": false
+   },
+   "v2": {
+    "process": "valid",
+    "step": null,
+    "location": "none",
+    "primary_error_type": null,
+    "resolved_but_invalid": false,
+    "judge_status": "ok"
+   }
+  },
+  {
+   "run_id": "hy3-mini-swe-agent__llm-inference-batching-scheduler",
+   "outcome": "resolved",
+   "reference": null,
+   "v1": {
+    "process": "valid",
+    "step": null,
+    "location": "none",
+    "primary_error_type": null,
+    "resolved_but_invalid": false
+   },
+   "v2": {
+    "process": "valid",
+    "step": null,
+    "location": "none",
+    "primary_error_type": null,
+    "resolved_but_invalid": false,
+    "judge_status": "ok"
+   }
+  },
+  {
+   "run_id": "hy3-mini-swe-agent__multi-source-data-merger",
+   "outcome": "resolved",
+   "reference": null,
+   "v1": {
+    "process": "valid",
+    "step": null,
+    "location": "none",
+    "primary_error_type": null,
+    "resolved_but_invalid": false
+   },
+   "v2": {
+    "process": "valid",
+    "step": null,
+    "location": "none",
+    "primary_error_type": null,
+    "resolved_but_invalid": false,
+    "judge_status": "ok"
+   }
+  },
+  {
+   "run_id": "hy3-mini-swe-agent__overfull-hbox",
+   "outcome": "unresolved",
+   "reference": {
+    "process": "partial",
+    "step": 8,
+    "location": "located",
+    "error_type": "implementation"
+   },
+   "v1": {
+    "process": "valid",
+    "step": null,
+    "location": "none",
+    "primary_error_type": null,
+    "resolved_but_invalid": false
+   },
+   "v2": {
+    "process": "valid",
+    "step": null,
+    "location": "none",
+    "primary_error_type": null,
+    "resolved_but_invalid": false,
+    "judge_status": "ok"
+   }
+  },
+  {
+   "run_id": "hy3-mini-swe-agent__portfolio-optimization",
+   "outcome": "resolved",
+   "reference": null,
+   "v1": {
+    "process": "valid",
+    "step": null,
+    "location": "none",
+    "primary_error_type": null,
+    "resolved_but_invalid": false
+   },
+   "v2": {
+    "process": "valid",
+    "step": null,
+    "location": "none",
+    "primary_error_type": null,
+    "resolved_but_invalid": false,
+    "judge_status": "ok"
+   }
+  },
+  {
+   "run_id": "hy3-mini-swe-agent__pytorch-model-recovery",
+   "outcome": "unresolved",
+   "reference": {
+    "process": "partial",
+    "step": 6,
+    "location": "located",
+    "error_type": "task_interpretation"
+   },
+   "v1": {
+    "process": "valid",
+    "step": null,
+    "location": "none",
+    "primary_error_type": null,
+    "resolved_but_invalid": false
+   },
+   "v2": {
+    "process": "valid",
+    "step": null,
+    "location": "none",
+    "primary_error_type": null,
+    "resolved_but_invalid": false,
+    "judge_status": "ok"
+   }
+  },
+  {
+   "run_id": "hy3-mini-swe-agent__raman-fitting",
+   "outcome": "unresolved",
+   "reference": {
+    "process": "invalid",
+    "step": 14,
+    "location": "located",
+    "error_type": "reasoning"
+   },
+   "v1": {
+    "process": "valid",
+    "step": null,
+    "location": "none",
+    "primary_error_type": null,
+    "resolved_but_invalid": false
+   },
+   "v2": {
+    "process": "valid",
+    "step": null,
+    "location": "none",
+    "primary_error_type": null,
+    "resolved_but_invalid": false,
+    "judge_status": "ok"
+   }
+  },
+  {
+   "run_id": "hy3-mini-swe-agent__sam-cell-seg",
+   "outcome": "unresolved",
+   "reference": {
+    "process": "invalid",
+    "step": 8,
+    "location": "located",
+    "error_type": "action_execution"
+   },
+   "v1": {
+    "process": "valid",
+    "step": null,
+    "location": "none",
+    "primary_error_type": null,
+    "resolved_but_invalid": false
+   },
+   "v2": {
+    "process": "valid",
+    "step": null,
+    "location": "none",
+    "primary_error_type": null,
+    "resolved_but_invalid": false,
+    "judge_status": "ok"
+   }
+  },
+  {
+   "run_id": "hy3-mini-swe-agent__schemelike-metacircular-eval",
+   "outcome": "unresolved",
+   "reference": {
+    "process": "partial",
+    "step": 46,
+    "location": "located",
+    "error_type": "reasoning"
+   },
+   "v1": {
+    "process": "valid",
+    "step": null,
+    "location": "none",
+    "primary_error_type": null,
+    "resolved_but_invalid": false
+   },
+   "v2": {
+    "process": "valid",
+    "step": null,
+    "location": "none",
+    "primary_error_type": null,
+    "resolved_but_invalid": false,
+    "judge_status": "ok"
+   }
+  },
+  {
+   "run_id": "hy3-mini-swe-agent__sparql-university",
+   "outcome": "resolved",
+   "reference": null,
+   "v1": {
+    "process": "valid",
+    "step": null,
+    "location": "none",
+    "primary_error_type": null,
+    "resolved_but_invalid": false
+   },
+   "v2": {
+    "process": "valid",
+    "step": null,
+    "location": "none",
+    "primary_error_type": null,
+    "resolved_but_invalid": false,
+    "judge_status": "ok"
+   }
+  },
+  {
+   "run_id": "hy3-mini-swe-agent__sqlite-db-truncate",
+   "outcome": "resolved",
+   "reference": null,
+   "v1": {
+    "process": "valid",
+    "step": null,
+    "location": "none",
+    "primary_error_type": null,
+    "resolved_but_invalid": false
+   },
+   "v2": {
+    "process": "valid",
+    "step": null,
+    "location": "none",
+    "primary_error_type": null,
+    "resolved_but_invalid": false,
+    "judge_status": "ok"
+   }
+  },
+  {
+   "run_id": "hy3-mini-swe-agent__video-processing",
+   "outcome": "unresolved",
+   "reference": {
+    "process": "invalid",
+    "step": 26,
+    "location": "located",
+    "error_type": "reasoning"
+   },
+   "v1": {
+    "process": "valid",
+    "step": null,
+    "location": "none",
+    "primary_error_type": null,
+    "resolved_but_invalid": false
+   },
+   "v2": {
+    "process": "valid",
+    "step": null,
+    "location": "none",
+    "primary_error_type": null,
+    "resolved_but_invalid": false,
+    "judge_status": "ok"
+   }
+  },
+  {
+   "run_id": "hy3-terminus-2__cobol-modernization",
+   "outcome": "resolved",
+   "reference": null,
+   "v1": {
+    "process": "valid",
+    "step": null,
+    "location": "none",
+    "primary_error_type": null,
+    "resolved_but_invalid": false
+   },
+   "v2": {
+    "process": "valid",
+    "step": null,
+    "location": "none",
+    "primary_error_type": null,
+    "resolved_but_invalid": false,
+    "judge_status": "ok"
+   }
+  },
+  {
+   "run_id": "hy3-terminus-2__constraints-scheduling",
+   "outcome": "resolved",
+   "reference": null,
+   "v1": {
+    "process": "valid",
+    "step": null,
+    "location": "none",
+    "primary_error_type": null,
+    "resolved_but_invalid": false
+   },
+   "v2": {
+    "process": "valid",
+    "step": null,
+    "location": "none",
+    "primary_error_type": null,
+    "resolved_but_invalid": false,
+    "judge_status": "ok"
+   }
+  },
+  {
+   "run_id": "hy3-terminus-2__count-dataset-tokens",
+   "outcome": "resolved",
+   "reference": null,
+   "v1": {
+    "process": "valid",
+    "step": null,
+    "location": "none",
+    "primary_error_type": null,
+    "resolved_but_invalid": false
+   },
+   "v2": {
+    "process": "valid",
+    "step": null,
+    "location": "none",
+    "primary_error_type": null,
+    "resolved_but_invalid": false,
+    "judge_status": "ok"
+   }
+  },
+  {
+   "run_id": "hy3-terminus-2__dna-insert",
+   "outcome": "unresolved",
+   "reference": {
+    "process": "invalid",
+    "step": 7,
+    "location": "located",
+    "error_type": "reasoning"
+   },
+   "v1": {
+    "process": "valid",
+    "step": null,
+    "location": "none",
+    "primary_error_type": null,
+    "resolved_but_invalid": false
+   },
+   "v2": {
+    "process": "valid",
+    "step": null,
+    "location": "none",
+    "primary_error_type": null,
+    "resolved_but_invalid": false,
+    "judge_status": "ok"
+   }
+  },
+  {
+   "run_id": "hy3-terminus-2__extract-moves-from-video",
+   "outcome": "unresolved",
+   "reference": {
+    "process": "valid",
+    "step": null,
+    "location": "none",
+    "error_type": null
+   },
+   "v1": {
+    "process": "valid",
+    "step": null,
+    "location": "none",
+    "primary_error_type": null,
+    "resolved_but_invalid": false
+   },
+   "v2": {
+    "process": "valid",
+    "step": null,
+    "location": "none",
+    "primary_error_type": null,
+    "resolved_but_invalid": false,
+    "judge_status": "ok"
+   }
+  },
+  {
+   "run_id": "hy3-terminus-2__feal-differential-cryptanalysis",
+   "outcome": "resolved",
+   "reference": null,
+   "v1": {
+    "process": "valid",
+    "step": null,
+    "location": "none",
+    "primary_error_type": null,
+    "resolved_but_invalid": false
+   },
+   "v2": {
+    "process": "valid",
+    "step": null,
+    "location": "none",
+    "primary_error_type": null,
+    "resolved_but_invalid": false,
+    "judge_status": "ok"
+   }
+  },
+  {
+   "run_id": "hy3-terminus-2__financial-document-processor",
+   "outcome": "unresolved",
+   "reference": {
+    "process": "partial",
+    "step": 12,
+    "location": "located",
+    "error_type": "task_interpretation"
+   },
+   "v1": {
+    "process": "valid",
+    "step": 12,
+    "location": "located",
+    "primary_error_type": null,
+    "resolved_but_invalid": false
+   },
+   "v2": {
+    "process": "partial",
+    "step": 12,
+    "location": "located",
+    "primary_error_type": "action_execution",
+    "resolved_but_invalid": false,
+    "judge_status": "ok"
+   }
+  },
+  {
+   "run_id": "hy3-terminus-2__fix-git",
+   "outcome": "resolved",
+   "reference": null,
+   "v1": {
+    "process": "valid",
+    "step": null,
+    "location": "none",
+    "primary_error_type": null,
+    "resolved_but_invalid": false
+   },
+   "v2": {
+    "process": "valid",
+    "step": null,
+    "location": "none",
+    "primary_error_type": null,
+    "resolved_but_invalid": false,
+    "judge_status": "ok"
+   }
+  },
+  {
+   "run_id": "hy3-terminus-2__git-multibranch",
+   "outcome": "resolved",
+   "reference": null,
+   "v1": {
+    "process": "valid",
+    "step": null,
+    "location": "none",
+    "primary_error_type": null,
+    "resolved_but_invalid": false
+   },
+   "v2": {
+    "process": "valid",
+    "step": null,
+    "location": "none",
+    "primary_error_type": null,
+    "resolved_but_invalid": false,
+    "judge_status": "ok"
+   }
+  },
+  {
+   "run_id": "hy3-terminus-2__llm-inference-batching-scheduler",
+   "outcome": "resolved",
+   "reference": null,
+   "v1": {
+    "process": "valid",
+    "step": null,
+    "location": "none",
+    "primary_error_type": null,
+    "resolved_but_invalid": false
+   },
+   "v2": {
+    "process": "valid",
+    "step": null,
+    "location": "none",
+    "primary_error_type": null,
+    "resolved_but_invalid": false,
+    "judge_status": "ok"
+   }
+  },
+  {
+   "run_id": "hy3-terminus-2__multi-source-data-merger",
+   "outcome": "resolved",
+   "reference": null,
+   "v1": {
+    "process": "valid",
+    "step": null,
+    "location": "none",
+    "primary_error_type": null,
+    "resolved_but_invalid": false
+   },
+   "v2": {
+    "process": "valid",
+    "step": null,
+    "location": "none",
+    "primary_error_type": null,
+    "resolved_but_invalid": false,
+    "judge_status": "ok"
+   }
+  },
+  {
+   "run_id": "hy3-terminus-2__overfull-hbox",
+   "outcome": "unresolved",
+   "reference": {
+    "process": "partial",
+    "step": 10,
+    "location": "located",
+    "error_type": "implementation"
+   },
+   "v1": {
+    "process": "valid",
+    "step": null,
+    "location": "none",
+    "primary_error_type": null,
+    "resolved_but_invalid": false
+   },
+   "v2": {
+    "process": "valid",
+    "step": null,
+    "location": "none",
+    "primary_error_type": null,
+    "resolved_but_invalid": false,
+    "judge_status": "ok"
+   }
+  },
+  {
+   "run_id": "hy3-terminus-2__portfolio-optimization",
+   "outcome": "resolved",
+   "reference": null,
+   "v1": {
+    "process": "valid",
+    "step": null,
+    "location": "none",
+    "primary_error_type": null,
+    "resolved_but_invalid": false
+   },
+   "v2": {
+    "process": "valid",
+    "step": null,
+    "location": "none",
+    "primary_error_type": null,
+    "resolved_but_invalid": false,
+    "judge_status": "ok"
+   }
+  },
+  {
+   "run_id": "hy3-terminus-2__pytorch-model-recovery",
+   "outcome": "resolved",
+   "reference": null,
+   "v1": {
+    "process": "valid",
+    "step": null,
+    "location": "none",
+    "primary_error_type": null,
+    "resolved_but_invalid": false
+   },
+   "v2": {
+    "process": "valid",
+    "step": null,
+    "location": "none",
+    "primary_error_type": null,
+    "resolved_but_invalid": false,
+    "judge_status": "ok"
+   }
+  },
+  {
+   "run_id": "hy3-terminus-2__raman-fitting",
+   "outcome": "unresolved",
+   "reference": {
+    "process": "invalid",
+    "step": 10,
+    "location": "located",
+    "error_type": "reasoning"
+   },
+   "v1": {
+    "process": "valid",
+    "step": null,
+    "location": "none",
+    "primary_error_type": null,
+    "resolved_but_invalid": false
+   },
+   "v2": {
+    "process": "valid",
+    "step": null,
+    "location": "none",
+    "primary_error_type": null,
+    "resolved_but_invalid": false,
+    "judge_status": "ok"
+   }
+  },
+  {
+   "run_id": "hy3-terminus-2__sam-cell-seg",
+   "outcome": "unresolved",
+   "reference": {
+    "process": "invalid",
+    "step": 8,
+    "location": "located",
+    "error_type": "task_interpretation"
+   },
+   "v1": {
+    "process": "valid",
+    "step": null,
+    "location": "none",
+    "primary_error_type": null,
+    "resolved_but_invalid": false
+   },
+   "v2": {
+    "process": "valid",
+    "step": null,
+    "location": "none",
+    "primary_error_type": null,
+    "resolved_but_invalid": false,
+    "judge_status": "ok"
+   }
+  },
+  {
+   "run_id": "hy3-terminus-2__schemelike-metacircular-eval",
+   "outcome": "resolved",
+   "reference": null,
+   "v1": {
+    "process": null,
+    "step": null,
+    "location": "unlocatable",
+    "primary_error_type": null,
+    "resolved_but_invalid": null
+   },
+   "v2": {
+    "process": null,
+    "step": null,
+    "location": "unlocatable",
+    "primary_error_type": null,
+    "resolved_but_invalid": null,
+    "judge_status": "context_limit"
+   }
+  },
+  {
+   "run_id": "hy3-terminus-2__sparql-university",
+   "outcome": "resolved",
+   "reference": null,
+   "v1": {
+    "process": "valid",
+    "step": null,
+    "location": "none",
+    "primary_error_type": null,
+    "resolved_but_invalid": false
+   },
+   "v2": {
+    "process": "valid",
+    "step": null,
+    "location": "none",
+    "primary_error_type": null,
+    "resolved_but_invalid": false,
+    "judge_status": "ok"
+   }
+  },
+  {
+   "run_id": "hy3-terminus-2__sqlite-db-truncate",
+   "outcome": "resolved",
+   "reference": null,
+   "v1": {
+    "process": "valid",
+    "step": null,
+    "location": "none",
+    "primary_error_type": null,
+    "resolved_but_invalid": false
+   },
+   "v2": {
+    "process": "valid",
+    "step": null,
+    "location": "none",
+    "primary_error_type": null,
+    "resolved_but_invalid": false,
+    "judge_status": "ok"
+   }
+  },
+  {
+   "run_id": "hy3-terminus-2__video-processing",
+   "outcome": "unresolved",
+   "reference": {
+    "process": "invalid",
+    "step": 16,
+    "location": "located",
+    "error_type": "reasoning"
+   },
+   "v1": {
+    "process": "valid",
+    "step": null,
+    "location": "none",
+    "primary_error_type": null,
+    "resolved_but_invalid": false
+   },
+   "v2": {
+    "process": "valid",
+    "step": null,
+    "location": "none",
+    "primary_error_type": null,
+    "resolved_but_invalid": false,
+    "judge_status": "ok"
+   }
+  }
+ ]
+}

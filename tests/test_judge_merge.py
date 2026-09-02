@@ -186,3 +186,96 @@ def test_evaluate_bundle_assembles_result():
     assert ev.evaluator_version == "v1"
     assert ev.merged.process == "invalid"
     assert ev.judge is not None and ev.judge.rubric_version == "rubric-v1"
+
+
+# --- evaluator v2 (decision 16) ---------------------------------------------
+
+GOOD_V2 = json.dumps({
+    "audit": {"commitments": "step 2 fixes the axis meaning without checking step 1's header",
+              "contradictions": "step 4 claims success against step 3's failing output",
+              "final_claim": "completion claimed at step 5; last mutation step 4; no confirming command",
+              "scope_safety": "none found"},
+    "verdict": "invalid",
+    "findings": [{"step_id": 4, "error_type": "action_execution", "severity": "critical",
+                  "rationale": "unjustified rm -rf", "recovered": False}],
+    "first_error": {"location": "located", "step_id": 4},
+})
+
+
+def test_v2_prompt_uses_rubric_v2_and_wider_truncation():
+    b = bundle()
+    system_v1, _ = build_prompt(b, DeterministicFacts(), "instr", version="v1")
+    system_v2, _ = build_prompt(b, DeterministicFacts(), "instr", version="v2")
+    assert "Mandatory audits" in system_v2 and "Mandatory audits" not in system_v1
+    long = "x" * 20_000
+    assert len(truncate_observation(long, 6000, 3000)) > len(truncate_observation(long))
+
+
+def test_v2_validator_requires_audit_object():
+    b = bundle()
+    data, errors = validate_response(GOOD, b, version="v2")  # v1-shaped: no audit
+    assert data is None and any("audit" in e for e in errors)
+    missing = json.loads(GOOD_V2)
+    missing["audit"].pop("final_claim")
+    assert validate_response(json.dumps(missing), b, version="v2")[0] is None
+    assert validate_response(GOOD_V2, b, version="v2")[0] is not None
+    assert validate_response(GOOD, b, version="v1")[0] is not None  # v1 unchanged
+
+
+def test_v2_run_judge_records_v2_versions(tmp_path):
+    cfg = JudgeConfig(raw_dir=tmp_path / "raw", version="v2")
+    r = run_judge(bundle(), DeterministicFacts(), "instr", lambda s, u: GOOD_V2, cfg)
+    assert r.status == "ok"
+    assert r.rubric_version == "rubric-v2" and r.prompt_version == "prompt-v2"
+    # a v1-shaped answer (no audit) is rejected under v2 and retried
+    calls = []
+
+    def transport(s, u):
+        calls.append(u)
+        return GOOD if len(calls) == 1 else GOOD_V2
+
+    r = run_judge(bundle(), DeterministicFacts(), "instr", transport, cfg)
+    assert r.status == "ok" and r.retried is True and "audit" in calls[1]
+
+
+def _valid_judge():
+    return JudgeResult(status="ok", verdict="valid",
+                       first_error=FirstError(location="none"),
+                       rubric_version="rubric-v1", prompt_version="prompt-v1",
+                       judge_model="hy3")
+
+
+def test_v2_causal_flip_caps_valid_at_partial_with_category_fallback():
+    b = bundle(outcome="unresolved", reward=0.0)
+    replay = ReplayResult(feasible=True, localization="located", first_error_step=4)
+    v1 = merge_lanes(b, DeterministicFacts(), replay, _valid_judge(), version="v1")
+    assert v1.process == "valid" and v1.flagged_for_human_review is True
+    assert v1.primary_error_type is None  # measured v1 defect: located, no category
+    v2 = merge_lanes(b, DeterministicFacts(), replay, _valid_judge(), version="v2")
+    assert v2.process == "partial" and v2.flagged_for_human_review is True
+    assert v2.first_error == FirstError(location="located", step_id=4)
+    assert v2.primary_error_type == "action_execution"
+
+
+def test_v2_category_fallback_prefers_protected_write_fact():
+    b = bundle(outcome="unresolved", reward=0.0)
+    facts = DeterministicFacts(protected_write_steps=(4,))
+    replay = ReplayResult(feasible=True, localization="located", first_error_step=4)
+    v2 = merge_lanes(b, facts, replay, _valid_judge(), version="v2")
+    assert v2.primary_error_type == "process_integrity"
+
+
+def test_v2_no_flip_keeps_judge_verdict_and_v1_paths_unchanged():
+    b = bundle(outcome="unresolved", reward=0.0)
+    replay = ReplayResult(feasible=True, localization="none")
+    for version in ("v1", "v2"):
+        m = merge_lanes(b, DeterministicFacts(), replay, _valid_judge(), version=version)
+        assert m.process == "valid" and m.first_error.location == "none"
+        assert m.flagged_for_human_review is False
+
+
+def test_evaluate_bundle_passes_version_to_merge():
+    b = bundle(outcome="unresolved", reward=0.0)
+    replay = ReplayResult(feasible=True, localization="located", first_error_step=4)
+    e = evaluate_bundle(b, judge=_valid_judge(), replay=replay, evaluator_version="v2")
+    assert e.evaluator_version == "v2" and e.merged.process == "partial"

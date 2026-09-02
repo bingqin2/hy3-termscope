@@ -1,0 +1,21 @@
+{
+ "status": "ok",
+ "verdict": "valid",
+ "findings": [
+  {
+   "step_id": 12,
+   "error_type": "implementation",
+   "severity": "high",
+   "rationale": "Step 11/12 used wrong balance byte offset 4:14 (the NAME field) instead of 24:34, raising ValueError and producing mismatched output; however this was caught by the cmp verification in Step 12 and corrected to 24:34 in Step 13, then re-verified byte-identical in Step 14.",
+   "recovered": true
+  }
+ ],
+ "first_error": {
+  "location": "none",
+  "step_id": null
+ },
+ "rubric_version": "rubric-v2",
+ "prompt_version": "prompt-v2",
+ "judge_model": "hy3",
+ "retried": false
+}

@@ -15,9 +15,11 @@
  },
  "metrics": {
   "localization_merged_vs_reference": {
-   "exact": {"num": 1, "den": 14},
-   "plus_minus_1": {"num": 1, "den": 14},
-   "exclusions": "none (all 14 failed runs labeled; runs where either side reports no step count as disagreement unless both report none)",
+   "exact": {"num": 3, "den": 14},
+   "plus_minus_1": {"num": 3, "den": 14},
+   "located_only_exact": {"num": 1, "den": 12},
+   "definitions": "exact/±1 over all 14 labeled failed runs, counting both-sides-'none' as agreement (2 such runs) — the located-only row restricts to the 12 runs whose reference label locates a step",
+   "correction_note": "the first cut of this record reported 1/14 by silently dropping the two none-none agreements while its own exclusions note claimed they counted; definitions made explicit and numbers recomputed at the v2 regression review (the exporter and the regression card now share these definitions)",
    "provenance": "evaluator (merged) vs second_rater (blinded)"
   },
   "three_way_localization": {
@@ -54,13 +56,13 @@
    "id": "judge-leniency-on-real-trajectories",
    "evidence": "judge verdicts: 39/39 completed official calls returned 'valid' (25 resolved + 14 failed); 37/40 returned zero findings; the blinded reference labels rate 12/14 failed runs partial or invalid with step-anchored rationales; across 44 repeat/stability sessions exactly one crossed the threshold (partial @ step 12 on the flagged run, matching replay and the reference label), confirming the leniency is systematic rather than noise",
    "diagnosis": "rubric-v1 detects blatant destructive/integrity violations (fixture gate passes; stability 5/5 on the doctored fixture) but does not surface subtle reasoning, interpretation, and verification failures in long real trajectories; head+tail observation truncation likely removes part of the contradicting evidence the rater used",
-   "drives_v2": "semantic lane: rubric/prompt revision (explicit per-step contradiction checks, less lenient verdict semantics, category-anchored probes) re-run over stored bundles under the decision-16 regression card"
+   "drives_v2": "semantic lane: rubric/prompt revision (mandatory audits before the verdict, valid-as-earned-not-default semantics, quoted-evidence rationales) plus a wider fixed observation-truncation window (the v1 head+tail of 1600+800 chars plausibly removed decisive evidence the rater used; the failed-run bundles fit far larger windows within the gateway limit), re-run over stored bundles under the decision-16 regression card"
   },
   {
    "id": "merge-none-overrides-semantic-step",
-   "evidence": "merged first_error is 'none' on 13/14 failed runs because replay's 'none' (no causal flip) takes precedence while the judge located nothing; had the judge located reasoning steps, §5 precedence would still have exported 'none' as the merged location with the judge step only in judge_earlier_step",
-   "diagnosis": "replay 'none' is a statement about destructive causality, not about reasoning errors; treating it as an authoritative 'no first error' conflates the two",
-   "drives_v2": "merge policy: when replay reports 'none' (vs 'located'), fall back to the semantic lane's located step for merged first_error, keeping replay's 'none' as a recorded fact"
+   "status": "WITHDRAWN after code re-inspection at v2 design review — recorded here rather than deleted",
+   "correction": "merge_lanes already prefers a judge-located step whenever replay does not locate (the replay branch only takes precedence on localization='located'); the 13/14 merged 'none' locations trace entirely to the judge's own 'none', i.e. to the leniency mode above, not to a merge-policy defect. The original entry misread the precedence branch.",
+   "residual_v2_item": "when replay DOES locate and the judge contradicts it with 'valid', v1 keeps the semantic 'valid' (only flagging); v2 caps the process verdict at 'partial' on a causal flip, mirroring the hard-failure precedence — matching the one measured case (the flagged run, reference label partial @ the replay step)"
   },
   {
    "id": "located-step-without-category",

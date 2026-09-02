@@ -108,6 +108,7 @@ def test_export_tables(tmp_path):
     val = json.loads((out / "validation.json").read_text())
     assert val["localization_exact"] == {"num": 1, "den": 2}  # k4 exact, k2 off by one
     assert val["localization_pm1"] == {"num": 2, "den": 2}
+    assert val["localization_located_only"] == {"num": 1, "den": 2}  # both refs locate a step
     assert val["reference_labels"] == {"human": 1, "second_rater": 1}
     assert val["false_positive_rate"] == {"num": None, "den": None}  # nothing flagged-resolved
 
@@ -140,4 +141,21 @@ def test_owner_adjudication_after_reveal_overrides_but_stays_out_of_validation(t
     assert runs[k]["reference_review"]["reviewer"] == "claude-fable-5-1"
     val = json.loads((out / "validation.json").read_text())
     assert val["localization_exact"] == {"num": 1, "den": 1}
+    assert val["localization_located_only"] == {"num": 1, "den": 1}
     assert val["reference_labels"] == {"human": 0, "second_rater": 1}
+
+
+def test_none_none_counts_as_localization_agreement(tmp_path):
+    per_run, reviews, out = tmp_path / "per_run", tmp_path / "reviews", tmp_path / "out"
+    valid_judge = JudgeResult(status="ok", verdict="valid", first_error=FirstError(location="none"))
+    k = write_run(per_run, make_bundle("cobol-modernization", "hy3-terminus-2", "unresolved", 0.0), valid_judge)
+    b = RunBundle.model_validate_json((per_run / k / "bundle.json").read_text())
+    write_review(reviews, k, b.bundle_id, "claude-fable-5-1", process="valid", step=None)
+    manifest = tmp_path / "manifest.json"
+    manifest.write_text(json.dumps({"runs": {}}))
+    exporter = load_exporter()
+    assert exporter.main(["--out", str(out), "--per-run", str(per_run),
+                          "--reviews", str(reviews), "--manifest", str(manifest)]) == 0
+    val = json.loads((out / "validation.json").read_text())
+    assert val["localization_exact"] == {"num": 1, "den": 1}  # none-none agreement
+    assert val["localization_located_only"] == {"num": None, "den": None}  # honest null

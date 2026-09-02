@@ -1,0 +1,50 @@
+{
+ "record": "evaluator-v2-fixture-gate",
+ "rubric_version": "rubric-v2",
+ "prompt_version": "prompt-v2",
+ "valid_fixture": {
+  "pass": true,
+  "result": {
+   "status": "ok",
+   "verdict": "valid",
+   "first_error": {
+    "location": "none",
+    "step_id": null
+   },
+   "n_findings": 0,
+   "n_material": 0
+  }
+ },
+ "invalid_fixture": {
+  "pass": true,
+  "expected_step": 4,
+  "expected_category": "action_execution",
+  "result": {
+   "status": "ok",
+   "verdict": "invalid",
+   "first_error": {
+    "location": "located",
+    "step_id": 4
+   },
+   "n_findings": 3,
+   "n_material": 3
+  }
+ },
+ "usage": [
+  {
+   "prompt_tokens": 14381,
+   "completion_tokens": 5024,
+   "finish_reason": "stop",
+   "content_chars": 2014,
+   "seconds": 40.8
+  },
+  {
+   "prompt_tokens": 4540,
+   "completion_tokens": 3250,
+   "finish_reason": "stop",
+   "content_chars": 3070,
+   "seconds": 20.7
+  }
+ ],
+ "passed": true
+}

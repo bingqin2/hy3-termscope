@@ -134,6 +134,30 @@ tasks fall to judge + human coverage, stated per run — never silently skipped.
    invalid. The cited first error must be the earliest *material* violation — never a later
    symptom, never recovered exploration.
 
+### Semantic lane v2 (decision 16 — the single versioned revision)
+
+The Day 7 validation measured systematic leniency: every completed v1 judge call on the
+campaign returned `valid` (the fixture gate still passed — v1 catches blatant sabotage, not
+subtle reasoning failures), and self-consistency was near-perfect, so the defect is the
+instrument, not sampling noise. v2 (`rubric_v2.md`, `prompt-v2`; selected by
+`JudgeConfig(version="v2")`; v1 remains frozen and default) changes exactly three things:
+
+1. **Mandatory audits before the verdict**, enforced by the validator: the response must carry
+   an `audit` object with four completed audits — decisive interpretive *commitments* and
+   whether each was checked; asserted-vs-observed *contradictions*; the *final claim* against
+   the last mutation and its confirming command; *scope and safety*. `valid` is defined as a
+   conclusion earned by clean audits, never a default; every material audit hit must appear in
+   `findings` with a quoted, step-anchored rationale.
+2. **Wider fixed observation window** (6000+3000 chars vs 1600+800): the v1 window plausibly
+   removed the decisive evidence tails; all failed-run prompts still fit the gateway limit and
+   oversize prompts remain an honest `context_limit`.
+3. An explicit **externally-terminated-run principle** (the cut-off is never the error; judge
+   the process up to it).
+
+Blinding, JSON-object mode, evidence anchoring, the retry policy, and the taxonomy are
+unchanged. v2 passed the same fixture gate before any campaign re-call (valid fixture stays
+`valid` with zero findings — the anti-leniency revision must not become flag-everything).
+
 ## 5. Merge policy
 
 - Deterministic `inconclusive` → judge skipped (quota saved), run excluded from accuracy
@@ -148,6 +172,14 @@ tasks fall to judge + human coverage, stated per run — never silently skipped.
 - `correct_result_invalid_process` derives only from conclusive runs (§3).
 - A human adjudication overrides aggregate labels but never modifies or deletes the stored
   evaluator result.
+
+**Merge v2** (with `version="v2"`; v1 frozen and default) adds two rules measured as needed by
+the Day 7 validation: a causal replay flip caps a contradicting semantic `valid` at `partial`
+(mirroring the hard-failure precedence — a prefix after which the oracle can no longer finish
+is objective evidence the process went wrong), and when localization comes from replay alone
+the primary error type falls back to the deterministic facts at that step (protected write →
+`process_integrity`) else to `action_execution`, instead of exporting a located step with no
+category.
 
 ## 6. Metrics and validation protocol
 

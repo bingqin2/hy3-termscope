@@ -277,7 +277,7 @@
     "hy3-terminus-2": {
      "outcome": "unresolved",
      "process": "partial",
-     "process_provenance": "second_rater",
+     "process_provenance": "human",
      "resolved_but_invalid": false,
      "reward": 0.0
     }

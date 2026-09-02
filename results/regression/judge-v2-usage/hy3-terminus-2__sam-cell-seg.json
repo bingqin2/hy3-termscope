@@ -1,0 +1,9 @@
+[
+ {
+  "prompt_tokens": 47758,
+  "completion_tokens": 4875,
+  "finish_reason": "stop",
+  "content_chars": 2439,
+  "seconds": 73.6
+ }
+]
