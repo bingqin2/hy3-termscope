@@ -1,0 +1,165 @@
+{
+ "note": "Sanitized campaign-manifest record: per-run finish timestamp, wall-clock seconds, and superseded-by markers — the only manifest fields the exporter reads. Derived once from the runner's live manifest.",
+ "runs": {
+  "hy3-mini-swe-agent__cobol-modernization": {
+   "finished": "2026-09-02T04:59:32.273166+00:00",
+   "wall_sec": 276.1
+  },
+  "hy3-mini-swe-agent__constraints-scheduling": {
+   "finished": "2026-09-02T05:15:02.680786+00:00",
+   "wall_sec": 152.6
+  },
+  "hy3-mini-swe-agent__count-dataset-tokens": {
+   "finished": "2026-09-02T05:20:26.895492+00:00",
+   "wall_sec": 219.1
+  },
+  "hy3-mini-swe-agent__dna-insert": {
+   "finished": "2026-09-02T05:29:09.259076+00:00",
+   "wall_sec": 332.1
+  },
+  "hy3-mini-swe-agent__extract-moves-from-video": {
+   "finished": "2026-09-02T07:26:51.033529+00:00",
+   "wall_sec": 1891.6
+  },
+  "hy3-mini-swe-agent__feal-differential-cryptanalysis": {
+   "finished": "2026-09-02T07:37:15.546158+00:00",
+   "wall_sec": 624.5
+  },
+  "hy3-mini-swe-agent__financial-document-processor": {
+   "finished": "2026-09-02T05:39:29.460124+00:00",
+   "wall_sec": 339.8
+  },
+  "hy3-mini-swe-agent__fix-git": {
+   "finished": "2026-09-02T05:04:23.340477+00:00",
+   "wall_sec": 132.4
+  },
+  "hy3-mini-swe-agent__git-multibranch": {
+   "finished": "2026-09-02T05:46:27.876786+00:00",
+   "wall_sec": 183.1
+  },
+  "hy3-mini-swe-agent__llm-inference-batching-scheduler": {
+   "finished": "2026-09-02T07:57:24.753133+00:00",
+   "wall_sec": 1209.2
+  },
+  "hy3-mini-swe-agent__multi-source-data-merger": {
+   "finished": "2026-09-02T05:50:41.022628+00:00",
+   "wall_sec": 178.0
+  },
+  "hy3-mini-swe-agent__overfull-hbox": {
+   "finished": "2026-09-02T05:09:04.936384+00:00",
+   "wall_sec": 281.6
+  },
+  "hy3-mini-swe-agent__portfolio-optimization": {
+   "finished": "2026-09-02T05:56:13.915181+00:00",
+   "wall_sec": 332.9
+  },
+  "hy3-mini-swe-agent__pytorch-model-recovery": {
+   "finished": "2026-09-02T06:00:28.559853+00:00",
+   "wall_sec": 254.6
+  },
+  "hy3-mini-swe-agent__raman-fitting": {
+   "finished": "2026-09-02T06:09:31.308729+00:00",
+   "wall_sec": 542.7
+  },
+  "hy3-mini-swe-agent__sam-cell-seg": {
+   "finished": "2026-09-02T08:00:00.994789+00:00",
+   "wall_sec": 156.2
+  },
+  "hy3-mini-swe-agent__schemelike-metacircular-eval": {
+   "finished": "2026-09-02T06:49:36.579681+00:00",
+   "wall_sec": 2405.3
+  },
+  "hy3-mini-swe-agent__sparql-university": {
+   "finished": "2026-09-02T08:12:34.222159+00:00",
+   "wall_sec": 257.5
+  },
+  "hy3-mini-swe-agent__sqlite-db-truncate": {
+   "finished": "2026-09-02T06:55:19.475264+00:00",
+   "wall_sec": 252.8
+  },
+  "hy3-mini-swe-agent__video-processing": {
+   "finished": "2026-09-02T08:22:23.531763+00:00",
+   "wall_sec": 514.2
+  },
+  "hy3-terminus-2__cobol-modernization": {
+   "finished": "2026-09-02T05:01:32.033092+00:00",
+   "wall_sec": 397.9
+  },
+  "hy3-terminus-2__constraints-scheduling": {
+   "finished": "2026-09-02T05:16:44.118644+00:00",
+   "wall_sec": 258.9
+  },
+  "hy3-terminus-2__count-dataset-tokens": {
+   "finished": "2026-09-02T05:23:36.612113+00:00",
+   "wall_sec": 412.5
+  },
+  "hy3-terminus-2__dna-insert": {
+   "finished": "2026-09-02T05:33:45.367776+00:00",
+   "wall_sec": 608.8
+  },
+  "hy3-terminus-2__extract-moves-from-video": {
+   "finished": "2026-09-02T07:25:43.641308+00:00",
+   "wall_sec": 1871.4
+  },
+  "hy3-terminus-2__feal-differential-cryptanalysis": {
+   "finished": "2026-09-02T07:36:08.608540+00:00",
+   "wall_sec": 625.0
+  },
+  "hy3-terminus-2__financial-document-processor": {
+   "finished": "2026-09-02T05:43:21.599883+00:00",
+   "wall_sec": 576.2
+  },
+  "hy3-terminus-2__fix-git": {
+   "finished": "2026-09-02T05:03:59.128499+00:00",
+   "wall_sec": 110.2
+  },
+  "hy3-terminus-2__git-multibranch": {
+   "finished": "2026-09-02T05:47:42.342993+00:00",
+   "wall_sec": 260.7
+  },
+  "hy3-terminus-2__llm-inference-batching-scheduler": {
+   "finished": "2026-09-02T07:49:57.383734+00:00",
+   "wall_sec": 828.8
+  },
+  "hy3-terminus-2__multi-source-data-merger": {
+   "finished": "2026-09-02T05:50:01.827808+00:00",
+   "wall_sec": 139.5
+  },
+  "hy3-terminus-2__overfull-hbox": {
+   "finished": "2026-09-02T05:12:25.242078+00:00",
+   "wall_sec": 506.1
+  },
+  "hy3-terminus-2__portfolio-optimization": {
+   "finished": "2026-09-02T05:53:26.016288+00:00",
+   "wall_sec": 204.2
+  },
+  "hy3-terminus-2__pytorch-model-recovery": {
+   "finished": "2026-09-02T05:57:52.586683+00:00",
+   "wall_sec": 266.6
+  },
+  "hy3-terminus-2__raman-fitting": {
+   "finished": "2026-09-02T06:09:29.331345+00:00",
+   "wall_sec": 696.7
+  },
+  "hy3-terminus-2__sam-cell-seg": {
+   "finished": "2026-09-02T08:08:13.437805+00:00",
+   "wall_sec": 1096.1
+  },
+  "hy3-terminus-2__schemelike-metacircular-eval": {
+   "finished": "2026-09-02T06:51:05.706061+00:00",
+   "wall_sec": 2496.4
+  },
+  "hy3-terminus-2__sparql-university": {
+   "finished": "2026-09-02T08:13:45.273084+00:00",
+   "wall_sec": 331.8
+  },
+  "hy3-terminus-2__sqlite-db-truncate": {
+   "finished": "2026-09-02T06:54:32.202224+00:00",
+   "wall_sec": 206.5
+  },
+  "hy3-terminus-2__video-processing": {
+   "finished": "2026-09-02T08:27:39.004545+00:00",
+   "wall_sec": 833.7
+  }
+ }
+}

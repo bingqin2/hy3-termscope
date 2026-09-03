@@ -2,8 +2,9 @@
 
 Every table is re-derived from results/per_run/* (+ reviews when present) so
 the numbers are reproducible from the repo alone. Output is byte-stable:
-sorted keys, fixed ordering, and an `updated` stamp derived from the campaign
-manifest rather than the wall clock.
+sorted keys, fixed ordering, and an `updated` stamp derived from the committed
+campaign-manifest record (results/campaign-manifest.json) rather than the wall
+clock, so a clean clone re-derives identical bytes with no outside files.
 
 Provenance (EVALUATOR_SPEC §6): outcomes are `official` (verifier). Process
 labels come from reviews (results/reviews/<run>/<reviewer>/review-vN.json,
@@ -34,8 +35,7 @@ REPO = Path(__file__).resolve().parent.parent
 PER_RUN = REPO / "results" / "per_run"
 REVIEWS = REPO / "results" / "reviews"
 HUMAN_REVIEWER = "owner"
-WORK = Path.home() / "termscope-work"
-MANIFEST = WORK / "campaign-manifest.json"
+MANIFEST = REPO / "results" / "campaign-manifest.json"
 
 prereg = json.loads((REPO / "data" / "slices" / "preregistration.json").read_text())
 CONFIGS = [c["config_id"] for c in prereg["configs"]]
