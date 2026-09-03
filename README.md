@@ -1,5 +1,8 @@
 # TermScope — Hy3 Process Evaluation on Terminal-Bench 2.0
 
+[![CI](https://github.com/bingqin2/hy3-termscope/actions/workflows/ci.yml/badge.svg)](https://github.com/bingqin2/hy3-termscope/actions/workflows/ci.yml)
+[![Site](https://github.com/bingqin2/hy3-termscope/actions/workflows/deploy.yml/badge.svg)](https://bingqin2.github.io/hy3-termscope/)
+
 Agent benchmarks grade the final state: run the verifier, pass or fail. TermScope asks the
 question that bit cannot answer — **was the agent's *process* sound, and if not, at exactly
 which step did it first go wrong?** It runs Tencent's Hy3 model as a terminal agent on 20

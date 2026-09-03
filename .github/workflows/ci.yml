@@ -1,0 +1,55 @@
+name: CI
+
+# Two proofs on every push: the test suite is green, and the repository is
+# self-reproducing — re-deriving the results tables and the site's data
+# snapshot from committed artifacts must be byte-identical to what is
+# committed. No credentials are needed or used; everything runs offline.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+        with:
+          python-version: "3.12"
+          enable-cache: true
+      - run: uv sync
+      - run: uv run pytest
+      - name: Re-derive results tables and site snapshot
+        run: |
+          uv run python scripts/export_results.py
+          uv run python scripts/build_site_data.py
+      - name: Verify byte-identical to committed artifacts
+        run: |
+          git status --porcelain -- results frontend/src/data
+          test -z "$(git status --porcelain -- results frontend/src/data)"
+
+  site:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm ci
+        working-directory: frontend
+      - run: npx tsc --noEmit
+        working-directory: frontend
+      - run: npm run build
+        working-directory: frontend
